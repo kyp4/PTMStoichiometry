@@ -38,7 +38,7 @@ namespace PTMStoichiometry20210414a
                     XmlElement peptideComp = doc.CreateElement("PairwiseCompairison");
                     //add pairwise compairison attributes: Peptides compaired, groups compared
                     XmlAttribute attributePep = doc.CreateAttribute("Peptides");
-                    attributePep.Value = comp.PeptideOne.Sequence + " | " + comp.PeptideTwo.Sequence;
+                    attributePep.Value = comp.PeptideOne.Sequence + " | " + String.Join(";", comp.PeptideTwo.Select(p => p.Sequence));
                     peptideComp.Attributes.Append(attributePep);
 
                     attributePep = doc.CreateAttribute("Groups");

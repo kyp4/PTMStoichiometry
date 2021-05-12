@@ -12,7 +12,7 @@ namespace PTMStoichiometry20210414a
     {
         //Peptides being compared
         public Peptide PeptideOne { get; }
-        public Peptide PeptideTwo { get; }
+        public List<Peptide> PeptideTwo { get; }
 
         //groups being compared
         public string GroupOne { get; }
@@ -33,10 +33,10 @@ namespace PTMStoichiometry20210414a
         //p-value
         public double MWPVal { get; }
 
-        public PairwiseComparison(Peptide Pep1, Peptide Pep2, string G1, string G2)
+        public PairwiseComparison(Peptide Pep1, List<Peptide> BaselinePeps, string G1, string G2)
         {
             this.PeptideOne = Pep1;
-            this.PeptideTwo = Pep2;
+            this.PeptideTwo = BaselinePeps;
             this.GroupOne = G1;
             this.GroupTwo = G2;
             this.PeptideStoichiometriesGroupOne = calcStoichiometry(this.GroupOne);
@@ -60,18 +60,25 @@ namespace PTMStoichiometry20210414a
         {
             List<Stoichiometry> stoich = new List<Stoichiometry>();
             List<Intensity> Pep1Intensity = this.PeptideOne.Intensities.Where(p => p.GroupID == group).ToList(); //intensities pep1 for group of interest
-            List<Intensity> Pep2Intensity = this.PeptideTwo.Intensities.Where(p => p.GroupID == group).ToList(); //intensities pep2 for group of interest
-
+            List<Intensity> Pep2Intensity = new List<Intensity>(); //intensities baseline for group of interest
+            foreach (Peptide basePep in this.PeptideTwo)
+            {
+                foreach (Intensity i2 in basePep.Intensities)
+                {
+                    Pep2Intensity.Add(i2);
+                }
+                
+            }
+            double baseline = Pep2Intensity.Select(p => p.IntensityVal).Average();
             foreach (Intensity i1 in Pep1Intensity)
             {
-                foreach (Intensity i2 in Pep2Intensity)
-                {
-                    Stoichiometry calcStoich = new Stoichiometry(i1, i2);
+                
+                    Stoichiometry calcStoich = new Stoichiometry(i1, baseline);
                     if (calcStoich.usefulStoichiometry)
                     {
-                        stoich.Add(new Stoichiometry(i1, i2));
+                        stoich.Add(new Stoichiometry(i1, baseline));
                     }
-                }
+                
             }
             return stoich;
         }
