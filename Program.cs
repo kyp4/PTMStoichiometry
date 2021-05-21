@@ -19,7 +19,9 @@ namespace PTMStoichiometry20210414a
             Dictionary<string, string> groups = PeptideReader.GetGroups(filepathgroups);
             List<string> groupsList = PeptideReader.GetGroupList(filepathgroups);
             List<Peptide> testPeptide = PeptideReader.ReadTsv(filepathpeptides, filepathgroups);
-            
+            Extensions.IncludeSharedPeptides(testPeptide);
+
+
             //group peptides by protein
             var proteins = testPeptide.Select(p => p.ProteinGroup).Distinct().ToArray();
             List<ProteinGroup> testProt = new List<ProteinGroup>();

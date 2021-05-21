@@ -38,15 +38,15 @@ namespace PTMStoichiometry20210414a
         //function to find baseline peptides to compare against
         private List<Peptide> getBaseLinePeptides(List<Peptide> peptidesInProtein, List<Peptide> Allpeptides, List<string> groups)
         {
-            List<Peptide>  unmodPep = peptidesInProtein.Where(p => p.Sequence == p.BaseSeq).ToList();
-            List<Peptide> AllOtherPeptides = Allpeptides.Where(p => !unmodPep.Contains(p)).ToList();
-            foreach (Peptide pep in unmodPep)
-            {
-                if (AllOtherPeptides.Contains(pep))
-                {
-                    unmodPep.Remove(pep);
-                }
-            }
+            List<Peptide>  unmodPep = peptidesInProtein.Where(p => p.Sequence == p.BaseSeq).Where(p => p.IsUnique).ToList();
+            //List<Peptide> AllOtherPeptides = Allpeptides.Where(p => !unmodPep.Contains(p)).ToList();
+            //foreach (Peptide pep in unmodPep)
+            //{
+            //    if (AllOtherPeptides.Contains(pep))
+          //      {
+          //          unmodPep.Remove(pep);
+          //      }
+          //  }
 
             //if pos Cov(X,Y) and pos Cov(X,Z) => pos Cov(Y,Z)
             List<Peptide> unmodPepCov = new List<Peptide>();
@@ -105,37 +105,58 @@ namespace PTMStoichiometry20210414a
         //function check whether is useful protein
         private string isProteinUseful(List<Peptide> pepsInProt)
         {
-            if (pepsInProt.Count() < 2)
+            if (pepsInProt.Count() < 4)
             {
-                return "unique";
+                return "InSufficientPeptides";
             }
-            else if (pepsInProt.Where(p => p.BaseSeq == p.Sequence).ToList().Count() == 0)
-            {
-                return "modOnly";
-            }
-            else if (pepsInProt.Where(p => p.BaseSeq != p.Sequence).ToList().Count() < 3)
+            else if (pepsInProt.Where(p => p.BaseSeq == p.Sequence).ToList().Count() < 3)
             {
                 return "BaseLineReqNotMet";
+            }
+            else if (pepsInProt.Where(p => p.BaseSeq != p.Sequence).ToList().Count() == 0)
+            {
+                return "unmodOnly";
             }
 
             return "modandunmod";
         }
 
+        //function to get list of intensities of baseline peptides
+        private List<Intensity> getBaselineIntensities()
+        {
+            List<Intensity> BaselinePepIntensity = new List<Intensity>(); //intensities baseline for group of interest
+            foreach (Peptide basePep in this.BaselinePeptides)
+            {
+                foreach (Intensity i2 in basePep.Intensities)
+                {
+                    BaselinePepIntensity.Add(i2);
+                }
+
+            }
+
+            return BaselinePepIntensity;
+        }
+
+        //function to compare all modified peptides in protein against baseline using PairwiseCompairison, 
+        //if UseRazorPeptides is set to false, peptides that are in more than one protein will be removed
         private List<PairwiseComparison> calcComparison(List<string> groups)
         {
             List<PairwiseComparison> comparePeps = new List<PairwiseComparison>();
 
-            for (int p1 = 0; p1 < this.PeptidesInProtein.Count(); ++p1)
+            List<Peptide> modPep = this.PeptidesInProtein.Where(p => p.BaseSeq != p.Sequence).ToList();
+
+       
+            for (int p1 = 0; p1 < modPep.Count(); ++p1)
             {
 
                  for (int g1 = 0; g1 < groups.Count(); ++g1)
                  {
                      for (int g2 = (g1 + 1); g2 < groups.Count(); ++g2)
                      {
-                            PairwiseComparison temp = new PairwiseComparison(this.PeptidesInProtein[p1], this.BaselinePeptides, groups[g1], groups[g2]);
+                            PairwiseComparison temp = new PairwiseComparison(modPep[p1], getBaselineIntensities(), groups[g1], groups[g2]);
                             if (temp.PeptideStoichiometriesGroupOne.Count > 3) //p-value set to -1 if both stoichiometry groups not larger than 3 values 
                             {
-                                comparePeps.Add(new PairwiseComparison(this.PeptidesInProtein[p1], this.BaselinePeptides, groups[g1], groups[g2]));
+                                comparePeps.Add(new PairwiseComparison(modPep[p1], getBaselineIntensities(), groups[g1], groups[g2]));
                             }
                      }
                  }

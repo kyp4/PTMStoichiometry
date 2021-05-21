@@ -11,14 +11,12 @@ namespace PTMStoichiometry20210414a
     {
         public string Sequence { get; } //Seq w mods from MM search output
         public string BaseSeq { get; } //Seq without mods from MM search output
-
         public string ProteinGroup { get; } //Accession number from MM search output
-
         public string GeneName { get; }
-
         public string Organism { get; }
-
         public List<Intensity> Intensities { get; }
+
+        public Boolean IsUnique { get; set; } // is true is peptide is in only one protein group, false otherwise
 
         public Peptide(string line, string[] fileNames, Dictionary<string, string> groups)
         {
@@ -47,5 +45,24 @@ namespace PTMStoichiometry20210414a
             }
             return intensities;
         }
+
+        public Boolean setIsUnique(List<Peptide> Peps)
+        {
+            int count = 0;
+            foreach (Peptide pep in Peps)
+            {
+                if (pep.Sequence == this.Sequence)
+                {
+                    count++;
+                    if (count > 1)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
     }
 }

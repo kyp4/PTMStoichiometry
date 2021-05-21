@@ -11,8 +11,7 @@ namespace PTMStoichiometry20210414a
     {
         public string FileName { get; }
         public double IntensityVal { get; }
-        public DetectionMS Detection { get; }
-
+        public DetectionMS Detection { get; } //Enum regarding how well was detected and how was detected as assigned by FlashLFQ
         public string GroupID { get; } //read from a separate tsv file with both the filenames (no Intensity_ or .raw) and their group
 
         public Intensity(string file, string group, double intensity, DetectionMS detection)

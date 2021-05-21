@@ -4,15 +4,15 @@ using System.Text;
 
 namespace PTMStoichiometry20210414a
 {
-    //this class calculates the stoichmetry between two peptides in a group: pep1/pep2
+    //this class calculates the stoichmetry of a peptide in a group: pep/baseline
     public class Stoichiometry
     {
-        public double StoichiometryVal { get;  } //intensity of pep1/pep2
-        public Boolean usefulStoichiometry { get; } //true if both Intensities are MS or MSMS (so have values), false otherwise
-        public Stoichiometry(Intensity Pep1, double baseline)
+        public double StoichiometryVal { get;  } //intensity of pep/baseline
+        public Boolean usefulStoichiometry { get; } //true if pep Intensity is MS or MSMS (so has values), false otherwise
+        public Stoichiometry(Intensity Pep, double baseline)
         { 
-            this.StoichiometryVal = Pep1.IntensityVal / baseline;
-            this.usefulStoichiometry = ((Pep1.Detection == DetectionMS.MS || Pep1.Detection == DetectionMS.MSMS)); //check that there is intensity to compare
+            this.StoichiometryVal = Pep.IntensityVal / baseline;
+            this.usefulStoichiometry = ((Pep.Detection == DetectionMS.MS || Pep.Detection == DetectionMS.MSMS)); //check that there is intensity to compare
         }
 
     }

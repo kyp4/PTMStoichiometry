@@ -26,6 +26,10 @@ namespace PTMStoichiometry20210414a
             attribute.Value = prot.NumPeptidesInProtein.ToString();
             protNode.Attributes.Append(attribute);
 
+            attribute = doc.CreateAttribute("BaselinePeptides");
+            attribute.Value = String.Join(";", prot.BaselinePeptides.Select(p => p.Sequence));
+            protNode.Attributes.Append(attribute);
+
             attribute = doc.CreateAttribute("CorrectProtein-p-value");
             attribute.Value = prot.CorrectedMWPValue.ToString();
             protNode.Attributes.Append(attribute);
@@ -37,8 +41,8 @@ namespace PTMStoichiometry20210414a
                 {
                     XmlElement peptideComp = doc.CreateElement("PairwiseCompairison");
                     //add pairwise compairison attributes: Peptides compaired, groups compared
-                    XmlAttribute attributePep = doc.CreateAttribute("Peptides");
-                    attributePep.Value = comp.PeptideOne.Sequence + " | " + String.Join(";", comp.PeptideTwo.Select(p => p.Sequence));
+                    XmlAttribute attributePep = doc.CreateAttribute("Peptide");
+                    attributePep.Value = comp.Peptide.Sequence;
                     peptideComp.Attributes.Append(attributePep);
 
                     attributePep = doc.CreateAttribute("Groups");

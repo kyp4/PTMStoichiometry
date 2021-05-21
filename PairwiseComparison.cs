@@ -10,10 +10,8 @@ namespace PTMStoichiometry20210414a
     //class for performing a pairwise compairson of peptide data between two groups
     public class PairwiseComparison
     {
-        //Peptides being compared
-        public Peptide PeptideOne { get; }
-        public List<Peptide> PeptideTwo { get; }
-
+        //Peptide being compared to baseline
+        public Peptide Peptide { get; }
         //groups being compared
         public string GroupOne { get; }
         public string GroupTwo { get; }
@@ -33,14 +31,13 @@ namespace PTMStoichiometry20210414a
         //p-value
         public double MWPVal { get; }
 
-        public PairwiseComparison(Peptide Pep1, List<Peptide> BaselinePeps, string G1, string G2)
+        public PairwiseComparison(Peptide Pep, List<Intensity> BaselinePepsIntensity, string G1, string G2)
         {
-            this.PeptideOne = Pep1;
-            this.PeptideTwo = BaselinePeps;
+            this.Peptide = Pep;
             this.GroupOne = G1;
             this.GroupTwo = G2;
-            this.PeptideStoichiometriesGroupOne = calcStoichiometry(this.GroupOne);
-            this.PeptideStoichiometriesGroupTwo = calcStoichiometry(this.GroupTwo);
+            this.PeptideStoichiometriesGroupOne = calcStoichiometry(this.GroupOne, BaselinePepsIntensity);
+            this.PeptideStoichiometriesGroupTwo = calcStoichiometry(this.GroupTwo, BaselinePepsIntensity);
             //private double[] mwStats = calcMWStats();
             if (this.PeptideStoichiometriesGroupOne.Count > 3 && this.PeptideStoichiometriesGroupTwo.Count > 3) //require at least three stoichiometries in both dist to run test
             {
@@ -56,29 +53,20 @@ namespace PTMStoichiometry20210414a
         }
 
         //calculate stoichiometries for all intensities
-        private List<Stoichiometry> calcStoichiometry(string group)
+        private List<Stoichiometry> calcStoichiometry(string group, List<Intensity> baselineIntensity)
         {
             List<Stoichiometry> stoich = new List<Stoichiometry>();
-            List<Intensity> Pep1Intensity = this.PeptideOne.Intensities.Where(p => p.GroupID == group).ToList(); //intensities pep1 for group of interest
-            List<Intensity> Pep2Intensity = new List<Intensity>(); //intensities baseline for group of interest
-            foreach (Peptide basePep in this.PeptideTwo)
+            List<Intensity> PepIntensity = this.Peptide.Intensities.Where(p => p.GroupID == group).ToList(); //intensities pep1 for group of interest
+            List<Intensity> baselineGroupIntensity = baselineIntensity.Where(p => p.GroupID == group).ToList();
+
+            double baseline = baselineGroupIntensity.Select(p => p.IntensityVal).Average();
+            foreach (Intensity i1 in PepIntensity)
             {
-                foreach (Intensity i2 in basePep.Intensities)
-                {
-                    Pep2Intensity.Add(i2);
-                }
-                
-            }
-            double baseline = Pep2Intensity.Select(p => p.IntensityVal).Average();
-            foreach (Intensity i1 in Pep1Intensity)
-            {
-                
                     Stoichiometry calcStoich = new Stoichiometry(i1, baseline);
                     if (calcStoich.usefulStoichiometry)
                     {
                         stoich.Add(new Stoichiometry(i1, baseline));
                     }
-                
             }
             return stoich;
         }
