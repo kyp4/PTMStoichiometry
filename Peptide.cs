@@ -46,7 +46,7 @@ namespace PTMStoichiometry20210414a
             return intensities;
         }
 
-        public Boolean setIsUnique(List<Peptide> Peps)
+        public void setIsUnique(List<Peptide> Peps)
         {
             int count = 0;
             foreach (Peptide pep in Peps)
@@ -56,12 +56,12 @@ namespace PTMStoichiometry20210414a
                     count++;
                     if (count > 1)
                     {
-                        return false;
+                        this.IsUnique = false;
                     }
                 }
             }
 
-            return true;
+            this.IsUnique = true;
         }
 
     }

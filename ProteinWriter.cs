@@ -30,10 +30,6 @@ namespace PTMStoichiometry20210414a
             attribute.Value = String.Join(";", prot.BaselinePeptides.Select(p => p.Sequence));
             protNode.Attributes.Append(attribute);
 
-            attribute = doc.CreateAttribute("CorrectProtein-p-value");
-            attribute.Value = prot.CorrectedMWPValue.ToString();
-            protNode.Attributes.Append(attribute);
-
             //Create child node for each pairwise comparison on peptides 
             foreach (PairwiseComparison comp in prot.ProteinPairwiseComparisons)
             {
@@ -57,6 +53,10 @@ namespace PTMStoichiometry20210414a
                     XmlElement MWpval = doc.CreateElement("Mann-Whitney-p-value");
                     MWpval.InnerText = comp.MWPVal.ToString();
                     peptideComp.AppendChild(MWpval);
+
+                    XmlElement bhCorrectedpvalue = doc.CreateElement("Benjamini-Hochberg-corrected-p-value");
+                    bhCorrectedpvalue.InnerText = comp.CorrectedpVal.ToString();
+                    peptideComp.AppendChild(bhCorrectedpvalue);
 
                     XmlElement StoicMedG1 = doc.CreateElement("MedianStoichiometryGroupOne");
                     StoicMedG1.InnerText = comp.PeptideStoichiometriesGroupOneMedian.ToString();

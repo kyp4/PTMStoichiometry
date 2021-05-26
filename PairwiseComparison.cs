@@ -30,6 +30,7 @@ namespace PTMStoichiometry20210414a
         public double MWStat { get; }
         //p-value
         public double MWPVal { get; }
+        public double CorrectedpVal { get; set; }
 
         public PairwiseComparison(Peptide Pep, List<Intensity> BaselinePepsIntensity, string G1, string G2)
         {
@@ -50,6 +51,11 @@ namespace PTMStoichiometry20210414a
                 this.PeptideStoichiometriesGroupOneMax = calcMWStats()[6];
                 this.PeptideStoichiometriesGroupTwoMax = calcMWStats()[7];
             }
+        }
+
+        public void setCorrectedpVal(Double correctPVal)
+        {
+            this.CorrectedpVal = correctPVal;
         }
 
         //calculate stoichiometries for all intensities

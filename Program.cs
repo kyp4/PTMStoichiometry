@@ -29,9 +29,11 @@ namespace PTMStoichiometry20210414a
             {
                 testProt.Add(new ProteinGroup(proteins[i], testPeptide, groupsList));
             }
-            List<ProteinGroup> ProteinsToUse = testProt.Where(p => p.useProt == "modandunmod").Where(p => p.CorrectedMWPValue > 0).ToList(); 
+            testProt = testProt.Where(p => p.ProteinPairwiseComparisons != null).ToList();
+            Extensions.CalcCorrectedPValue(testProt, false);
+            List<ProteinGroup> ProteinsToUse = testProt.Where(p => p.useProt == "modandunmod").ToList(); 
             //store protein output in XML file
-            string outFile = @"C:\Users\KAP\BioinformaticsII\PTMStoichiometryFullPhosphoData3.xml"; //replace with desired output file
+            string outFile = @"C:\Users\KAP\BioinformaticsII\PTMStoichiometryFullPhosphoData6.xml"; //replace with desired output file
             XmlDocument proteinOutput = new XmlDocument();
             proteinOutput.LoadXml("<PTMStoichiometry>  </PTMStoichiometry>");
             foreach (ProteinGroup prot in ProteinsToUse) //make each protein a XML element

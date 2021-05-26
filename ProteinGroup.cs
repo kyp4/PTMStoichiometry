@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MathNet.Numerics.Statistics;
 
 namespace PTMStoichiometry20210414a
 {
@@ -16,7 +17,6 @@ namespace PTMStoichiometry20210414a
         public int NumPeptidesInProtein { get; }
         public List<Peptide> BaselinePeptides { get; } //peptides to compare others to: must be unmodified, covary with each other, and not be in other proteins & must be the same baseline for all groups
         public List<PairwiseComparison> ProteinPairwiseComparisons { get; } //compare peptides by group within protein
-        public double CorrectedMWPValue { get; } //Benjamini-Hochberg correct p-value
         public ProteinGroup(string proteinAccession, List<Peptide> peptides, List<string> groups)
         {
             this.ProteinName = proteinAccession;
@@ -25,18 +25,17 @@ namespace PTMStoichiometry20210414a
             this.useProt = isProteinUseful(PeptidesInProtein);
             if ((this.useProt == "modandunmod")) //only calc stoichiometries if there are multiple peptides both mod & unmod - TODO: consider expanding
             {
-                this.BaselinePeptides = getBaseLinePeptides(this.PeptidesInProtein, peptides, groups);
+                this.BaselinePeptides = getBaseLinePeptides(this.PeptidesInProtein, peptides, groups, 0.25);
 
                 if (this.BaselinePeptides.Count() > 2)
                 {
                     this.ProteinPairwiseComparisons = calcComparison(groups);
-                    this.CorrectedMWPValue = BenjaminiHochberg(this.ProteinPairwiseComparisons);
                 }
             }
         }
 
         //function to find baseline peptides to compare against
-        private List<Peptide> getBaseLinePeptides(List<Peptide> peptidesInProtein, List<Peptide> Allpeptides, List<string> groups)
+        private List<Peptide> getBaseLinePeptides(List<Peptide> peptidesInProtein, List<Peptide> Allpeptides, List<string> groups, double covarianceStrength)
         {
             List<Peptide>  unmodPep = peptidesInProtein.Where(p => p.Sequence == p.BaseSeq).Where(p => p.IsUnique).ToList();
             //List<Peptide> AllOtherPeptides = Allpeptides.Where(p => !unmodPep.Contains(p)).ToList();
@@ -56,7 +55,8 @@ namespace PTMStoichiometry20210414a
                 temp.Add(unmodPep[p1]);
                 for (int p2 = p1+1; p2 < unmodPep.Count(); p2++)
                 {
-                    if (Covariance(unmodPep[p1].Intensities, unmodPep[p2].Intensities, groups) > 0.1) //TODO: tune this variable
+
+                    if (GroupCorrelation(unmodPep[p1].Intensities, unmodPep[p2].Intensities, groups) > covarianceStrength) //TODO: tune covarianceStrength
                         temp.Add(unmodPep[p2]);
                 }
 
@@ -69,7 +69,39 @@ namespace PTMStoichiometry20210414a
             return unmodPepCov;
         }
 
-        //function to calc Covariance: 1/n * sum[(X-ave(X))(Y-ave(Y))]
+        //function to calc Correlation in each group - returns min correlation
+        private double GroupCorrelation(List<Intensity> Peptide1, List<Intensity> Peptide2, List<string> groups)
+        {
+            List<Intensity> Peptide1Vals = Peptide1.Where(p => p.Detection == DetectionMS.MS || p.Detection == DetectionMS.MSMS).ToList();
+            List<Intensity> Peptide2Vals = Peptide2.Where(p => p.Detection == DetectionMS.MS || p.Detection == DetectionMS.MSMS).ToList();
+
+            foreach (string group in groups)
+            {
+                //require at least three measurements in each group
+                if (Peptide1Vals.Where(p => p.GroupID == group).Count() < 3 || Peptide2Vals.Where(p => p.GroupID == group).Count() < 3) 
+                {
+                    return -3;
+                }
+            }
+
+            double correlation = 3; 
+            foreach (string group in groups)
+            {
+                IEnumerable<double> Pep1group = Peptide1Vals.Where(p => p.GroupID == group).Select(p => p.IntensityVal);
+                IEnumerable<double> Pep2group =  Peptide2Vals.Where(p => p.GroupID == group).Select(p => p.IntensityVal);
+                double temp = Correlation.Pearson(Pep1group, Pep2group);
+                if (temp < correlation)
+                {
+                    correlation = temp;
+                }
+            }
+
+            return correlation;
+        }
+
+
+        /*
+        //function to calc Covariance: 1/n * sum[(X-ave(X))(Y-ave(Y))] - TODO: change to correlation so not impacted by scale
         private double Covariance(List<Intensity> Peptide1, List<Intensity> Peptide2, List<string> groups)
         {
             List<Intensity> Peptide1Vals = Peptide1.Where(p => p.Detection == DetectionMS.MS || p.Detection == DetectionMS.MSMS).ToList();
@@ -93,7 +125,7 @@ namespace PTMStoichiometry20210414a
             {
                 for (int p2 = 0; p2 < Peptide1Vals.Count(); p2++)
                 {
-                    covariance += p1 * p2;
+                    covariance += Peptide1Vals[p1].IntensityVal * Peptide2Vals[p2].IntensityVal;
                 }
             }
 
@@ -101,13 +133,14 @@ namespace PTMStoichiometry20210414a
 
             return covariance;
         }
+        */
 
-        //function check whether is useful protein
+        //function check whether is useful protein: must have baseline peptides required (3 unmodified peptides) and at least on mod peptide to consider
         private string isProteinUseful(List<Peptide> pepsInProt)
         {
             if (pepsInProt.Count() < 4)
             {
-                return "InSufficientPeptides";
+                return "InsufficientPeptides";
             }
             else if (pepsInProt.Where(p => p.BaseSeq == p.Sequence).ToList().Count() < 3)
             {
@@ -165,7 +198,6 @@ namespace PTMStoichiometry20210414a
             return comparePeps;
         }
 
-
         //depreciated
         /*
         //calc PairwiseCompairsons for each pair pf peptides and every pair of groups
@@ -193,6 +225,8 @@ namespace PTMStoichiometry20210414a
             return comparePeps;
         }
         */
+
+        /*
         public double BenjaminiHochberg(List<PairwiseComparison> Comparisons, double alpha = 0.5)
         {
             List<double> pvals = new List<double>();
@@ -218,6 +252,7 @@ namespace PTMStoichiometry20210414a
             }
             return 0; //this makes nothing sig pvals[pvals.Count() - 1];
         }
+        */
 
         /*
         //calc PairwiseCompairsons for each pair pf peptides and every pair of groups
