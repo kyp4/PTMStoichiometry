@@ -14,11 +14,11 @@ namespace PTMStoichiometry20210414a
         public string ProteinGroup { get; } //Accession number from MM search output
         public string GeneName { get; }
         public string Organism { get; }
-        public List<Intensity> Intensities { get; }
-
+        public List<Intensity> Intensities { get; } 
         public Boolean IsUnique { get; set; } // is true is peptide is in only one protein group, false otherwise
+        public Boolean DetectedMinNum { get; } // is true if peptide is detected (>0) in all group the min num of times (reqNumPepMeasurements, default=3), false otherwise
 
-        public Peptide(string line, string[] fileNames, Dictionary<string, string> groups)
+        public Peptide(string line, string[] fileNames, Dictionary<string, string> groups, List<string> groupsList, int reqNumPepMeasurements)
         {
             var spl = line.Split('\t');
 
@@ -28,6 +28,19 @@ namespace PTMStoichiometry20210414a
             this.GeneName = spl[3];
             this.Organism = spl[4];
             this.Intensities = GetIntensities(spl.SubArray(5, spl.Length - 5), fileNames, groups);
+            this.DetectedMinNum = DetectCount(this.Intensities, groupsList, reqNumPepMeasurements);
+        }
+
+        private bool DetectCount(List<Intensity> intensities, List<string> groupsList, int reqNumPepMeasurements)
+        {
+            foreach (string group in groupsList)
+            {
+                if (intensities.Where(p => p.GroupID == group).Where(p => p.IntensityVal > 0).Count() < reqNumPepMeasurements)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         //take intensities from a line and place in intensities object

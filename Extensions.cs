@@ -5,10 +5,10 @@ using System.Linq;
 
 namespace PTMStoichiometry20210414a
 {
-    //Extensions class written with Dr. Shortreed
     public static class Extensions
     {
         //read in peptide data from MM
+        //written by Dr. Shortreed
         public static T[] SubArray<T>(this T[] array, int offset, int length)
         {
             T[] result = new T[length];
