@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,7 +18,9 @@ namespace PTMStoichiometry20210414a
         public List<Intensity> Intensities { get; } 
         public Boolean IsUnique { get; set; } // is true is peptide is in only one protein group, false otherwise
         public Boolean DetectedMinNum { get; } // is true if peptide is detected (>0) in all group the min num of times (reqNumPepMeasurements, default=3), false otherwise
+        public Boolean Mod { get; } //true if peptide is modified and modification is not one of the "to ignore" modifications
 
+        IEnumerable<string> fixedPTMs = File.ReadLines(@"C:\Users\KAP\source\repos\PTMStoichiometry_master\PTMStoichiometry\FixedPTMs.txt");
         public Peptide(string line, string[] fileNames, Dictionary<string, string> groups, List<string> groupsList, int reqNumPepMeasurements)
         {
             var spl = line.Split('\t');
@@ -29,6 +32,7 @@ namespace PTMStoichiometry20210414a
             this.Organism = spl[4];
             this.Intensities = GetIntensities(spl.SubArray(5, spl.Length - 5), fileNames, groups);
             this.DetectedMinNum = DetectCount(this.Intensities, groupsList, reqNumPepMeasurements);
+            this.Mod = GetMod(this.Sequence, this.BaseSeq);
         }
 
         //overload for testing 
@@ -41,6 +45,7 @@ namespace PTMStoichiometry20210414a
             this.Organism = Organism;
             this.Intensities = Intensities;
             this.DetectedMinNum = DetectCount(this.Intensities, groupsList, reqNumPepMeasurements);
+            this.Mod = GetMod(this.Sequence, this.BaseSeq);
         }
 
         //determine if the number of detections is greater than the min set
@@ -54,6 +59,30 @@ namespace PTMStoichiometry20210414a
                 }
             }
             return true;
+        }
+
+        //set mod: true if seq is mod and mod not one of the fixed mods to ignore
+        private bool GetMod(string Sequence, string BaseSeq)
+        {
+            string seq = Sequence;
+            if (Sequence == BaseSeq)
+            {
+                return false;
+            }
+            
+            foreach (string ptm in fixedPTMs)
+            {
+                seq = seq.Replace(ptm, "");
+            }
+            
+            if (seq == BaseSeq)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
 
         //take intensities from a line and place in intensities object

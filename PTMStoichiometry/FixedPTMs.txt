@@ -1,0 +1,2 @@
+[Common Fixed:Carbamidomethyl on C]
+[Common Fixed:Carbamidomethyl on U]

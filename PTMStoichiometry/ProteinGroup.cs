@@ -87,7 +87,7 @@ namespace PTMStoichiometry20210414a
         //function to find baseline peptides to compare against
         private List<Peptide> getBaseLinePeptides(List<Peptide> peptidesInProtein, List<Peptide> Allpeptides, List<string> groups, double correlationCutOff)
         {
-            List<Peptide>  unmodPep = peptidesInProtein.Where(p => p.Sequence == p.BaseSeq).Where(p => p.IsUnique).ToList();
+            List<Peptide>  unmodPep = peptidesInProtein.Where(p => !p.Mod).Where(p => p.IsUnique).ToList();
 
             //if pos Corr(X,Y) and pos Corr(X,Z) => pos Corr(Y,Z)
             List<Peptide> unmodPepCov = new List<Peptide>();
@@ -151,8 +151,8 @@ namespace PTMStoichiometry20210414a
         private Boolean isProteinUseful(List<Peptide> pepsInProt, int reqNumUnmodPeptides, int reqNumModPeptides, int reqNumOfPepeptides)
         {
             //ensure have enough peptides, mod, & unmod peptides
-            if (pepsInProt.Count() >= reqNumOfPepeptides || pepsInProt.Where(p => p.BaseSeq == p.Sequence).ToList().Count() >= reqNumUnmodPeptides || 
-                pepsInProt.Where(p => p.BaseSeq != p.Sequence).ToList().Count() >= reqNumModPeptides)
+            if (pepsInProt.Count() >= reqNumOfPepeptides || pepsInProt.Where(p => !p.Mod).ToList().Count() >= reqNumUnmodPeptides || 
+                pepsInProt.Where(p => p.Mod).ToList().Count() >= reqNumModPeptides)
             {
                 return true;
             }
@@ -183,7 +183,7 @@ namespace PTMStoichiometry20210414a
             //if not considering unmod peptides -> remove
             if (!compareUnmod)
             {
-                PeptidesToCompare = PeptidesToCompare.Where(p => p.BaseSeq != p.Sequence).ToList();
+                PeptidesToCompare = PeptidesToCompare.Where(p => p.Mod).ToList();
             }
             //loop over all peptide, group, group permutations 
             for (int p1 = 0; p1 < PeptidesToCompare.Count(); ++p1)
@@ -211,7 +211,7 @@ namespace PTMStoichiometry20210414a
             //if not considering unmod peptides -> remove
             if (!compareUnmod)
             {
-                PeptidesToCompare = PeptidesToCompare.Where(p => p.BaseSeq != p.Sequence).ToList();
+                PeptidesToCompare = PeptidesToCompare.Where(p => p.Mod).ToList();
             }
             groups.Remove(groupToCompare);
             //loop over all peptide, group, groupToCompare permutations 

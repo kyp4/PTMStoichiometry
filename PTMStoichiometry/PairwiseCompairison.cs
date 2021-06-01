@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MathNet.Numerics.Statistics;
 using Meta.Numerics.Statistics;
 
 namespace PTMStoichiometry20210414a
@@ -64,7 +65,8 @@ namespace PTMStoichiometry20210414a
             this.PeptideStoichiometriesGroupOne = calcStoichiometry(this.PeptideOne, this.PeptideTwo, this.GroupOne);
             this.PeptideStoichiometriesGroupTwo = calcStoichiometry(this.PeptideOne, this.PeptideTwo, this.GroupTwo);
 
-            if (this.PeptideStoichiometriesGroupOne.Count() >= minNumStoichiometries && this.PeptideStoichiometriesGroupTwo.Count() >= minNumStoichiometries)
+            if (this.PeptideStoichiometriesGroupOne.Select( p => p.usefulStoichiometry).Count() >= minNumStoichiometries 
+                && this.PeptideStoichiometriesGroupTwo.Select(p => p.usefulStoichiometry).Count() >= minNumStoichiometries)
             {
                 this.MWStat = calcMWStats()[0];
                 this.MWPVal = calcMWStats()[1];
@@ -89,14 +91,14 @@ namespace PTMStoichiometry20210414a
             List<Intensity> PepIntensity = pep.Intensities.Where(p => p.GroupID == group).ToList(); //intensities pep1 for group of interest
             List<Intensity> baselineGroupIntensity = baselineIntensity.Where(p => p.GroupID == group).ToList();
 
-            double baseline = baselineGroupIntensity.Select(p => p.IntensityVal).Average();
+            double baseline = baselineGroupIntensity.Select(p => p.IntensityVal).Median();
             foreach (Intensity i1 in PepIntensity)
             {
                     Stoichiometry calcStoich = new Stoichiometry(i1, baseline);
-                    if (calcStoich.usefulStoichiometry)
-                    {
+                    //if (calcStoich.usefulStoichiometry)
+                    //{
                         stoich.Add(new Stoichiometry(i1, baseline));
-                    }
+                    //}
             }
             return stoich;
         }
@@ -112,10 +114,10 @@ namespace PTMStoichiometry20210414a
             {
                 Intensity i2 = Pep2Intensity.Where(p => p.FileName == i1.FileName).ToList()[0];
                 Stoichiometry calcStoich = new Stoichiometry(i1, i2);
-                if (calcStoich.usefulStoichiometry)
-                {
+                //if (calcStoich.usefulStoichiometry)
+                //{
                     stoich.Add(calcStoich);
-                }
+                //}
             }
             return stoich;
         }

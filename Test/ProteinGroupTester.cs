@@ -369,19 +369,67 @@ namespace PTMStoichiometryTester20200415a
             Assert.AreEqual(baselinePeptideSeq, ProteinGroupSetGroupTest.BaselinePeptides.Select(p => p.Sequence));
         }
 
+        private static readonly object[] _useProt =
+        {
+            new object[] {
+                "Prot",
+                new List<Peptide>
+                {
+                    new Peptide("Seq1", "Seq1", "Prot", "Gene", "Organism",
+                        new List<Intensity>() {
+                            new Intensity("file", "group1", 10, DetectionMS.MS),
+                            new Intensity("file", "group1", 20, DetectionMS.MS),
+                            new Intensity("file", "group1", 15, DetectionMS.MS),
+                            new Intensity("file", "group1", 30, DetectionMS.MS),
 
+                            new Intensity("file", "group2", 10, DetectionMS.MS),
+                            new Intensity("file", "group2", 20, DetectionMS.MS),
+                            new Intensity("file", "group2", 15, DetectionMS.MS),
+                            new Intensity("file", "group2", 30, DetectionMS.MS)
+                        },
+                        new List<string>() { "group1", "group2" }, 1),
+                   new Peptide("Seq2", "Seq2", "Prot", "Gene", "Organism",
+                        new List<Intensity>() {
+                            new Intensity("file", "group1", 20, DetectionMS.MS),
+                            new Intensity("file", "group1", 40, DetectionMS.MS),
+                            new Intensity("file", "group1", 30, DetectionMS.MS),
+                            new Intensity("file", "group1", 60, DetectionMS.MS),
+
+                            new Intensity("file", "group2", 20, DetectionMS.MS),
+                            new Intensity("file", "group2", 40, DetectionMS.MS),
+                            new Intensity("file", "group2", 30, DetectionMS.MS),
+                            new Intensity("file", "group2", 60, DetectionMS.MS)
+                        },
+                    new List<string>() { "group1", "group2" }, 1)
+                },
+                new List<string> { "group1", "group2" },
+                3, 1, 4, 0.5, false, 3, "group1",
+                false, false
+            }
+           
+            
+            
+           
+        };
 
         [Test]
+        [TestCaseSource("_useProt")]
         public void ProteinGroup_useProt_Pass(string proteinAccession, List<Peptide> peptides, List<string> groups, int reqNumUnmodPeptides, int reqNumModPeptides, int reqNumOfPepeptides,
-            Boolean useBaselinePeptides, int reqNumBaselinePeptides, double correlationCutOff, Boolean compareUnmod, int minNumStoichiometries, string groupToCompare, bool useProtBaseline, bool useProtPeptidePeptide)
+            double correlationCutOff, Boolean compareUnmod, int minNumStoichiometries, string groupToCompare, bool useProtBaseline, bool useProtPeptidePeptide)
         {
-            ProteinGroup ProteinGroupAllGroupsTest = new ProteinGroup(proteinAccession, peptides, groups, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides, useBaselinePeptides,
-                reqNumBaselinePeptides, correlationCutOff, compareUnmod, minNumStoichiometries);
-            ProteinGroup ProteinGroupSetGroupTest = new ProteinGroup(proteinAccession, peptides, groups, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides, useBaselinePeptides,
-                reqNumBaselinePeptides, correlationCutOff, compareUnmod, minNumStoichiometries, groupToCompare);
+            ProteinGroup ProteinGroupBaselineAllGroupTest = new ProteinGroup(proteinAccession, peptides, groups, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides, true,
+                reqNumUnmodPeptides, correlationCutOff, compareUnmod, minNumStoichiometries);
+            ProteinGroup ProteinGroupBaselineSetGroupTest = new ProteinGroup(proteinAccession, peptides, groups, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides, true,
+                reqNumUnmodPeptides, correlationCutOff, compareUnmod, minNumStoichiometries, groupToCompare);
+            ProteinGroup ProteinGroupPeptidePeptideAllGroupTest = new ProteinGroup(proteinAccession, peptides, groups, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides, false,
+                reqNumUnmodPeptides, correlationCutOff, compareUnmod, minNumStoichiometries);
+            ProteinGroup ProteinGroupPeptidePeptideSetGroupTest = new ProteinGroup(proteinAccession, peptides, groups, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides, false,
+                reqNumUnmodPeptides, correlationCutOff, compareUnmod, minNumStoichiometries, groupToCompare);
 
-            Assert.AreEqual(useProtBaseline, ProteinGroupAllGroupsTest.useProt);
-            Assert.AreEqual(useProtPeptidePeptide, ProteinGroupAllGroupsTest.useProt);
+            Assert.AreEqual(useProtBaseline, ProteinGroupBaselineAllGroupTest.useProt);
+            Assert.AreEqual(useProtBaseline, ProteinGroupBaselineSetGroupTest.useProt);
+            Assert.AreEqual(useProtPeptidePeptide, ProteinGroupPeptidePeptideAllGroupTest.useProt);
+            Assert.AreEqual(useProtPeptidePeptide, ProteinGroupPeptidePeptideSetGroupTest.useProt);
         }
 
     }
