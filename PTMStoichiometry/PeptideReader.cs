@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
-namespace PTMStoichiometry20210414a
+namespace PTMStoichiometry
 {   
     //class to read in Peptide data from FlashLFQ data
     //PeptideReader class written with Dr. Shortreed

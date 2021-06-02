@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PTMStoichiometry20210414a
+namespace PTMStoichiometry
 {
     //work with peptide data from MM and FlashLFQ
     public class Peptide

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 
-namespace PTMStoichiometry20210414a
+namespace PTMStoichiometry
 {
     public static class Extensions
     {
@@ -33,33 +33,13 @@ namespace PTMStoichiometry20210414a
             return Peps;
         }
 
-        /*
-        //apply Benjamini-Hochberg correction to p-values - correct significance
-        public static double BenjaminiHochberg(List<double> pvals, double alpha = 0.5)
-        {
-            pvals.Sort();
-            int m = pvals.Count();
-            double corrected = 0;
-            for (int i = 0; i < pvals.Count(); i++)
-            {
-                if (pvals[i] <= (i + 1) * alpha / m)
-                {
-                    corrected = pvals[i];
-                }
-                else
-                {
-                    return corrected;
-                }
-            }
-            return corrected;
-        }
-        */
+        
 
         //apply Benjamini-Hochberg p-value correct - correct the p-values
         //set the corrected p-values in pairwise comparisons
-        public static void BenjaminiHochberg(List<PairwiseCompairison> pairwiseComparisons, double alpha = 0.5)
+        public static void BenjaminiHochberg(List<PairwiseCompairison> pairwiseComparisons, double alpha = 0.05)
         {
-            List<PairwiseCompairison> sortedPairwiseComparisons = pairwiseComparisons.OrderBy(p => p.MWPVal).Reverse().ToList();
+            List<PairwiseCompairison> sortedPairwiseComparisons = pairwiseComparisons.OrderBy(p => p.MWPVal).ToList();
             int m = sortedPairwiseComparisons.Count();
             if (m == 0)
             {
@@ -73,7 +53,7 @@ namespace PTMStoichiometry20210414a
                 sortedPairwiseComparisons[m - 1].setCorrectedpVal(1);
             }
 
-            for (int i = m-2; i > 0; i--)
+            for (int i = m-2; i >= 0; i--)
             {
                 //pval*#pvals/#in sorted order
                 sortedPairwiseComparisons[i].setCorrectedpVal(sortedPairwiseComparisons[i].MWPVal * m / (i + 1));
@@ -87,14 +67,14 @@ namespace PTMStoichiometry20210414a
 
         //two different methods of considering peptides for p-value correction: 
         //either correction within each protein (grouped) or across all proteins
-        public static void CalcCorrectedPValue(List<ProteinGroup> protein, Boolean grouped = false)
+        public static void CalcCorrectedPValue(List<ProteinGroup> protein, Boolean grouped = false, double alpha = 0.05)
         {
             if (grouped)
             {
                 //apply correction to the pairwise compairisons in each protein individually 
                 foreach (ProteinGroup prot in protein)
                 {
-                    BenjaminiHochberg(prot.ProteinPairwiseComparisons);
+                    BenjaminiHochberg(prot.ProteinPairwiseComparisons, alpha);
                 }
             }
             //apply correction to all pairwise compairsons at once, regardless of what protein they belong to
@@ -111,7 +91,7 @@ namespace PTMStoichiometry20210414a
                
                 foreach (ProteinGroup prot in protein)
                 {
-                    BenjaminiHochberg(prot.ProteinPairwiseComparisons);
+                    BenjaminiHochberg(prot.ProteinPairwiseComparisons, alpha);
                 }
             }
         }

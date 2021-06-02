@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MathNet.Numerics.Statistics;
 
-namespace PTMStoichiometry20210414a
+namespace PTMStoichiometry
 {
     //work with protein data from MM and FlashLFQ
     public class ProteinGroup
@@ -35,7 +35,7 @@ namespace PTMStoichiometry20210414a
         }
 
         public ProteinGroup(string proteinAccession, List<Peptide> peptides, List<string> groups, int reqNumUnmodPeptides, int reqNumModPeptides, int reqNumOfPepeptides,
-        Boolean useBaselinePeptides, int reqNumBaselinePeptides, double correlationCutOff, Boolean compareUnmod, int minNumStoichiometries) : this (proteinAccession, peptides, reqNumUnmodPeptides, 
+        Boolean useBaselinePeptides, int reqNumBaselinePeptides, int reqNumBaselineMeasurements, double correlationCutOff, Boolean compareUnmod, int minNumStoichiometries) : this (proteinAccession, peptides, reqNumUnmodPeptides, 
         reqNumModPeptides, reqNumOfPepeptides)
         {
             if (!this.useProt) return;
@@ -43,7 +43,7 @@ namespace PTMStoichiometry20210414a
             //use averaged baseline
             if (useBaselinePeptides)
             {
-                this.BaselinePeptides = getBaseLinePeptides(this.PeptidesInProtein, peptides, groups, correlationCutOff);
+                this.BaselinePeptides = getBaseLinePeptides(this.PeptidesInProtein, peptides, groups, correlationCutOff, reqNumBaselineMeasurements);
                 if (this.BaselinePeptides.Count() < reqNumBaselinePeptides)
                 {
                     this.setUseProt(false);
@@ -60,15 +60,15 @@ namespace PTMStoichiometry20210414a
 
         //overload if given groupToCompare - single group to compare against, this is the group name (e.g. a control group) (default = null)
         public ProteinGroup(string proteinAccession, List<Peptide> peptides, List<string> groups, int reqNumUnmodPeptides, int reqNumModPeptides, int reqNumOfPepeptides,
-        Boolean useBaselinePeptides, int reqNumBaselinePeptides, double correlationCutOff, Boolean compareUnmod, int minNumStoichiometries, string groupToCompare) : this(proteinAccession, peptides, reqNumUnmodPeptides,
-        reqNumModPeptides, reqNumOfPepeptides)
+        Boolean useBaselinePeptides, int reqNumBaselinePeptides, int reqNumBaselineMeasurements, double correlationCutOff, Boolean compareUnmod, int minNumStoichiometries, string groupToCompare) : 
+            this(proteinAccession, peptides, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides)
         {
             if (!this.useProt) return;
 
             //use averaged baseline
             if (useBaselinePeptides)
             {
-                this.BaselinePeptides = getBaseLinePeptides(this.PeptidesInProtein, peptides, groups, correlationCutOff);
+                this.BaselinePeptides = getBaseLinePeptides(this.PeptidesInProtein, peptides, groups, correlationCutOff, reqNumBaselineMeasurements);
                 if (this.BaselinePeptides.Count() < reqNumBaselinePeptides)
                 {
                     this.setUseProt(false);
@@ -85,7 +85,8 @@ namespace PTMStoichiometry20210414a
 
 
         //function to find baseline peptides to compare against
-        private List<Peptide> getBaseLinePeptides(List<Peptide> peptidesInProtein, List<Peptide> Allpeptides, List<string> groups, double correlationCutOff)
+        private List<Peptide> getBaseLinePeptides(List<Peptide> peptidesInProtein, List<Peptide> Allpeptides, List<string> groups, 
+            double correlationCutOff, int reqNumBaselineMeasurements)
         {
             List<Peptide>  unmodPep = peptidesInProtein.Where(p => !p.Mod).Where(p => p.IsUnique).ToList();
 
@@ -97,7 +98,7 @@ namespace PTMStoichiometry20210414a
                 temp.Add(unmodPep[p1]);
                 for (int p2 = p1+1; p2 < unmodPep.Count(); p2++)
                 {
-                    if (GroupCorrelation(unmodPep[p1].Intensities, unmodPep[p2].Intensities, groups) > correlationCutOff) 
+                    if (GroupCorrelation(unmodPep[p1].Intensities, unmodPep[p2].Intensities, groups, reqNumBaselineMeasurements) > correlationCutOff) 
                         temp.Add(unmodPep[p2]);
                 }
 
@@ -111,7 +112,7 @@ namespace PTMStoichiometry20210414a
         }
 
         //function to calc Correlation in each group - returns min correlation
-        private double GroupCorrelation(List<Intensity> Peptide1, List<Intensity> Peptide2, List<string> groups)
+        private double GroupCorrelation(List<Intensity> Peptide1, List<Intensity> Peptide2, List<string> groups, int reqNumBaselineMeasurements)
         {
             List<Intensity> Peptide1Vals = Peptide1.Where(p => p.IntensityVal > 0).ToList();
             List<Intensity> Peptide2Vals = Peptide2.Where(p => p.IntensityVal > 0).ToList();
@@ -119,7 +120,7 @@ namespace PTMStoichiometry20210414a
             foreach (string group in groups)
             {
                 //require at least three measurements in each group
-                if (Peptide1Vals.Where(p => p.GroupID == group).Count() < 3 || Peptide2Vals.Where(p => p.GroupID == group).Count() < 3) 
+                if (Peptide1Vals.Where(p => p.GroupID == group).Count() < reqNumBaselineMeasurements || Peptide2Vals.Where(p => p.GroupID == group).Count() < reqNumBaselineMeasurements) 
                 {
                     return -3;
                 }
@@ -128,8 +129,12 @@ namespace PTMStoichiometry20210414a
             double correlation = 3; 
             foreach (string group in groups)
             {
-                IEnumerable<double> Pep1group = Peptide1Vals.Where(p => p.GroupID == group).Select(p => p.IntensityVal);
-                IEnumerable<double> Pep2group =  Peptide2Vals.Where(p => p.GroupID == group).Select(p => p.IntensityVal);
+                IEnumerable<double> Pep1group = Peptide1.Where(p => p.GroupID == group).Select(p => p.IntensityVal);
+                IEnumerable<double> Pep2group = Peptide2.Where(p => p.GroupID == group).Select(p => p.IntensityVal);
+                if (Pep1group.Count() != Pep2group.Count())
+                {
+                    throw new Exception("Samples must be paired for baseline method- if not all groups are equal this will cause an issue with baseline method, select non-baseline method");
+                }
                 double temp = Correlation.Pearson(Pep1group, Pep2group);
                 if (temp < correlation)
                 {
@@ -226,6 +231,7 @@ namespace PTMStoichiometry20210414a
                     }
                 }
             }
+            groups.Add(groupToCompare);
             return comparePeps;
         }
 
@@ -243,6 +249,8 @@ namespace PTMStoichiometry20210414a
                         for (int g2 = (g1+1); g2 < groups.Count(); ++g2)
                         {
                             PairwiseCompairison temp = new PairwiseCompairison(PepsInProt[p1], PepsInProt[p2], groups[g1], groups[g2], minNumStoichiometries);
+                            Console.WriteLine(PepsInProt[p1].Sequence + PepsInProt[p2].Sequence + groups[g1] + groups[g2]);
+                            Console.WriteLine(groups.Count());
                             if (temp.PeptideStoichiometriesGroupOne.Count() >= minNumStoichiometries && temp.PeptideStoichiometriesGroupTwo.Count() >= minNumStoichiometries)
                             {
                                 comparePeps.Add(temp);
@@ -258,6 +266,7 @@ namespace PTMStoichiometry20210414a
         private List<PairwiseCompairison> calcComparison(List<Peptide> PepsInProt, List<string> groups, int minNumStoichiometries, string groupToCompare)
         {
             List<PairwiseCompairison> comparePeps = new List<PairwiseCompairison>();
+            
             groups.Remove(groupToCompare);
             //loop over all peptide, peptide, group, groupToCompare permutations
             for (int p1 = 0; p1 < this.PeptidesInProtein.Count(); ++p1)
@@ -274,6 +283,7 @@ namespace PTMStoichiometry20210414a
                     }
                 }
             }
+            groups.Add(groupToCompare);
             return comparePeps;
         }
 

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PTMStoichiometry20210414a
+namespace PTMStoichiometry
 {
     //Works with intensities from FlashLFQ output from MM
     public class Intensity

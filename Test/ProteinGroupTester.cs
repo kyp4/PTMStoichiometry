@@ -1,10 +1,10 @@
 ﻿using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using PTMStoichiometry20210414a;
+using PTMStoichiometry;
 using System.Linq;
 
-namespace PTMStoichiometryTester20200415a
+namespace Test
 {
     [TestFixture]
     class ProteinGroupTester
@@ -359,9 +359,9 @@ namespace PTMStoichiometryTester20200415a
         {
             Extensions.IncludeSharedPeptides(peptides, true); //set isUnique
             ProteinGroup ProteinGroupAllGroupsTest = new ProteinGroup(proteinAccession, peptides, groups, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides, useBaselinePeptides, 
-                reqNumBaselinePeptides, correlationCutOff, compareUnmod, minNumStoichiometries);
+                reqNumBaselinePeptides, 3, correlationCutOff, compareUnmod, minNumStoichiometries);
             ProteinGroup ProteinGroupSetGroupTest = new ProteinGroup(proteinAccession, peptides, groups, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides, useBaselinePeptides,
-                reqNumBaselinePeptides, correlationCutOff, compareUnmod, minNumStoichiometries, groupToCompare);
+                reqNumBaselinePeptides, 3, correlationCutOff, compareUnmod, minNumStoichiometries, groupToCompare);
 
             Assert.AreEqual(baselinePeptideSeq.Count(), ProteinGroupAllGroupsTest.BaselinePeptides.Count());
             Assert.AreEqual(baselinePeptideSeq.Count(), ProteinGroupSetGroupTest.BaselinePeptides.Count());
@@ -405,12 +405,172 @@ namespace PTMStoichiometryTester20200415a
                 new List<string> { "group1", "group2" },
                 3, 1, 4, 0.5, false, 3, "group1",
                 false, false
+            },
+            new object[] {
+                "Prot",
+                new List<Peptide>
+                {
+                    new Peptide("Seq1", "Seq1", "Prot", "Gene", "Organism",
+                        new List<Intensity>() {
+                            new Intensity("file", "group1", 10, DetectionMS.MS),
+                            new Intensity("file", "group1", 20, DetectionMS.MS),
+                            new Intensity("file", "group1", 15, DetectionMS.MS),
+                            new Intensity("file", "group1", 30, DetectionMS.MS),
+
+                            new Intensity("file", "group2", 10, DetectionMS.MS),
+                            new Intensity("file", "group2", 20, DetectionMS.MS),
+                            new Intensity("file", "group2", 15, DetectionMS.MS),
+                            new Intensity("file", "group2", 30, DetectionMS.MS)
+                        },
+                        new List<string>() { "group1", "group2" }, 1),
+                   new Peptide("Seq2", "Seq2", "Prot", "Gene", "Organism",
+                        new List<Intensity>() {
+                            new Intensity("file", "group1", 20, DetectionMS.MS),
+                            new Intensity("file", "group1", 40, DetectionMS.MS),
+                            new Intensity("file", "group1", 30, DetectionMS.MS),
+                            new Intensity("file", "group1", 60, DetectionMS.MS),
+
+                            new Intensity("file", "group2", 20, DetectionMS.MS),
+                            new Intensity("file", "group2", 40, DetectionMS.MS),
+                            new Intensity("file", "group2", 30, DetectionMS.MS),
+                            new Intensity("file", "group2", 60, DetectionMS.MS)
+                        },
+                        new List<string>() { "group1", "group2" }, 1),
+                   new Peptide("Seq3", "Seq3", "Prot", "Gene", "Organism",
+                        new List<Intensity>() {
+                            new Intensity("file", "group1", 100, DetectionMS.MS),
+                            new Intensity("file", "group1", 20, DetectionMS.MS),
+                            new Intensity("file", "group1", 50, DetectionMS.MS),
+                            new Intensity("file", "group1", 600, DetectionMS.MS),
+
+                            new Intensity("file", "group2", 80, DetectionMS.MS),
+                            new Intensity("file", "group2", 600, DetectionMS.MS),
+                            new Intensity("file", "group2", 40, DetectionMS.MS),
+                            new Intensity("file", "group2", 3, DetectionMS.MS)
+                        },
+                        new List<string>() { "group1", "group2" }, 1),
+                   new Peptide("Seq4", "Seq4", "Prot", "Gene", "Organism",
+                        new List<Intensity>() {
+                            new Intensity("file", "group1", 20, DetectionMS.MS),
+                            new Intensity("file", "group1", 40, DetectionMS.MS),
+                            new Intensity("file", "group1", 30, DetectionMS.MS),
+                            new Intensity("file", "group1", 60, DetectionMS.MS),
+
+                            new Intensity("file", "group2", 20, DetectionMS.MS),
+                            new Intensity("file", "group2", 40, DetectionMS.MS),
+                            new Intensity("file", "group2", 30, DetectionMS.MS),
+                            new Intensity("file", "group2", 60, DetectionMS.MS)
+                        },
+                        new List<string>() { "group1", "group2" }, 1),
+                   new Peptide("Seq4", "Seq4", "Prot", "Gene", "Organism",
+                        new List<Intensity>() {
+                            new Intensity("file", "group1", 20, DetectionMS.MS),
+                            new Intensity("file", "group1", 40, DetectionMS.MS),
+                            new Intensity("file", "group1", 30, DetectionMS.MS),
+                            new Intensity("file", "group1", 60, DetectionMS.MS),
+
+                            new Intensity("file", "group2", 20, DetectionMS.MS),
+                            new Intensity("file", "group2", 40, DetectionMS.MS),
+                            new Intensity("file", "group2", 30, DetectionMS.MS),
+                            new Intensity("file", "group2", 60, DetectionMS.MS)
+                        },
+                        new List<string>() { "group1", "group2" }, 1),
+                   new Peptide("Seq5a", "Seq5", "Prot", "Gene", "Organism",
+                        new List<Intensity>() {
+                            new Intensity("file", "group1", 20, DetectionMS.MS),
+                            new Intensity("file", "group1", 40, DetectionMS.MS),
+                            new Intensity("file", "group1", 30, DetectionMS.MS),
+                            new Intensity("file", "group1", 60, DetectionMS.MS),
+
+                            new Intensity("file", "group2", 20, DetectionMS.MS),
+                            new Intensity("file", "group2", 40, DetectionMS.MS),
+                            new Intensity("file", "group2", 30, DetectionMS.MS),
+                            new Intensity("file", "group2", 60, DetectionMS.MS)
+                        },
+                        new List<string>() { "group1", "group2" }, 1)
+                },
+                new List<string> { "group1", "group2" },
+                3, 1, 4, 0.5, false, 3, "group1",
+                false, true
+            },
+            new object[] {
+                "Prot",
+                new List<Peptide>
+                {
+                    new Peptide("Seq1", "Seq1", "Prot", "Gene", "Organism",
+                        new List<Intensity>() {
+                            new Intensity("file", "group1", 10, DetectionMS.MS),
+                            new Intensity("file", "group1", 20, DetectionMS.MS),
+                            new Intensity("file", "group1", 15, DetectionMS.MS),
+                            new Intensity("file", "group1", 30, DetectionMS.MS),
+
+                            new Intensity("file", "group2", 10, DetectionMS.MS),
+                            new Intensity("file", "group2", 20, DetectionMS.MS),
+                            new Intensity("file", "group2", 15, DetectionMS.MS),
+                            new Intensity("file", "group2", 30, DetectionMS.MS)
+                        },
+                        new List<string>() { "group1", "group2" }, 1),
+                   new Peptide("Seq2", "Seq2", "Prot", "Gene", "Organism",
+                        new List<Intensity>() {
+                            new Intensity("file", "group1", 20, DetectionMS.MS),
+                            new Intensity("file", "group1", 40, DetectionMS.MS),
+                            new Intensity("file", "group1", 30, DetectionMS.MS),
+                            new Intensity("file", "group1", 60, DetectionMS.MS),
+
+                            new Intensity("file", "group2", 20, DetectionMS.MS),
+                            new Intensity("file", "group2", 40, DetectionMS.MS),
+                            new Intensity("file", "group2", 30, DetectionMS.MS),
+                            new Intensity("file", "group2", 60, DetectionMS.MS)
+                        },
+                        new List<string>() { "group1", "group2" }, 1),
+                   new Peptide("Seq3", "Seq3", "Prot", "Gene", "Organism",
+                        new List<Intensity>() {
+                            new Intensity("file", "group1", 100, DetectionMS.MS),
+                            new Intensity("file", "group1", 20, DetectionMS.MS),
+                            new Intensity("file", "group1", 50, DetectionMS.MS),
+                            new Intensity("file", "group1", 600, DetectionMS.MS),
+
+                            new Intensity("file", "group2", 80, DetectionMS.MS),
+                            new Intensity("file", "group2", 600, DetectionMS.MS),
+                            new Intensity("file", "group2", 40, DetectionMS.MS),
+                            new Intensity("file", "group2", 3, DetectionMS.MS)
+                        },
+                        new List<string>() { "group1", "group2"}, 1),
+                   new Peptide("Seq4", "Seq4", "Prot", "Gene", "Organism",
+                        new List<Intensity>() {
+                            new Intensity("file", "group1", 150, DetectionMS.MS),
+                            new Intensity("file", "group1", 50, DetectionMS.MS),
+                            new Intensity("file", "group1", 75, DetectionMS.MS),
+                            new Intensity("file", "group1", 200, DetectionMS.MS),
+
+                            new Intensity("file", "group2", 90, DetectionMS.MS),
+                            new Intensity("file", "group2", 100, DetectionMS.MS),
+                            new Intensity("file", "group2", 50, DetectionMS.MS),
+                            new Intensity("file", "group2", 10, DetectionMS.MS)
+                        },
+                        new List<string>() { "group1", "group2"}, 1),
+                   new Peptide("Seq5a", "Seq5", "Prot", "Gene", "Organism",
+                        new List<Intensity>() {
+                            new Intensity("file", "group1", 160, DetectionMS.MS),
+                            new Intensity("file", "group1", 55, DetectionMS.MS),
+                            new Intensity("file", "group1", 80, DetectionMS.MS),
+                            new Intensity("file", "group1", 240, DetectionMS.MS),
+
+                            new Intensity("file", "group2", 110, DetectionMS.MS),
+                            new Intensity("file", "group2", 120, DetectionMS.MS),
+                            new Intensity("file", "group2", 75, DetectionMS.MS),
+                            new Intensity("file", "group2", 24, DetectionMS.MS)
+                        },
+                        new List<string>() { "group1", "group2"}, 1)
+
+                },
+                new List<string> { "group1", "group2" },
+                3, 1, 4, 0.5, false, 3, "group1",
+                false, true
             }
-           
-            
-            
-           
         };
+
+
 
         [Test]
         [TestCaseSource("_useProt")]
@@ -418,13 +578,13 @@ namespace PTMStoichiometryTester20200415a
             double correlationCutOff, Boolean compareUnmod, int minNumStoichiometries, string groupToCompare, bool useProtBaseline, bool useProtPeptidePeptide)
         {
             ProteinGroup ProteinGroupBaselineAllGroupTest = new ProteinGroup(proteinAccession, peptides, groups, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides, true,
-                reqNumUnmodPeptides, correlationCutOff, compareUnmod, minNumStoichiometries);
+                reqNumUnmodPeptides, 3, correlationCutOff, compareUnmod, minNumStoichiometries);
             ProteinGroup ProteinGroupBaselineSetGroupTest = new ProteinGroup(proteinAccession, peptides, groups, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides, true,
-                reqNumUnmodPeptides, correlationCutOff, compareUnmod, minNumStoichiometries, groupToCompare);
+                reqNumUnmodPeptides, 3, correlationCutOff, compareUnmod, minNumStoichiometries, groupToCompare);
             ProteinGroup ProteinGroupPeptidePeptideAllGroupTest = new ProteinGroup(proteinAccession, peptides, groups, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides, false,
-                reqNumUnmodPeptides, correlationCutOff, compareUnmod, minNumStoichiometries);
+                reqNumUnmodPeptides, 3, correlationCutOff, compareUnmod, minNumStoichiometries);
             ProteinGroup ProteinGroupPeptidePeptideSetGroupTest = new ProteinGroup(proteinAccession, peptides, groups, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides, false,
-                reqNumUnmodPeptides, correlationCutOff, compareUnmod, minNumStoichiometries, groupToCompare);
+                reqNumUnmodPeptides, 3, correlationCutOff, compareUnmod, minNumStoichiometries, groupToCompare);
 
             Assert.AreEqual(useProtBaseline, ProteinGroupBaselineAllGroupTest.useProt);
             Assert.AreEqual(useProtBaseline, ProteinGroupBaselineSetGroupTest.useProt);
@@ -432,5 +592,131 @@ namespace PTMStoichiometryTester20200415a
             Assert.AreEqual(useProtPeptidePeptide, ProteinGroupPeptidePeptideSetGroupTest.useProt);
         }
 
+        private static readonly object[] _calCompairison =
+{
+            new object[] {
+                "Prot",
+                new List<Peptide>
+                {
+                    new Peptide("Seq1a", "Seq1", "Prot", "Gene", "Organism",
+                        new List<Intensity>() {
+                            new Intensity("file", "group1", 10, DetectionMS.MS),
+                            new Intensity("file", "group1", 20, DetectionMS.MS),
+                            new Intensity("file", "group1", 15, DetectionMS.MS),
+                            new Intensity("file", "group1", 30, DetectionMS.MS),
+
+                            new Intensity("file", "group2", 10, DetectionMS.MS),
+                            new Intensity("file", "group2", 20, DetectionMS.MS),
+                            new Intensity("file", "group2", 15, DetectionMS.MS),
+                            new Intensity("file", "group2", 30, DetectionMS.MS),
+
+                            new Intensity("file", "group3", 10, DetectionMS.MS),
+                            new Intensity("file", "group3", 20, DetectionMS.MS),
+                            new Intensity("file", "group3", 15, DetectionMS.MS),
+                            new Intensity("file", "group3", 30, DetectionMS.MS)
+                        },
+                        new List<string>() { "group1", "group2", "group3" }, 1),
+                   new Peptide("Seq2b", "Seq2", "Prot", "Gene", "Organism",
+                        new List<Intensity>() {
+                            new Intensity("file", "group1", 20, DetectionMS.MS),
+                            new Intensity("file", "group1", 40, DetectionMS.MS),
+                            new Intensity("file", "group1", 30, DetectionMS.MS),
+                            new Intensity("file", "group1", 60, DetectionMS.MS),
+
+                            new Intensity("file", "group2", 20, DetectionMS.MS),
+                            new Intensity("file", "group2", 40, DetectionMS.MS),
+                            new Intensity("file", "group2", 30, DetectionMS.MS),
+                            new Intensity("file", "group2", 60, DetectionMS.MS),
+
+                            new Intensity("file", "group3", 20, DetectionMS.MS),
+                            new Intensity("file", "group3", 40, DetectionMS.MS),
+                            new Intensity("file", "group3", 30, DetectionMS.MS),
+                            new Intensity("file", "group3", 60, DetectionMS.MS)
+                        },
+                        new List<string>() { "group1", "group2", "group3" }, 1),
+                   new Peptide("Seq3", "Seq3", "Prot", "Gene", "Organism",
+                        new List<Intensity>() {
+                            new Intensity("file", "group1", 100, DetectionMS.MS),
+                            new Intensity("file", "group1", 20, DetectionMS.MS),
+                            new Intensity("file", "group1", 50, DetectionMS.MS),
+                            new Intensity("file", "group1", 600, DetectionMS.MS),
+
+                            new Intensity("file", "group2", 80, DetectionMS.MS),
+                            new Intensity("file", "group2", 600, DetectionMS.MS),
+                            new Intensity("file", "group2", 40, DetectionMS.MS),
+                            new Intensity("file", "group2", 3, DetectionMS.MS),
+
+                            new Intensity("file", "group3", 80, DetectionMS.MS),
+                            new Intensity("file", "group3", 600, DetectionMS.MS),
+                            new Intensity("file", "group3", 40, DetectionMS.MS),
+                            new Intensity("file", "group3", 3, DetectionMS.MS)
+                        },
+                        new List<string>() { "group1", "group2", "group3" }, 1),
+                   new Peptide("Seq4", "Seq4", "Prot", "Gene", "Organism",
+                        new List<Intensity>() {
+                            new Intensity("file", "group1", 150, DetectionMS.MS),
+                            new Intensity("file", "group1", 50, DetectionMS.MS),
+                            new Intensity("file", "group1", 75, DetectionMS.MS),
+                            new Intensity("file", "group1", 200, DetectionMS.MS),
+
+                            new Intensity("file", "group2", 90, DetectionMS.MS),
+                            new Intensity("file", "group2", 100, DetectionMS.MS),
+                            new Intensity("file", "group2", 50, DetectionMS.MS),
+                            new Intensity("file", "group2", 10, DetectionMS.MS),
+
+                            new Intensity("file", "group3", 90, DetectionMS.MS),
+                            new Intensity("file", "group3", 100, DetectionMS.MS),
+                            new Intensity("file", "group3", 50, DetectionMS.MS),
+                            new Intensity("file", "group3", 10, DetectionMS.MS)
+                        },
+                        new List<string>() { "group1", "group2", "group3" }, 1),
+                   new Peptide("Seq5", "Seq5", "Prot", "Gene", "Organism",
+                        new List<Intensity>() {
+                            new Intensity("file", "group1", 160, DetectionMS.MS),
+                            new Intensity("file", "group1", 55, DetectionMS.MS),
+                            new Intensity("file", "group1", 80, DetectionMS.MS),
+                            new Intensity("file", "group1", 240, DetectionMS.MS),
+
+                            new Intensity("file", "group2", 110, DetectionMS.MS),
+                            new Intensity("file", "group2", 120, DetectionMS.MS),
+                            new Intensity("file", "group2", 75, DetectionMS.MS),
+                            new Intensity("file", "group2", 24, DetectionMS.MS),
+
+                            new Intensity("file", "group3", 110, DetectionMS.MS),
+                            new Intensity("file", "group3", 120, DetectionMS.MS),
+                            new Intensity("file", "group3", 75, DetectionMS.MS),
+                            new Intensity("file", "group3", 24, DetectionMS.MS)
+                        },
+                        new List<string>() { "group1", "group2", "group3" }, 1)
+
+                },
+                new List<string> { "group1", "group2", "group3" }, "group1",
+                6, 4, 30, 20
+            }
+        };
+
+        //calcComparison - since PairwiseCompairison is tested elsewhere, just want to check is returning correct number of PairwiseCompairisons depending on inputs 
+        [Test]
+        [TestCaseSource("_calCompairison")]
+        public void ProteinGroup_calcComparison_Pass(string proteinAccession, List<Peptide> peptides, List<string> groups, string groupToCompare, 
+            int numPairwiseCompairisonsBaselineAllGroup, int numPairwiseCompairisonsBaselineSetGroup, int numPairwiseCompairisonsPeptidePeptideAllGroup, 
+            int numPairwiseCompairisonsPeptidePeptideSetGroup)
+        {
+
+            Extensions.IncludeSharedPeptides(peptides, true); //set isUnique
+            ProteinGroup ProteinGroupBaselineAllGroupTest = new ProteinGroup(proteinAccession, peptides, groups, 3, 1, 4, true,
+                3, 3, 0.5, false, 3);
+            ProteinGroup ProteinGroupBaselineSetGroupTest = new ProteinGroup(proteinAccession, peptides, groups, 3, 1, 4, true,
+                3, 3, 0.5, false, 3, groupToCompare);
+            ProteinGroup ProteinGroupPeptidePeptideAllGroupTest = new ProteinGroup(proteinAccession, peptides, groups, 1, 1, 4, false,
+                0, 3, 0.5, false, 3);
+            ProteinGroup ProteinGroupPeptidePeptideSetGroupTest = new ProteinGroup(proteinAccession, peptides, groups, 1, 1, 2, false,
+                0, 3, 0.5, false, 3, groupToCompare);
+
+            Assert.AreEqual(numPairwiseCompairisonsBaselineAllGroup, ProteinGroupBaselineAllGroupTest.ProteinPairwiseComparisons.Count());
+            Assert.AreEqual(numPairwiseCompairisonsBaselineSetGroup, ProteinGroupBaselineSetGroupTest.ProteinPairwiseComparisons.Count());
+            Assert.AreEqual(numPairwiseCompairisonsPeptidePeptideAllGroup, ProteinGroupPeptidePeptideAllGroupTest.ProteinPairwiseComparisons.Count());
+            Assert.AreEqual(numPairwiseCompairisonsPeptidePeptideSetGroup, ProteinGroupPeptidePeptideSetGroupTest.ProteinPairwiseComparisons.Count());
+        }
     }
 }

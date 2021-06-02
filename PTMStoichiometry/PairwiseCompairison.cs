@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using MathNet.Numerics.Statistics;
 using Meta.Numerics.Statistics;
 
-namespace PTMStoichiometry20210414a
+namespace PTMStoichiometry
 {
     //class for performing a pairwise compairson of peptide data between two groups
     public class PairwiseCompairison
@@ -114,10 +114,10 @@ namespace PTMStoichiometry20210414a
             {
                 Intensity i2 = Pep2Intensity.Where(p => p.FileName == i1.FileName).ToList()[0];
                 Stoichiometry calcStoich = new Stoichiometry(i1, i2);
-                //if (calcStoich.usefulStoichiometry)
-                //{
+                if (i1.IntensityVal > 0 || i2.IntensityVal > 0)
+                {
                     stoich.Add(calcStoich);
-                //}
+                }
             }
             return stoich;
         }

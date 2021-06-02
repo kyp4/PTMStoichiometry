@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace PTMStoichiometry20210414a
+namespace PTMStoichiometry
 {
     public class Program
     {
@@ -22,6 +22,9 @@ namespace PTMStoichiometry20210414a
             //reqNumModPeptides - min num of modified peptides that must be observed for a protein in order to consider it (default=1)
             //reqNumUnmodPeptides - min num of modified peptides that must be observed for a protein in order to consider it (default=3)
             //reqNumPepMeasurements - min num of peptide intensities that must be observed (non zero -> MS or MSMS detection)
+            //reqNumBaselineMeasurements - min num of intensities (non zero -> MS or MSMS detection) that must be observed for in a 
+                //baseline peptide (non zero -> MS or MSMS detection) - increasing this value will decrease the number of baseline peptides  
+                //that are not observed in samples and therefore the number of non numeric stoichiometry values found in baseline case
             //compareUnmod - if false (default) only compare modified peptides to baseline, not unmodified peptides
 
             //useRazorPeptides - if false (default) peptides in more than one protein are removed
@@ -29,20 +32,28 @@ namespace PTMStoichiometry20210414a
             //pvalueAdjust - if true (default) use Benjamini-Hochberg analysis to adjust all p-values, else report raw p-values
             //alpha - significance value
             //minNumStoichiometries - min num of stoichiometries req in both groups before run test
+            //groupPepsForPValCalc - choose to apply p-valuse correction within each protein (grouped) or across all proteins
+            //alpha - chosen significance (default=0.05)
 
             int reqNumUnmodPeptides = 1;
             int reqNumModPeptides = 3;
             int reqNumOfPepeptides = reqNumUnmodPeptides + reqNumModPeptides;
-            Boolean useBaselinePeptides = true;
+            Boolean useBaselinePeptides = false;
             int reqNumBaselinePeptides = reqNumUnmodPeptides;
-            double correlationCutOff = 0.25;
+            int reqNumBaselineMeasurements = 5; //allow one missing value
+            double correlationCutOff = 0.5;
             Boolean compareUnmod = false;
             int minNumStoichiometries = 3;
             int reqNumPepMeasurements = 3;
+            Boolean groupPepsForPValCalc = true;
+            double alpha = 0.05;
 
-            string filepathpeptides = @"C:\Users\KAP\BioinformaticsII\2021-04-07-15-31-12_full_analysis\2021-04-07-15-31-12\Task2-SearchTask\AllQuantifiedPeptides.tsv"; //replace with MM FlashLFQ output to run
+            string filepathpeptides = @"C:\Users\KAP\source\repos\PTMStoichiometryTester20200415a\TestData\AllQuantifiedPeptidesPosphoSmallTest.txt"; //replace with MM FlashLFQ output to run
             string filepathgroups = @"C:\Users\KAP\BioinformaticsII\groupsPhosphoStudy.txt"; //replace with tab separated groups file to run
-    
+
+            //string filepathpeptides = @"C:\Users\KAP\BioinformaticsII\2021-04-07-15-31-12_full_analysis\2021-04-07-15-31-12\Task2-SearchTask\AllQuantifiedPeptides.tsv"; //replace with MM FlashLFQ output to run
+            //string filepathgroups = @"C:\Users\KAP\BioinformaticsII\groupsPhosphoStudy.txt"; //replace with tab separated groups file to run
+
             Dictionary<string, string> groups = PeptideReader.GetGroups(filepathgroups);
             List<string> groupsList = PeptideReader.GetGroupList(filepathgroups);
             List<Peptide> testPeptide = PeptideReader.ReadTsv(filepathpeptides, filepathgroups, reqNumPepMeasurements);
@@ -55,13 +66,13 @@ namespace PTMStoichiometry20210414a
             for (int i = 0; i < proteins.Length; i++)
             {
                 testProt.Add(new ProteinGroup(proteins[i], testPeptide, groupsList, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides,
-                    useBaselinePeptides, reqNumBaselinePeptides, correlationCutOff, compareUnmod, minNumStoichiometries));
+                    useBaselinePeptides, reqNumBaselinePeptides, reqNumBaselineMeasurements, correlationCutOff, compareUnmod, minNumStoichiometries));
             }
             testProt = testProt.Where(p => p.ProteinPairwiseComparisons != null).ToList();
-            Extensions.CalcCorrectedPValue(testProt, false);
+            Extensions.CalcCorrectedPValue(testProt, groupPepsForPValCalc, alpha);
             List<ProteinGroup> ProteinsToUse = testProt.Where(p => p.useProt).ToList(); 
             //store protein output in XML file
-            string outFile = @"C:\Users\KAP\BioinformaticsII\PTMStoichiometryFullPhosphoData6.xml"; //replace with desired output file
+            string outFile = @"C:\Users\KAP\BioinformaticsII\PTMStoichiometrySmallPhosphoData-pvals-grouped.xml"; //replace with desired output file
             XmlDocument proteinOutput = new XmlDocument();
             proteinOutput.LoadXml("<PTMStoichiometry>  </PTMStoichiometry>");
             foreach (ProteinGroup prot in ProteinsToUse) //make each protein a XML element

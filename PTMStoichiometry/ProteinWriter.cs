@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace PTMStoichiometry20210414a
+namespace PTMStoichiometry
 {
-    //class to write protein output to XML file
+    //class to write protein output to XML file TODO: need dif writer for peptide and baseline cases
     public class ProteinWriter
     {
         //code to add protein node to Xml file: adapted from https://docs.microsoft.com/en-us/dotnet/api/system.xml.xmldocument?view=net-5.0
@@ -26,9 +26,9 @@ namespace PTMStoichiometry20210414a
             attribute.Value = prot.NumPeptidesInProtein.ToString();
             protNode.Attributes.Append(attribute);
 
-            attribute = doc.CreateAttribute("BaselinePeptides");
-            attribute.Value = String.Join(";", prot.BaselinePeptides.Select(p => p.Sequence));
-            protNode.Attributes.Append(attribute);
+            //attribute = doc.CreateAttribute("BaselinePeptides");
+            //attribute.Value = String.Join(";", prot.BaselinePeptides.Select(p => p.Sequence));
+            //protNode.Attributes.Append(attribute);
 
             //Create child node for each pairwise comparison on peptides 
             foreach (PairwiseCompairison comp in prot.ProteinPairwiseComparisons)

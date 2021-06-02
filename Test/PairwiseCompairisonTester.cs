@@ -1,10 +1,10 @@
 ﻿using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using PTMStoichiometry20210414a;
+using PTMStoichiometry;
 using System.Linq;
 
-namespace PTMStoichiometryTester20200415a
+namespace Test
 {
     [TestFixture]
     class PairwiseCompairisonTester
@@ -23,7 +23,7 @@ namespace PTMStoichiometryTester20200415a
                 new Intensity("file", "group2", 500, DetectionMS.MS)},
                 "group1", "group2",
                 3,
-                new List<double> { },
+                new List<double> { 0 },
                 new List<double> { 1 }
             },
             new object[] {
@@ -63,7 +63,7 @@ namespace PTMStoichiometryTester20200415a
                         new Intensity("file", "group2", 8907235.0893645, DetectionMS.MS),
                         new Intensity("file", "group2", 0, DetectionMS.NotDetected),
                         new Intensity("file", "group3", 8907235.0893645, DetectionMS.MS),
-                        new Intensity("file", "group3", 3409750.2309, DetectionMS.NotDetected)
+                        new Intensity("file", "group3", 3409750.2309, DetectionMS.MS)
                     },
                     new List<string>() { "group1", "group2" }, 1),
                 new List<Intensity> {
@@ -78,8 +78,8 @@ namespace PTMStoichiometryTester20200415a
                 new Intensity("file", "group3", 32587.4569384, DetectionMS.MS)},
                 "group1", "group2",
                 3,
-                new List<double> { (756019.37596012) / ((23974.23487 + 807934.23874 + 23974.23487)/3), (234667.023876) / ((23974.23487 + 807934.23874 + 23974.23487)/3) },
-                new List<double> { (38947.830453) / ((89754.37958 + 357698.893275 + 32587.4569384)/3), (8907235.0893645) / ((89754.37958 + 357698.893275 + 32587.4569384)/3) }
+                new List<double> { (756019.37596012) / 23974.23487, (234667.023876) / 23974.23487 },
+                new List<double> { (38947.830453) / 89754.37958, (8907235.0893645) / 89754.37958, 0 }
             }
         };
         [Test]
@@ -115,7 +115,7 @@ namespace PTMStoichiometryTester20200415a
                     new List<string>() { "group1", "group2" }, 1),
                 "group1", "group2",
                 3,
-                new List<double> { },
+                new List<double> { 0 },
                 new List<double> { 1 }
             },
             new object[] {
@@ -123,16 +123,16 @@ namespace PTMStoichiometryTester20200415a
                     new List<Intensity>() {
                         new Intensity("file", "group1", 100, DetectionMS.MS),
                         new Intensity("file", "group2", 10, DetectionMS.MS) },
-                    new List<string>() { "group1", "group2" }, 1),
+                    new List<string>() { "group1", "group2" }, 0),
                new Peptide("Seq1", "Seq1", "Prot", "Gene", "Organism",
                     new List<Intensity>() {
                         new Intensity("file", "group1", 1000, DetectionMS.MSMS),
                         new Intensity("file", "group2", 0, DetectionMS.NotDetected) },
-                    new List<string>() { "group1", "group2" }, 1),
+                    new List<string>() { "group1", "group2" }, 0),
                 "group1", "group2",
                 3,
                 new List<double> { 0.1 },
-                new List<double> { }
+                new List<double> { double.PositiveInfinity }
             },
             new object[] {
                 new Peptide("Seq1", "Seq1", "Prot", "Gene", "Organism",
@@ -209,7 +209,7 @@ namespace PTMStoichiometryTester20200415a
                     new List<string>() { "group1", "group2" }, 1),
                 "group1", "group2", 3,
                 new List<double> { 756019.37596012 / 83475.98537, 234667.023876 / 3597.9823571 },
-                new List<double> { 38947.830453 / 97435.938475, 8907235.0893645 / 89745.43956 }
+                new List<double> { 38947.830453 / 97435.938475, 8907235.0893645 / 89745.43956, 0, double.PositiveInfinity }
             }
         };
         [Test]
@@ -342,7 +342,7 @@ namespace PTMStoichiometryTester20200415a
                     new Intensity("file", "group2", 986563.64254, DetectionMS.MS),
                     new Intensity("file", "group2", 864857.63963, DetectionMS.MS)},
                     "group1", "group2", 3,
-                    59, 0.0004995, 0.163037939, 0.001629926, 0.013203507, 0.000999196, 0.953835614, 0.015965038
+                    59, 0.0004995, 1.658557295, 0.016605811, 0.13431704, 0.010179878, 9.703207906, 0.162652985
             }
 
         };
@@ -352,7 +352,7 @@ namespace PTMStoichiometryTester20200415a
             double mwStat, double mwPVal, double g1Med, double g2Med, double g1Min, double g2Min, double g1Max, double g2Max)
         {
             PairwiseCompairison PairwiseCompairisonTest = new PairwiseCompairison(pep, baseline, g1, g2, minNumStoichiometries);
-            Assert.That(mwStat, Is.EqualTo(PairwiseCompairisonTest.MWStat).Within(0.01));
+            Assert.That(mwStat, Is.EqualTo(PairwiseCompairisonTest.MWStat).Within(0.001));
             Assert.That(mwPVal, Is.EqualTo(PairwiseCompairisonTest.MWPVal).Within(0.01));
             Assert.That(g1Med, Is.EqualTo(PairwiseCompairisonTest.PeptideStoichiometriesGroupOneMedian).Within(0.001));
             Assert.That(g2Med, Is.EqualTo(PairwiseCompairisonTest.PeptideStoichiometriesGroupTwoMedian).Within(0.001));

@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace PTMStoichiometry20210414a
+namespace PTMStoichiometry
 {
     //this class calculates the stoichmetry of a peptide in a group: pep/baseline
     public class Stoichiometry
     {
-        public double StoichiometryVal { get;  } //intensity of pep/baseline or pep1/pep2 ;
+        public double StoichiometryVal { get; } //intensity of pep/baseline or pep1/pep2 ;
         public Boolean usefulStoichiometry { get; } //true if pep Intensity > 0, false otherwise
         public Stoichiometry(Intensity Pep, double baseline)
         { 

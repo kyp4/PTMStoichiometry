@@ -1,10 +1,10 @@
 ﻿using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using PTMStoichiometry20210414a;
+using PTMStoichiometry;
 using System.Linq;
 
-namespace PTMStoichiometryTester20200415a
+namespace Test
 {
     [TestFixture]
     class PeptideTester
@@ -134,7 +134,5 @@ namespace PTMStoichiometryTester20200415a
             }
             Assert.AreEqual(isUnique, peps.Select(peps => peps.IsUnique));
         }
-
-        
     }
 }
