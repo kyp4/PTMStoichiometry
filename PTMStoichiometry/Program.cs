@@ -40,29 +40,26 @@ namespace PTMStoichiometry
             int reqNumOfPepeptides = reqNumUnmodPeptides + reqNumModPeptides;
             bool useBaselinePeptides = true;
             int reqNumBaselinePeptides = reqNumUnmodPeptides;
-            int reqNumBaselineMeasurements = 3; //allow one missing value
+            int reqNumBaselineMeasurements = 5; //allow one missing value
             double correlationCutOff = 0.5;
             bool compareUnmod = false;
             int minNumStoichiometries = 3;
             int reqNumPepMeasurements = 3;
             bool groupPepsForPValCalc = true;
             double alpha = 0.05;
-            string groupToCompare = null;
+            string groupToCompare = "Phospho Control";
+            string dataType = "FlashLFQ";
 
-            string filepathpeptides = @"D:\PTMStoichiometry\TestData\EcoliSpikeIn\2021-06-03-11-06-06\Task3-SearchTask\AllQuantifiedPeptidesEvenGroups.txt";
-            string filepathgroups = @"D:\PTMStoichiometry\TestData\EcoliSpikeIn\2021-06-03-11-06-06\Task3-SearchTask\EcoliSpikeInEvenGroups.txt";
-            string directory = @"D:\PTMStoichiometry\TestData\EcoliSpikeIn\2021-06-03-11-06-06\Task3-SearchTask\";
-            string stoichiometryfileout = "20210607a_AllQuantifiedPeptidesEvenGroupsBaselineGrouped";
-            string paramsfile = "20210607a_AllQuantifiedPeptidesEvenGroupsBaselineGrouped_params";
-            //replace with tab separated groups file to run
-
-            //string filepathpeptides = @"C:\Users\KAP\BioinformaticsII\2021-04-07-15-31-12_full_analysis\2021-04-07-15-31-12\Task2-SearchTask\AllQuantifiedPeptides.tsv"; //replace with MM FlashLFQ output to run
-            //string filepathgroups = @"C:\Users\KAP\BioinformaticsII\groupsPhosphoStudy.txt"; //replace with tab separated groups file to run
-
+            string filepathpeptides = @"D:\PTMStoichiometry\TestData\MSV000086126\2021-06-03-16-11-24\Task3-SearchTask\AllQuantifiedPeptides.tsv";
+            string filepathgroups = @"D:\PTMStoichiometry\TestData\MSV000086126\2021-06-03-16-11-24\Task3-SearchTask\MSV000086126Groups.txt";
+            string directory = @"D:\PTMStoichiometry\TestData\MSV000086126\2021-06-03-16-11-24\Task3-SearchTask";
+            string stoichiometryfileout = "20210607g_MSV000086126";
+            string paramsfile = stoichiometryfileout + "_params";
+            
             Dictionary<string, string> groups = PeptideReader.GetGroups(filepathgroups);
             List<string> groupsList = PeptideReader.GetGroupList(filepathgroups);
-            List<Peptide> testPeptide = PeptideReader.ReadTsv(filepathpeptides, filepathgroups, reqNumPepMeasurements);
-            testPeptide = Extensions.IncludeSharedPeptides(testPeptide, false);
+            List<Peptide> testPeptide = PeptideReader.ReadTsv(filepathpeptides, filepathgroups, reqNumPepMeasurements, dataType);
+            testPeptide = Extensions.IncludeSharedPeptides(testPeptide, false); 
 
 
             //group peptides by protein
@@ -71,25 +68,17 @@ namespace PTMStoichiometry
             for (int i = 0; i < proteins.Length; i++)
             {
                 testProt.Add(new ProteinGroup(proteins[i], testPeptide, groupsList, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides,
-                    useBaselinePeptides, reqNumBaselinePeptides, reqNumBaselineMeasurements, correlationCutOff, compareUnmod, minNumStoichiometries));
+                    useBaselinePeptides, reqNumBaselinePeptides, reqNumBaselineMeasurements, correlationCutOff, compareUnmod, minNumStoichiometries, groupToCompare));
             }
-            testProt = testProt.Where(p => p.ProteinPairwiseComparisons != null).ToList();
+            testProt = testProt.Where(p => p.ProteinPairwiseComparisons != null).ToList(); //hmmm
             Extensions.CalcCorrectedPValue(testProt, groupPepsForPValCalc, alpha);
             List<ProteinGroup> ProteinsToUse = testProt.Where(p => p.useProt).ToList();
-            //store protein output in XML file
-            //string outFile = @"D:\PTMStoichiometry\TestData\EcoliSpikeIn\2021-06-03-11-06-06\Task3-SearchTask\20210607a_AllQuantifiedPeptidesEvenGroupsBaselineGrouped.xml"; //replace with desired output file
+            
             WriteFile.ParamsWriter(paramsfile, filepathpeptides, filepathgroups, directory, stoichiometryfileout, reqNumUnmodPeptides, reqNumModPeptides,
                 reqNumOfPepeptides, useBaselinePeptides, reqNumBaselinePeptides, reqNumBaselineMeasurements, correlationCutOff, compareUnmod,
                 minNumStoichiometries, reqNumPepMeasurements, groupPepsForPValCalc, alpha, groupToCompare);
             WriteFile.StoichiometryDataWriter(ProteinsToUse, useBaselinePeptides, minNumStoichiometries, directory, stoichiometryfileout);
-            //XmlDocument proteinOutput = new XmlDocument();
-            //proteinOutput.LoadXml("<PTMStoichiometry>  </PTMStoichiometry>");
-            //foreach (ProteinGroup prot in ProteinsToUse) //make each protein a XML element
-            //{
-            //    proteinOutput.DocumentElement.AppendChild(ProteinWriter.AddProtein(prot, proteinOutput));
-            //}
 
-            //proteinOutput.Save(outFile); 
         }
     }
 }

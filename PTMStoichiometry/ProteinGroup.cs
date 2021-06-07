@@ -120,7 +120,8 @@ namespace PTMStoichiometry
             foreach (string group in groups)
             {
                 //require at least three measurements in each group
-                if (Peptide1Vals.Where(p => p.GroupID == group).Count() < reqNumBaselineMeasurements || Peptide2Vals.Where(p => p.GroupID == group).Count() < reqNumBaselineMeasurements) 
+                if (Peptide1Vals.Where(p => p.GroupID == group).Count() < reqNumBaselineMeasurements || 
+                    Peptide2Vals.Where(p => p.GroupID == group).Count() < reqNumBaselineMeasurements) 
                 {
                     return -3;
                 }
@@ -249,9 +250,9 @@ namespace PTMStoichiometry
                         for (int g2 = (g1+1); g2 < groups.Count(); ++g2)
                         {
                             PairwiseCompairison temp = new PairwiseCompairison(PepsInProt[p1], PepsInProt[p2], groups[g1], groups[g2], minNumStoichiometries);
-                            Console.WriteLine(PepsInProt[p1].Sequence + PepsInProt[p2].Sequence + groups[g1] + groups[g2]);
-                            Console.WriteLine(groups.Count());
-                            if (temp.PeptideStoichiometriesGroupOne.Count() >= minNumStoichiometries && temp.PeptideStoichiometriesGroupTwo.Count() >= minNumStoichiometries)
+                            
+                            if (temp.PeptideStoichiometriesGroupOne.Count() >= minNumStoichiometries && 
+                                temp.PeptideStoichiometriesGroupTwo.Count() >= minNumStoichiometries)
                             {
                                 comparePeps.Add(temp);
                             }

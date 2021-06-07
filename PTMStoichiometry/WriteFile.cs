@@ -18,7 +18,7 @@ namespace PTMStoichiometry
             {
                 if (useBaselinePeptides)
                 {
-                    output.WriteLine("Peptide\tBaseline\tGroup1\tGroup2\tProtein\tTotalNumPeptidesProt\tMWStat\tMWPVal\tBHPVal\tStoichiometriesGroup1\tStoichiometriesGroup2");
+                    output.WriteLine("Peptide\tModifications\tBaseline\tGroup1\tGroup2\tProtein\tTotalNumPeptidesProt\tMWStat\tMWPVal\tBHPVal\tStoichiometriesGroup1\tStoichiometriesGroup2");
                     foreach (ProteinGroup prot in proteinGroups)
                     {
                         foreach (PairwiseCompairison pc in prot.ProteinPairwiseComparisons)
@@ -28,6 +28,7 @@ namespace PTMStoichiometry
                             {
                                 output.WriteLine(
                                     pc.PeptideOne.Sequence
+                                    + "\t" + String.Join(";", pc.PeptideOne.Modifications)
                                     + "\t" + String.Join(";", prot.BaselinePeptides.Select(p => p.Sequence))
                                     + "\t" + pc.GroupOne
                                     + "\t" + pc.GroupTwo
@@ -45,7 +46,7 @@ namespace PTMStoichiometry
                 }
                 else
                 {
-                    output.WriteLine("Peptide1\tPeptide2\tGroup1\tGroup2\tProtein\tTotalNumPeptidesProt\tMWStat\tMWPVal\tBHPVal\tStoichiometriesGroup1\tStoichiometriesGroup2");
+                    output.WriteLine("Peptide1\tModifications1\tPeptide2\tModifications2\tGroup1\tGroup2\tProtein\tTotalNumPeptidesProt\tMWStat\tMWPVal\tBHPVal\tStoichiometriesGroup1\tStoichiometriesGroup2");
                     foreach (ProteinGroup prot in proteinGroups)
                     {
                         foreach (PairwiseCompairison pc in prot.ProteinPairwiseComparisons)
@@ -55,7 +56,9 @@ namespace PTMStoichiometry
                             {
                                 output.WriteLine(
                                     pc.PeptideOne.Sequence
+                                    + "\t" + String.Join(";", pc.PeptideOne.Modifications)
                                     + "\t" + pc.PeptideTwo.Sequence
+                                    + "\t" + String.Join(";", pc.PeptideTwo.Modifications)
                                     + "\t" + pc.GroupOne
                                     + "\t" + pc.GroupTwo
                                     + "\t" + prot.ProteinName
