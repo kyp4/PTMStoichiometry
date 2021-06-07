@@ -56,10 +56,10 @@ namespace PTMStoichiometry
         {
             string[] headerEntries = v.Split('\t');
             int length = (headerEntries.Length - 5) / 2;
-            for (int i = 5; i < length + 5; i++)
-            {
-                headerEntries[i] = headerEntries[i].Replace("Intensity_", "");
-            }
+            //for (int i = 5; i < length + 5; i++)
+            //{
+                //headerEntries[i] = headerEntries[i].Replace("Intensity_", "");
+            //}
             return headerEntries.SubArray(5, length);
         }
     }

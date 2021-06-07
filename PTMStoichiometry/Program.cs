@@ -23,8 +23,8 @@ namespace PTMStoichiometry
             //reqNumUnmodPeptides - min num of modified peptides that must be observed for a protein in order to consider it (default=3)
             //reqNumPepMeasurements - min num of peptide intensities that must be observed (non zero -> MS or MSMS detection)
             //reqNumBaselineMeasurements - min num of intensities (non zero -> MS or MSMS detection) that must be observed for in a 
-                //baseline peptide (non zero -> MS or MSMS detection) - increasing this value will decrease the number of baseline peptides  
-                //that are not observed in samples and therefore the number of non numeric stoichiometry values found in baseline case
+            //baseline peptide (non zero -> MS or MSMS detection) - increasing this value will decrease the number of baseline peptides  
+            //that are not observed in samples and therefore the number of non numeric stoichiometry values found in baseline case
             //compareUnmod - if false (default) only compare modified peptides to baseline, not unmodified peptides
 
             //useRazorPeptides - if false (default) peptides in more than one protein are removed
@@ -36,20 +36,22 @@ namespace PTMStoichiometry
             //alpha - chosen significance (default=0.05)
 
             int reqNumUnmodPeptides = 1;
-            int reqNumModPeptides = 3;
+            int reqNumModPeptides = 1;
             int reqNumOfPepeptides = reqNumUnmodPeptides + reqNumModPeptides;
             Boolean useBaselinePeptides = false;
             int reqNumBaselinePeptides = reqNumUnmodPeptides;
-            int reqNumBaselineMeasurements = 5; //allow one missing value
+            int reqNumBaselineMeasurements = 3; //allow one missing value
             double correlationCutOff = 0.5;
             Boolean compareUnmod = false;
             int minNumStoichiometries = 3;
             int reqNumPepMeasurements = 3;
-            Boolean groupPepsForPValCalc = true;
+            Boolean groupPepsForPValCalc = false;
             double alpha = 0.05;
 
-            string filepathpeptides = @"C:\Users\KAP\source\repos\PTMStoichiometryTester20200415a\TestData\AllQuantifiedPeptidesPosphoSmallTest.txt"; //replace with MM FlashLFQ output to run
-            string filepathgroups = @"C:\Users\KAP\BioinformaticsII\groupsPhosphoStudy.txt"; //replace with tab separated groups file to run
+
+
+            string filepathpeptides = @"D:\PTMStoichiometry\TestData\EcoliSpikeIn\2021-06-03-11-06-06\Task3-SearchTask\AllQuantifiedPeptidesEvenGroups.txt";
+            string filepathgroups = @"D:\PTMStoichiometry\TestData\EcoliSpikeIn\2021-06-03-11-06-06\Task3-SearchTask\EcoliSpikeInEvenGroups.txt"; //replace with tab separated groups file to run
 
             //string filepathpeptides = @"C:\Users\KAP\BioinformaticsII\2021-04-07-15-31-12_full_analysis\2021-04-07-15-31-12\Task2-SearchTask\AllQuantifiedPeptides.tsv"; //replace with MM FlashLFQ output to run
             //string filepathgroups = @"C:\Users\KAP\BioinformaticsII\groupsPhosphoStudy.txt"; //replace with tab separated groups file to run
@@ -70,9 +72,9 @@ namespace PTMStoichiometry
             }
             testProt = testProt.Where(p => p.ProteinPairwiseComparisons != null).ToList();
             Extensions.CalcCorrectedPValue(testProt, groupPepsForPValCalc, alpha);
-            List<ProteinGroup> ProteinsToUse = testProt.Where(p => p.useProt).ToList(); 
+            List<ProteinGroup> ProteinsToUse = testProt.Where(p => p.useProt).ToList();
             //store protein output in XML file
-            string outFile = @"C:\Users\KAP\BioinformaticsII\PTMStoichiometrySmallPhosphoData-pvals-grouped.xml"; //replace with desired output file
+            string outFile = @"D:\PTMStoichiometry\TestData\EcoliSpikeIn\2021-06-03-11-06-06\Task3-SearchTask\20210604a_AllQuantifiedPeptidesEvenGroupsPeptidePeptideUngrouped.xml"; //replace with desired output file
             XmlDocument proteinOutput = new XmlDocument();
             proteinOutput.LoadXml("<PTMStoichiometry>  </PTMStoichiometry>");
             foreach (ProteinGroup prot in ProteinsToUse) //make each protein a XML element

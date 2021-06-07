@@ -89,10 +89,10 @@ namespace PTMStoichiometry
                     }
                 }
                
-                foreach (ProteinGroup prot in protein)
-                {
-                    BenjaminiHochberg(prot.ProteinPairwiseComparisons, alpha);
-                }
+                //foreach (ProteinGroup prot in protein)
+                //{
+                    BenjaminiHochberg(pairwiseComparisons, alpha);
+                //}
             }
         }
 
