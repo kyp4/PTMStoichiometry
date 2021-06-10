@@ -18,7 +18,7 @@ namespace PTMStoichiometry
 
         //remove shared peptides if parameter set to false, otherwise include shared peptides in calculations
         //sets the IsUnique parameter in Peptide
-        public static List<Peptide> IncludeSharedPeptides(List<Peptide> Peps, Boolean IncludeRazorPep)
+        public static List<Peptide> IncludeSharedPeptides(List<Peptide> Peps, bool IncludeRazorPep)
         {
 
             foreach (Peptide pep in Peps)
@@ -96,44 +96,7 @@ namespace PTMStoichiometry
             }
         }
 
-        /*
-        //two different methods of considering peptides for p-value correction: 
-        //either correction within each protein (grouped) or across all proteins
-        public static void CalcCorrectedPValue(List<ProteinGroup> protein, Boolean grouped = false)
-        {
-            if (grouped)
-            {
-                //apply correction to the pairwise compairisons in each protein individually 
-                foreach (ProteinGroup prot in protein) 
-                {
-                    List<double> pvals = new List<double>();
-                    foreach (PairwiseComparison comp in prot.ProteinPairwiseComparisons)
-                    {
-                        pvals.Add(comp.MWPVal);
-                    }
-                    double pval = BenjaminiHochberg(pvals);
-                    prot.setCorrectedMWPVal(pval);
-                }
-            }
-            //apply correction to all pairwise compairsons at once, regardless of what protein they belong to
-            else
-            {
-                List<double> pvals = new List<double>();
-                foreach (ProteinGroup prot in protein)
-                {
-                    foreach (PairwiseComparison comp in prot.ProteinPairwiseComparisons)
-                    {
-                        pvals.Add(comp.MWPVal);
-                    }
-                }
-                double pval = BenjaminiHochberg(pvals);
-                foreach (ProteinGroup prot in protein)
-                {
-                    prot.setCorrectedMWPVal(pval);
-                }
-            }
-        }
-        */
+        
 
     }
 }

@@ -11,17 +11,17 @@ namespace PTMStoichiometry
     //PeptideReader class written with Dr. Shortreed
     public class PeptideReader
     {
-        public static List<Peptide> ReadTsv(string peptidefilepath, string groupfilepath, int reqNumPepMeasurements)
+        public static List<Peptide> ReadTsv(string peptidefilepath, string groupfilepath, int reqNumPepMeasurements, string dataType)
         {
             List<Peptide> peptides = new List<Peptide>();
             string[] lines = File.ReadAllLines(peptidefilepath, Encoding.UTF8);
-            string[] files = GetFile(lines[0]);
+            //string[] files = GetFile(lines[0]);
             Dictionary<string, string> groups = GetGroups(groupfilepath);
             List<string> groupList = GetGroupList(groupfilepath);
 
             for (int i = 1; i < lines.Length; i++)
             {
-                peptides.Add(new Peptide(lines[i], files, groups, groupList, reqNumPepMeasurements));
+                peptides.Add(new Peptide(lines[i], groups, groupList, reqNumPepMeasurements, dataType));
             }
             return peptides;
         }
@@ -55,11 +55,12 @@ namespace PTMStoichiometry
         private static string[] GetFile(string v)
         {
             string[] headerEntries = v.Split('\t');
+    
             int length = (headerEntries.Length - 5) / 2;
-            //for (int i = 5; i < length + 5; i++)
-            //{
+                //for (int i = 5; i < length + 5; i++)
+                //{
                 //headerEntries[i] = headerEntries[i].Replace("Intensity_", "");
-            //}
+                //}
             return headerEntries.SubArray(5, length);
         }
     }
