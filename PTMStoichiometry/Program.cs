@@ -47,7 +47,7 @@ namespace PTMStoichiometry
             int reqNumPepMeasurements = 3;
             bool groupPepsForPValCalc = true;
             double alpha = 0.05;
-            string groupToCompare = "Phospho Control";
+            string groupToCompare = null;
             string dataType = "FlashLFQ";
 
             string filepathpeptides = @"D:\PTMStoichiometry\TestData\MSV000086126\2021-06-03-16-11-24\Task3-SearchTask\AllQuantifiedPeptides.tsv";
@@ -65,11 +65,24 @@ namespace PTMStoichiometry
             //group peptides by protein
             var proteins = testPeptide.Select(p => p.ProteinGroup).Distinct().ToArray();
             List<ProteinGroup> testProt = new List<ProteinGroup>();
-            for (int i = 0; i < proteins.Length; i++)
+
+            if (groupToCompare != null)
             {
-                testProt.Add(new ProteinGroup(proteins[i], testPeptide, groupsList, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides,
+                for (int i = 0; i < proteins.Length; i++)
+                {
+                    testProt.Add(new ProteinGroup(proteins[i], testPeptide, groupsList, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides,
                     useBaselinePeptides, reqNumBaselinePeptides, reqNumBaselineMeasurements, correlationCutOff, compareUnmod, minNumStoichiometries, groupToCompare));
+                }
             }
+            else
+            {
+                for (int i = 0; i < proteins.Length; i++)
+                {
+                    testProt.Add(new ProteinGroup(proteins[i], testPeptide, groupsList, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides,
+                    useBaselinePeptides, reqNumBaselinePeptides, reqNumBaselineMeasurements, correlationCutOff, compareUnmod, minNumStoichiometries));
+                }
+            }
+
             testProt = testProt.Where(p => p.ProteinPairwiseComparisons != null).ToList(); //hmmm
             Extensions.CalcCorrectedPValue(testProt, groupPepsForPValCalc, alpha);
             List<ProteinGroup> ProteinsToUse = testProt.Where(p => p.useProt).ToList();

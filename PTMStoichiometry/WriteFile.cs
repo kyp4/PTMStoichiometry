@@ -18,7 +18,9 @@ namespace PTMStoichiometry
             {
                 if (useBaselinePeptides)
                 {
-                    output.WriteLine("Peptide\tModifications\tBaseline\tGroup1\tGroup2\tProtein\tTotalNumPeptidesProt\tMWStat\tMWPVal\tBHPVal\tStoichiometriesGroup1\tStoichiometriesGroup2");
+                    output.WriteLine("Peptide\tModifications\tBaseline\tGroup1\tGroup2\tProtein\tTotalNumPeptidesProt\tMWStat\tMWPVal\tBHPVal\t" 
+                        + "MedianStoichiometryGroup1\tMedianStoichiometryGroup2\tMinStoichiometryGroup1\tMinStoichiometryGroup2\t"
+                        + "MaxStoichiometryGroup1\tMaxStoichiometryGroup2\tStoichiometriesGroup1\tStoichiometriesGroup2");
                     foreach (ProteinGroup prot in proteinGroups)
                     {
                         foreach (PairwiseCompairison pc in prot.ProteinPairwiseComparisons)
@@ -37,6 +39,12 @@ namespace PTMStoichiometry
                                     + "\t" + pc.MWStat.ToString()
                                     + "\t" + pc.MWPVal.ToString()
                                     + "\t" + pc.CorrectedpVal.ToString()
+                                    + "\t" + pc.PeptideStoichiometriesGroupOneMedian.ToString()
+                                    + "\t" + pc.PeptideStoichiometriesGroupTwoMedian.ToString()
+                                    + "\t" + pc.PeptideStoichiometriesGroupOneMin.ToString()
+                                    + "\t" + pc.PeptideStoichiometriesGroupTwoMin.ToString()
+                                    + "\t" + pc.PeptideStoichiometriesGroupOneMax.ToString()
+                                    + "\t" + pc.PeptideStoichiometriesGroupTwoMax.ToString()
                                     + "\t" + String.Join(";", pc.PeptideStoichiometriesGroupOne.Select(p => p.StoichiometryVal))
                                     + "\t" + String.Join(";", pc.PeptideStoichiometriesGroupTwo.Select(p => p.StoichiometryVal))
                                 );
