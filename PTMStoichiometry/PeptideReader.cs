@@ -11,7 +11,7 @@ namespace PTMStoichiometry
     //PeptideReader class written with Dr. Shortreed
     public class PeptideReader
     {
-        public static List<Peptide> ReadTsv(string peptidefilepath, string groupfilepath, int reqNumPepMeasurements, string dataType)
+        public static List<Peptide> ReadTsv(string peptidefilepath, string groupfilepath, int reqNumPepMeasurements, int intensityIndex, string dataType)
         {
             List<Peptide> peptides = new List<Peptide>();
             string[] lines = File.ReadAllLines(peptidefilepath, Encoding.UTF8);
@@ -21,7 +21,7 @@ namespace PTMStoichiometry
 
             for (int i = 1; i < lines.Length; i++)
             {
-                peptides.Add(new Peptide(lines[i], groups, groupList, reqNumPepMeasurements, dataType));
+                peptides.Add(new Peptide(lines[i], groups, groupList, reqNumPepMeasurements, intensityIndex, dataType));
             }
             return peptides;
         }
@@ -50,6 +50,15 @@ namespace PTMStoichiometry
             }
 
             return groups.Distinct().ToList();
+        }
+
+        //function to find index of a key string in a header
+        public static int IndexFind(string filepath, string find)
+        {
+            string headerline = File.ReadAllLines(filepath, Encoding.UTF8)[0];
+            List<string> header = headerline.Split("\t").ToList();
+
+            return header.IndexOf(find);
         }
 
         private static string[] GetFile(string v)

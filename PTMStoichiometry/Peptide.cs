@@ -34,11 +34,10 @@ namespace PTMStoichiometry
             this.Mod = GetMod(this.Sequence, this.BaseSeq);
         }
 
-        
 
         //read from FlashLFQ and MaxQuant
-        public Peptide(string line, Dictionary<string, string> groups, List<string> groupsList, int reqNumPepMeasurements, 
-            string dataType)
+        public Peptide(string line, Dictionary<string, string> groups, List<string> groupsList, int reqNumPepMeasurements,
+            int intensityIndex, string dataType)
         {
             
             var spl = line.Split('\t');
@@ -50,7 +49,7 @@ namespace PTMStoichiometry
                 this.Modifications = this.Sequence.Split('[', ']').Where((item, index) => index % 2 != 0).ToList();
                 this.ProteinGroup = spl[2];
                 this.GeneName = spl[3];
-                this.Intensities = GetIntensities(spl.SubArray(5, spl.Length - 5), groups);
+                this.Intensities = GetIntensities(spl.SubArray(intensityIndex, spl.Length - intensityIndex), groups);
                 this.DetectedMinNum = DetectCount(this.Intensities, groupsList, reqNumPepMeasurements);
                 this.Mod = GetMod(this.Sequence, this.BaseSeq);
             }
@@ -61,7 +60,8 @@ namespace PTMStoichiometry
                 this.Modifications = spl[1].Split(';').ToList();
                 this.ProteinGroup = spl[5];
                 this.GeneName = spl[6];
-                this.Intensities = GetIntensities(spl.SubArray(12 + groups.Count() + 9, spl.Length - (12 + groups.Count() + 9)), groups);
+                this.Intensities = GetIntensities(spl.SubArray(intensityIndex, spl.Length - intensityIndex), groups);
+                //this.Intensities = GetIntensities(spl.SubArray(12 + groups.Count() + 11, spl.Length - (12 + groups.Count() + 11)), groups);
                 this.DetectedMinNum = DetectCount(this.Intensities, groupsList, reqNumPepMeasurements);
                 this.Mod = this.Modifications[0] != "Unmodified";
 

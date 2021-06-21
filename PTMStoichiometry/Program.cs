@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -40,25 +41,41 @@ namespace PTMStoichiometry
             int reqNumOfPepeptides = reqNumUnmodPeptides + reqNumModPeptides;
             bool useBaselinePeptides = true;
             int reqNumBaselinePeptides = reqNumUnmodPeptides;
-            int reqNumBaselineMeasurements = 5; //allow one missing value
-            double correlationCutOff = 0.5;
+            int reqNumBaselineMeasurements = 3; //allow one missing value
+            double correlationCutOff = 0.75;
             bool compareUnmod = false;
             int minNumStoichiometries = 3;
             int reqNumPepMeasurements = 3;
             bool groupPepsForPValCalc = true;
             double alpha = 0.05;
             string groupToCompare = null;
-            string dataType = "FlashLFQ";
+            string dataType = "unknown";
 
-            string filepathpeptides = @"D:\PTMStoichiometry\TestData\MSV000086126\2021-06-03-16-11-24\Task3-SearchTask\AllQuantifiedPeptides.tsv";
-            string filepathgroups = @"D:\PTMStoichiometry\TestData\MSV000086126\2021-06-03-16-11-24\Task3-SearchTask\MSV000086126Groups.txt";
-            string directory = @"D:\PTMStoichiometry\TestData\MSV000086126\2021-06-03-16-11-24\Task3-SearchTask";
-            string stoichiometryfileout = "20210607g_MSV000086126";
+            string filepathpeptides = @"D:\PTMStoichiometry\TestData\PXD003881\2021-06-09-09-54-45\Task3-SearchTask\AllQuantifiedPeptides.tsv";
+            string filepathgroups = @"D:\PTMStoichiometry\TestData\PXD003881\2021-06-09-09-54-45\Task3-SearchTask\PXD003881_MM_Groups.txt";
+            string directory = @"D:\PTMStoichiometry\TestData\PXD003881\2021-06-09-09-54-45\Task3-SearchTask\";
+            string stoichiometryfileout = "20210621a_PXD003881_FlashLFQ";
             string paramsfile = stoichiometryfileout + "_params";
-            
+
+            if (File.ReadAllLines(filepathpeptides, Encoding.UTF8)[0].Split("\t")[4] == "Organism")
+            {
+                dataType = "FlashLFQ";
+            }
+            else
+            {
+                dataType = "MaxQuant";
+            }
+
+            int intensityIndex = 5;
+            if (dataType == "MaxQuant")
+            {
+                intensityIndex = PeptideReader.IndexFind(filepathpeptides, "Intensity");
+            }
+
+
             Dictionary<string, string> groups = PeptideReader.GetGroups(filepathgroups);
             List<string> groupsList = PeptideReader.GetGroupList(filepathgroups);
-            List<Peptide> testPeptide = PeptideReader.ReadTsv(filepathpeptides, filepathgroups, reqNumPepMeasurements, dataType);
+            List<Peptide> testPeptide = PeptideReader.ReadTsv(filepathpeptides, filepathgroups, reqNumPepMeasurements, intensityIndex, dataType);
             testPeptide = Extensions.IncludeSharedPeptides(testPeptide, false); 
 
 

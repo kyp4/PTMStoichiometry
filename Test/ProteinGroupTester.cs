@@ -20,28 +20,28 @@ namespace Test
                 {
                     new Peptide("Seq1", "Seq1", "Prot", "Gene", "Organism",
                         new List<Intensity>() {
-                            new Intensity("file", "group1", 10, DetectionMS.MS),
-                            new Intensity("file", "group1", 20, DetectionMS.MS),
-                            new Intensity("file", "group1", 15, DetectionMS.MS),
-                            new Intensity("file", "group1", 30, DetectionMS.MS),
+                            new Intensity("file", "group1", 10),
+                            new Intensity("file", "group1", 20),
+                            new Intensity("file", "group1", 15),
+                            new Intensity("file", "group1", 30),
 
-                            new Intensity("file", "group2", 10, DetectionMS.MS),
-                            new Intensity("file", "group2", 20, DetectionMS.MS),
-                            new Intensity("file", "group2", 15, DetectionMS.MS),
-                            new Intensity("file", "group2", 30, DetectionMS.MS) 
+                            new Intensity("file", "group2", 10),
+                            new Intensity("file", "group2", 20),
+                            new Intensity("file", "group2", 15),
+                            new Intensity("file", "group2", 30) 
                         },
                         new List<string>() { "group1", "group2" }, 1),
                    new Peptide("Seq2", "Seq2", "Prot", "Gene", "Organism",
                         new List<Intensity>() {
-                            new Intensity("file", "group1", 20, DetectionMS.MS),
-                            new Intensity("file", "group1", 40, DetectionMS.MS),
-                            new Intensity("file", "group1", 30, DetectionMS.MS),
-                            new Intensity("file", "group1", 60, DetectionMS.MS),
+                            new Intensity("file", "group1", 20),
+                            new Intensity("file", "group1", 40),
+                            new Intensity("file", "group1", 30),
+                            new Intensity("file", "group1", 60),
 
-                            new Intensity("file", "group2", 20, DetectionMS.MS),
-                            new Intensity("file", "group2", 40, DetectionMS.MS),
-                            new Intensity("file", "group2", 30, DetectionMS.MS),
-                            new Intensity("file", "group2", 60, DetectionMS.MS) 
+                            new Intensity("file", "group2", 20),
+                            new Intensity("file", "group2", 40),
+                            new Intensity("file", "group2", 30),
+                            new Intensity("file", "group2", 60) 
                         },
                     new List<string>() { "group1", "group2" }, 1)
                 },
@@ -55,80 +55,80 @@ namespace Test
                 {
                     new Peptide("Seq1", "Seq1", "Prot", "Gene", "Organism",
                         new List<Intensity>() {
-                            new Intensity("file", "group1", 10, DetectionMS.MS),
-                            new Intensity("file", "group1", 20, DetectionMS.MS),
-                            new Intensity("file", "group1", 15, DetectionMS.MS),
-                            new Intensity("file", "group1", 30, DetectionMS.MS),
+                            new Intensity("file", "group1", 10),
+                            new Intensity("file", "group1", 20),
+                            new Intensity("file", "group1", 15),
+                            new Intensity("file", "group1", 30),
 
-                            new Intensity("file", "group2", 10, DetectionMS.MS),
-                            new Intensity("file", "group2", 20, DetectionMS.MS),
-                            new Intensity("file", "group2", 15, DetectionMS.MS),
-                            new Intensity("file", "group2", 30, DetectionMS.MS)
+                            new Intensity("file", "group2", 10),
+                            new Intensity("file", "group2", 20),
+                            new Intensity("file", "group2", 15),
+                            new Intensity("file", "group2", 30)
                         },
                         new List<string>() { "group1", "group2" }, 1),
                    new Peptide("Seq2", "Seq2", "Prot", "Gene", "Organism",
                         new List<Intensity>() {
-                            new Intensity("file", "group1", 20, DetectionMS.MS),
-                            new Intensity("file", "group1", 40, DetectionMS.MS),
-                            new Intensity("file", "group1", 30, DetectionMS.MS),
-                            new Intensity("file", "group1", 60, DetectionMS.MS),
+                            new Intensity("file", "group1", 20),
+                            new Intensity("file", "group1", 40),
+                            new Intensity("file", "group1", 30),
+                            new Intensity("file", "group1", 60),
 
-                            new Intensity("file", "group2", 20, DetectionMS.MS),
-                            new Intensity("file", "group2", 40, DetectionMS.MS),
-                            new Intensity("file", "group2", 30, DetectionMS.MS),
-                            new Intensity("file", "group2", 60, DetectionMS.MS)
+                            new Intensity("file", "group2", 20),
+                            new Intensity("file", "group2", 40),
+                            new Intensity("file", "group2", 30),
+                            new Intensity("file", "group2", 60)
                         },
                         new List<string>() { "group1", "group2" }, 1),
                    new Peptide("Seq3", "Seq3", "Prot", "Gene", "Organism",
                         new List<Intensity>() {
-                            new Intensity("file", "group1", 100, DetectionMS.MS),
-                            new Intensity("file", "group1", 20, DetectionMS.MS),
-                            new Intensity("file", "group1", 50, DetectionMS.MS),
-                            new Intensity("file", "group1", 600, DetectionMS.MS),
+                            new Intensity("file", "group1", 100),
+                            new Intensity("file", "group1", 20),
+                            new Intensity("file", "group1", 50),
+                            new Intensity("file", "group1", 600),
 
-                            new Intensity("file", "group2", 80, DetectionMS.MS),
-                            new Intensity("file", "group2", 600, DetectionMS.MS),
-                            new Intensity("file", "group2", 40, DetectionMS.MS),
-                            new Intensity("file", "group2", 3, DetectionMS.MS)
+                            new Intensity("file", "group2", 80),
+                            new Intensity("file", "group2", 600),
+                            new Intensity("file", "group2", 40),
+                            new Intensity("file", "group2", 3)
                         },
                         new List<string>() { "group1", "group2" }, 1),
                    new Peptide("Seq4", "Seq4", "Prot", "Gene", "Organism",
                         new List<Intensity>() {
-                            new Intensity("file", "group1", 20, DetectionMS.MS),
-                            new Intensity("file", "group1", 40, DetectionMS.MS),
-                            new Intensity("file", "group1", 30, DetectionMS.MS),
-                            new Intensity("file", "group1", 60, DetectionMS.MS),
+                            new Intensity("file", "group1", 20),
+                            new Intensity("file", "group1", 40),
+                            new Intensity("file", "group1", 30),
+                            new Intensity("file", "group1", 60),
 
-                            new Intensity("file", "group2", 20, DetectionMS.MS),
-                            new Intensity("file", "group2", 40, DetectionMS.MS),
-                            new Intensity("file", "group2", 30, DetectionMS.MS),
-                            new Intensity("file", "group2", 60, DetectionMS.MS)
+                            new Intensity("file", "group2", 20),
+                            new Intensity("file", "group2", 40),
+                            new Intensity("file", "group2", 30),
+                            new Intensity("file", "group2", 60)
                         },
                         new List<string>() { "group1", "group2" }, 1),
                    new Peptide("Seq4", "Seq4", "Prot", "Gene", "Organism",
                         new List<Intensity>() {
-                            new Intensity("file", "group1", 20, DetectionMS.MS),
-                            new Intensity("file", "group1", 40, DetectionMS.MS),
-                            new Intensity("file", "group1", 30, DetectionMS.MS),
-                            new Intensity("file", "group1", 60, DetectionMS.MS),
+                            new Intensity("file", "group1", 20),
+                            new Intensity("file", "group1", 40),
+                            new Intensity("file", "group1", 30),
+                            new Intensity("file", "group1", 60),
 
-                            new Intensity("file", "group2", 20, DetectionMS.MS),
-                            new Intensity("file", "group2", 40, DetectionMS.MS),
-                            new Intensity("file", "group2", 30, DetectionMS.MS),
-                            new Intensity("file", "group2", 60, DetectionMS.MS)
+                            new Intensity("file", "group2", 20),
+                            new Intensity("file", "group2", 40),
+                            new Intensity("file", "group2", 30),
+                            new Intensity("file", "group2", 60)
                         },
                         new List<string>() { "group1", "group2" }, 1),
                    new Peptide("Seq5a", "Seq5", "Prot", "Gene", "Organism",
                         new List<Intensity>() {
-                            new Intensity("file", "group1", 20, DetectionMS.MS),
-                            new Intensity("file", "group1", 40, DetectionMS.MS),
-                            new Intensity("file", "group1", 30, DetectionMS.MS),
-                            new Intensity("file", "group1", 60, DetectionMS.MS),
+                            new Intensity("file", "group1", 20),
+                            new Intensity("file", "group1", 40),
+                            new Intensity("file", "group1", 30),
+                            new Intensity("file", "group1", 60),
 
-                            new Intensity("file", "group2", 20, DetectionMS.MS),
-                            new Intensity("file", "group2", 40, DetectionMS.MS),
-                            new Intensity("file", "group2", 30, DetectionMS.MS),
-                            new Intensity("file", "group2", 60, DetectionMS.MS)
+                            new Intensity("file", "group2", 20),
+                            new Intensity("file", "group2", 40),
+                            new Intensity("file", "group2", 30),
+                            new Intensity("file", "group2", 60)
                         },
                         new List<string>() { "group1", "group2" }, 1)
                 },
@@ -142,56 +142,56 @@ namespace Test
                 {
                     new Peptide("Seq1", "Seq1", "Prot", "Gene", "Organism",
                         new List<Intensity>() {
-                            new Intensity("file", "group1", 10, DetectionMS.MS),
-                            new Intensity("file", "group1", 20, DetectionMS.MS),
-                            new Intensity("file", "group1", 15, DetectionMS.MS),
-                            new Intensity("file", "group1", 30, DetectionMS.MS),
+                            new Intensity("file", "group1", 10),
+                            new Intensity("file", "group1", 20),
+                            new Intensity("file", "group1", 15),
+                            new Intensity("file", "group1", 30),
 
-                            new Intensity("file", "group2", 10, DetectionMS.MS),
-                            new Intensity("file", "group2", 20, DetectionMS.MS),
-                            new Intensity("file", "group2", 15, DetectionMS.MS),
-                            new Intensity("file", "group2", 30, DetectionMS.MS),
+                            new Intensity("file", "group2", 10),
+                            new Intensity("file", "group2", 20),
+                            new Intensity("file", "group2", 15),
+                            new Intensity("file", "group2", 30),
 
-                            new Intensity("file", "group3", 10, DetectionMS.MS),
-                            new Intensity("file", "group3", 20, DetectionMS.MS),
-                            new Intensity("file", "group3", 15, DetectionMS.MS),
-                            new Intensity("file", "group3", 30, DetectionMS.MS)
+                            new Intensity("file", "group3", 10),
+                            new Intensity("file", "group3", 20),
+                            new Intensity("file", "group3", 15),
+                            new Intensity("file", "group3", 30)
                         },
                         new List<string>() { "group1", "group2", "group3" }, 1),
                    new Peptide("Seq2", "Seq2", "Prot", "Gene", "Organism",
                         new List<Intensity>() {
-                            new Intensity("file", "group1", 20, DetectionMS.MS),
-                            new Intensity("file", "group1", 40, DetectionMS.MS),
-                            new Intensity("file", "group1", 30, DetectionMS.MS),
-                            new Intensity("file", "group1", 60, DetectionMS.MS),
+                            new Intensity("file", "group1", 20),
+                            new Intensity("file", "group1", 40),
+                            new Intensity("file", "group1", 30),
+                            new Intensity("file", "group1", 60),
 
-                            new Intensity("file", "group2", 20, DetectionMS.MS),
-                            new Intensity("file", "group2", 40, DetectionMS.MS),
-                            new Intensity("file", "group2", 30, DetectionMS.MS),
-                            new Intensity("file", "group2", 60, DetectionMS.MS),
+                            new Intensity("file", "group2", 20),
+                            new Intensity("file", "group2", 40),
+                            new Intensity("file", "group2", 30),
+                            new Intensity("file", "group2", 60),
 
-                            new Intensity("file", "group3", 20, DetectionMS.MS),
-                            new Intensity("file", "group3", 40, DetectionMS.MS),
-                            new Intensity("file", "group3", 30, DetectionMS.MS),
-                            new Intensity("file", "group3", 60, DetectionMS.MS)
+                            new Intensity("file", "group3", 20),
+                            new Intensity("file", "group3", 40),
+                            new Intensity("file", "group3", 30),
+                            new Intensity("file", "group3", 60)
                         },
                         new List<string>() { "group1", "group2" , "group3"}, 1),
                    new Peptide("Seq3", "Seq3", "Prot", "Gene", "Organism",
                         new List<Intensity>() {
-                            new Intensity("file", "group1", 100, DetectionMS.MS),
-                            new Intensity("file", "group1", 20, DetectionMS.MS),
-                            new Intensity("file", "group1", 50, DetectionMS.MS),
-                            new Intensity("file", "group1", 600, DetectionMS.MS),
+                            new Intensity("file", "group1", 100),
+                            new Intensity("file", "group1", 20),
+                            new Intensity("file", "group1", 50),
+                            new Intensity("file", "group1", 600),
 
-                            new Intensity("file", "group2", 80, DetectionMS.MS),
-                            new Intensity("file", "group2", 600, DetectionMS.MS),
-                            new Intensity("file", "group2", 40, DetectionMS.MS),
-                            new Intensity("file", "group2", 3, DetectionMS.MS),
+                            new Intensity("file", "group2", 80),
+                            new Intensity("file", "group2", 600),
+                            new Intensity("file", "group2", 40),
+                            new Intensity("file", "group2", 3),
 
-                            new Intensity("file", "group3", 100, DetectionMS.MS),
-                            new Intensity("file", "group3", 20, DetectionMS.MS),
-                            new Intensity("file", "group3", 50, DetectionMS.MS),
-                            new Intensity("file", "group3", 600, DetectionMS.MS)
+                            new Intensity("file", "group3", 100),
+                            new Intensity("file", "group3", 20),
+                            new Intensity("file", "group3", 50),
+                            new Intensity("file", "group3", 600)
 
                         }, 
                         new List<string>() { "group1", "group2" , "group3"}, 1)
@@ -206,67 +206,67 @@ namespace Test
                 {
                     new Peptide("Seq1", "Seq1", "Prot", "Gene", "Organism",
                         new List<Intensity>() {
-                            new Intensity("file", "group1", 10, DetectionMS.MS),
-                            new Intensity("file", "group1", 20, DetectionMS.MS),
-                            new Intensity("file", "group1", 15, DetectionMS.MS),
-                            new Intensity("file", "group1", 30, DetectionMS.MS),
+                            new Intensity("file", "group1", 10),
+                            new Intensity("file", "group1", 20),
+                            new Intensity("file", "group1", 15),
+                            new Intensity("file", "group1", 30),
 
-                            new Intensity("file", "group2", 10, DetectionMS.MS),
-                            new Intensity("file", "group2", 20, DetectionMS.MS),
-                            new Intensity("file", "group2", 15, DetectionMS.MS),
-                            new Intensity("file", "group2", 30, DetectionMS.MS)
+                            new Intensity("file", "group2", 10),
+                            new Intensity("file", "group2", 20),
+                            new Intensity("file", "group2", 15),
+                            new Intensity("file", "group2", 30)
                         },
                         new List<string>() { "group1", "group2" }, 1),
                    new Peptide("Seq2", "Seq2", "Prot", "Gene", "Organism",
                         new List<Intensity>() {
-                            new Intensity("file", "group1", 20, DetectionMS.MS),
-                            new Intensity("file", "group1", 40, DetectionMS.MS),
-                            new Intensity("file", "group1", 30, DetectionMS.MS),
-                            new Intensity("file", "group1", 60, DetectionMS.MS),
+                            new Intensity("file", "group1", 20),
+                            new Intensity("file", "group1", 40),
+                            new Intensity("file", "group1", 30),
+                            new Intensity("file", "group1", 60),
 
-                            new Intensity("file", "group2", 20, DetectionMS.MS),
-                            new Intensity("file", "group2", 40, DetectionMS.MS),
-                            new Intensity("file", "group2", 30, DetectionMS.MS),
-                            new Intensity("file", "group2", 60, DetectionMS.MS)
+                            new Intensity("file", "group2", 20),
+                            new Intensity("file", "group2", 40),
+                            new Intensity("file", "group2", 30),
+                            new Intensity("file", "group2", 60)
                         },
                         new List<string>() { "group1", "group2" }, 1),
                    new Peptide("Seq3", "Seq3", "Prot", "Gene", "Organism",
                         new List<Intensity>() {
-                            new Intensity("file", "group1", 100, DetectionMS.MS),
-                            new Intensity("file", "group1", 20, DetectionMS.MS),
-                            new Intensity("file", "group1", 50, DetectionMS.MS),
-                            new Intensity("file", "group1", 600, DetectionMS.MS),
+                            new Intensity("file", "group1", 100),
+                            new Intensity("file", "group1", 20),
+                            new Intensity("file", "group1", 50),
+                            new Intensity("file", "group1", 600),
 
-                            new Intensity("file", "group2", 80, DetectionMS.MS),
-                            new Intensity("file", "group2", 600, DetectionMS.MS),
-                            new Intensity("file", "group2", 40, DetectionMS.MS),
-                            new Intensity("file", "group2", 3, DetectionMS.MS)
+                            new Intensity("file", "group2", 80),
+                            new Intensity("file", "group2", 600),
+                            new Intensity("file", "group2", 40),
+                            new Intensity("file", "group2", 3)
                         },
                         new List<string>() { "group1", "group2"}, 1),
                    new Peptide("Seq4", "Seq4", "Prot", "Gene", "Organism",
                         new List<Intensity>() {
-                            new Intensity("file", "group1", 150, DetectionMS.MS),
-                            new Intensity("file", "group1", 50, DetectionMS.MS),
-                            new Intensity("file", "group1", 75, DetectionMS.MS),
-                            new Intensity("file", "group1", 200, DetectionMS.MS),
+                            new Intensity("file", "group1", 150),
+                            new Intensity("file", "group1", 50),
+                            new Intensity("file", "group1", 75),
+                            new Intensity("file", "group1", 200),
 
-                            new Intensity("file", "group2", 90, DetectionMS.MS),
-                            new Intensity("file", "group2", 100, DetectionMS.MS),
-                            new Intensity("file", "group2", 50, DetectionMS.MS),
-                            new Intensity("file", "group2", 10, DetectionMS.MS)
+                            new Intensity("file", "group2", 90),
+                            new Intensity("file", "group2", 100),
+                            new Intensity("file", "group2", 50),
+                            new Intensity("file", "group2", 10)
                         },
                         new List<string>() { "group1", "group2"}, 1),
                    new Peptide("Seq5", "Seq5", "Prot", "Gene", "Organism",
                         new List<Intensity>() {
-                            new Intensity("file", "group1", 160, DetectionMS.MS),
-                            new Intensity("file", "group1", 55, DetectionMS.MS),
-                            new Intensity("file", "group1", 80, DetectionMS.MS),
-                            new Intensity("file", "group1", 240, DetectionMS.MS),
+                            new Intensity("file", "group1", 160),
+                            new Intensity("file", "group1", 55),
+                            new Intensity("file", "group1", 80),
+                            new Intensity("file", "group1", 240),
 
-                            new Intensity("file", "group2", 110, DetectionMS.MS),
-                            new Intensity("file", "group2", 120, DetectionMS.MS),
-                            new Intensity("file", "group2", 75, DetectionMS.MS),
-                            new Intensity("file", "group2", 24, DetectionMS.MS)
+                            new Intensity("file", "group2", 110),
+                            new Intensity("file", "group2", 120),
+                            new Intensity("file", "group2", 75),
+                            new Intensity("file", "group2", 24)
                         },
                         new List<string>() { "group1", "group2"}, 1)
 
@@ -281,67 +281,67 @@ namespace Test
                 {
                     new Peptide("Seq1", "Seq1", "Prot", "Gene", "Organism",
                         new List<Intensity>() {
-                            new Intensity("file", "group1", 10, DetectionMS.MS),
-                            new Intensity("file", "group1", 20, DetectionMS.MS),
-                            new Intensity("file", "group1", 15, DetectionMS.MS),
-                            new Intensity("file", "group1", 30, DetectionMS.MS),
+                            new Intensity("file", "group1", 10),
+                            new Intensity("file", "group1", 20),
+                            new Intensity("file", "group1", 15),
+                            new Intensity("file", "group1", 30),
 
-                            new Intensity("file", "group2", 10, DetectionMS.MS),
-                            new Intensity("file", "group2", 20, DetectionMS.MS),
-                            new Intensity("file", "group2", 15, DetectionMS.MS),
-                            new Intensity("file", "group2", 30, DetectionMS.MS)
+                            new Intensity("file", "group2", 10),
+                            new Intensity("file", "group2", 20),
+                            new Intensity("file", "group2", 15),
+                            new Intensity("file", "group2", 30)
                         },
                         new List<string>() { "group1", "group2" }, 1),
                    new Peptide("Seq2", "Seq2", "Prot", "Gene", "Organism",
                         new List<Intensity>() {
-                            new Intensity("file", "group1", 20, DetectionMS.MS),
-                            new Intensity("file", "group1", 40, DetectionMS.MS),
-                            new Intensity("file", "group1", 30, DetectionMS.MS),
-                            new Intensity("file", "group1", 60, DetectionMS.MS),
+                            new Intensity("file", "group1", 20),
+                            new Intensity("file", "group1", 40),
+                            new Intensity("file", "group1", 30),
+                            new Intensity("file", "group1", 60),
 
-                            new Intensity("file", "group2", 20, DetectionMS.MS),
-                            new Intensity("file", "group2", 40, DetectionMS.MS),
-                            new Intensity("file", "group2", 30, DetectionMS.MS),
-                            new Intensity("file", "group2", 60, DetectionMS.MS)
+                            new Intensity("file", "group2", 20),
+                            new Intensity("file", "group2", 40),
+                            new Intensity("file", "group2", 30),
+                            new Intensity("file", "group2", 60)
                         },
                         new List<string>() { "group1", "group2" }, 1),
                    new Peptide("Seq3", "Seq3", "Prot", "Gene", "Organism",
                         new List<Intensity>() {
-                            new Intensity("file", "group1", 100, DetectionMS.MS),
-                            new Intensity("file", "group1", 20, DetectionMS.MS),
-                            new Intensity("file", "group1", 50, DetectionMS.MS),
-                            new Intensity("file", "group1", 600, DetectionMS.MS),
+                            new Intensity("file", "group1", 100),
+                            new Intensity("file", "group1", 20),
+                            new Intensity("file", "group1", 50),
+                            new Intensity("file", "group1", 600),
 
-                            new Intensity("file", "group2", 80, DetectionMS.MS),
-                            new Intensity("file", "group2", 600, DetectionMS.MS),
-                            new Intensity("file", "group2", 40, DetectionMS.MS),
-                            new Intensity("file", "group2", 3, DetectionMS.MS)
+                            new Intensity("file", "group2", 80),
+                            new Intensity("file", "group2", 600),
+                            new Intensity("file", "group2", 40),
+                            new Intensity("file", "group2", 3)
                         },
                         new List<string>() { "group1", "group2"}, 1),
                    new Peptide("Seq4", "Seq4", "Prot", "Gene", "Organism",
                         new List<Intensity>() {
-                            new Intensity("file", "group1", 150, DetectionMS.MS),
-                            new Intensity("file", "group1", 50, DetectionMS.MS),
-                            new Intensity("file", "group1", 75, DetectionMS.MS),
-                            new Intensity("file", "group1", 200, DetectionMS.MS),
+                            new Intensity("file", "group1", 150),
+                            new Intensity("file", "group1", 50),
+                            new Intensity("file", "group1", 75),
+                            new Intensity("file", "group1", 200),
 
-                            new Intensity("file", "group2", 90, DetectionMS.MS),
-                            new Intensity("file", "group2", 100, DetectionMS.MS),
-                            new Intensity("file", "group2", 50, DetectionMS.MS),
-                            new Intensity("file", "group2", 10, DetectionMS.MS)
+                            new Intensity("file", "group2", 90),
+                            new Intensity("file", "group2", 100),
+                            new Intensity("file", "group2", 50),
+                            new Intensity("file", "group2", 10)
                         },
                         new List<string>() { "group1", "group2"}, 1),
                    new Peptide("Seq5", "Seq5", "Prot", "Gene", "Organism",
                         new List<Intensity>() {
-                            new Intensity("file", "group1", 160, DetectionMS.MS),
-                            new Intensity("file", "group1", 55, DetectionMS.MS),
-                            new Intensity("file", "group1", 80, DetectionMS.MS),
-                            new Intensity("file", "group1", 240, DetectionMS.MS),
+                            new Intensity("file", "group1", 160),
+                            new Intensity("file", "group1", 55),
+                            new Intensity("file", "group1", 80),
+                            new Intensity("file", "group1", 240),
 
-                            new Intensity("file", "group2", 110, DetectionMS.MS),
-                            new Intensity("file", "group2", 120, DetectionMS.MS),
-                            new Intensity("file", "group2", 75, DetectionMS.MS),
-                            new Intensity("file", "group2", 24, DetectionMS.MS)
+                            new Intensity("file", "group2", 110),
+                            new Intensity("file", "group2", 120),
+                            new Intensity("file", "group2", 75),
+                            new Intensity("file", "group2", 24)
                         },
                         new List<string>() { "group1", "group2"}, 1)
 
@@ -377,28 +377,28 @@ namespace Test
                 {
                     new Peptide("Seq1", "Seq1", "Prot", "Gene", "Organism",
                         new List<Intensity>() {
-                            new Intensity("file", "group1", 10, DetectionMS.MS),
-                            new Intensity("file", "group1", 20, DetectionMS.MS),
-                            new Intensity("file", "group1", 15, DetectionMS.MS),
-                            new Intensity("file", "group1", 30, DetectionMS.MS),
+                            new Intensity("file", "group1", 10),
+                            new Intensity("file", "group1", 20),
+                            new Intensity("file", "group1", 15),
+                            new Intensity("file", "group1", 30),
 
-                            new Intensity("file", "group2", 10, DetectionMS.MS),
-                            new Intensity("file", "group2", 20, DetectionMS.MS),
-                            new Intensity("file", "group2", 15, DetectionMS.MS),
-                            new Intensity("file", "group2", 30, DetectionMS.MS)
+                            new Intensity("file", "group2", 10),
+                            new Intensity("file", "group2", 20),
+                            new Intensity("file", "group2", 15),
+                            new Intensity("file", "group2", 30)
                         },
                         new List<string>() { "group1", "group2" }, 1),
                    new Peptide("Seq2", "Seq2", "Prot", "Gene", "Organism",
                         new List<Intensity>() {
-                            new Intensity("file", "group1", 20, DetectionMS.MS),
-                            new Intensity("file", "group1", 40, DetectionMS.MS),
-                            new Intensity("file", "group1", 30, DetectionMS.MS),
-                            new Intensity("file", "group1", 60, DetectionMS.MS),
+                            new Intensity("file", "group1", 20),
+                            new Intensity("file", "group1", 40),
+                            new Intensity("file", "group1", 30),
+                            new Intensity("file", "group1", 60),
 
-                            new Intensity("file", "group2", 20, DetectionMS.MS),
-                            new Intensity("file", "group2", 40, DetectionMS.MS),
-                            new Intensity("file", "group2", 30, DetectionMS.MS),
-                            new Intensity("file", "group2", 60, DetectionMS.MS)
+                            new Intensity("file", "group2", 20),
+                            new Intensity("file", "group2", 40),
+                            new Intensity("file", "group2", 30),
+                            new Intensity("file", "group2", 60)
                         },
                     new List<string>() { "group1", "group2" }, 1)
                 },
@@ -412,80 +412,80 @@ namespace Test
                 {
                     new Peptide("Seq1", "Seq1", "Prot", "Gene", "Organism",
                         new List<Intensity>() {
-                            new Intensity("file", "group1", 10, DetectionMS.MS),
-                            new Intensity("file", "group1", 20, DetectionMS.MS),
-                            new Intensity("file", "group1", 15, DetectionMS.MS),
-                            new Intensity("file", "group1", 30, DetectionMS.MS),
+                            new Intensity("file", "group1", 10),
+                            new Intensity("file", "group1", 20),
+                            new Intensity("file", "group1", 15),
+                            new Intensity("file", "group1", 30),
 
-                            new Intensity("file", "group2", 10, DetectionMS.MS),
-                            new Intensity("file", "group2", 20, DetectionMS.MS),
-                            new Intensity("file", "group2", 15, DetectionMS.MS),
-                            new Intensity("file", "group2", 30, DetectionMS.MS)
+                            new Intensity("file", "group2", 10),
+                            new Intensity("file", "group2", 20),
+                            new Intensity("file", "group2", 15),
+                            new Intensity("file", "group2", 30)
                         },
                         new List<string>() { "group1", "group2" }, 1),
                    new Peptide("Seq2", "Seq2", "Prot", "Gene", "Organism",
                         new List<Intensity>() {
-                            new Intensity("file", "group1", 20, DetectionMS.MS),
-                            new Intensity("file", "group1", 40, DetectionMS.MS),
-                            new Intensity("file", "group1", 30, DetectionMS.MS),
-                            new Intensity("file", "group1", 60, DetectionMS.MS),
+                            new Intensity("file", "group1", 20),
+                            new Intensity("file", "group1", 40),
+                            new Intensity("file", "group1", 30),
+                            new Intensity("file", "group1", 60),
 
-                            new Intensity("file", "group2", 20, DetectionMS.MS),
-                            new Intensity("file", "group2", 40, DetectionMS.MS),
-                            new Intensity("file", "group2", 30, DetectionMS.MS),
-                            new Intensity("file", "group2", 60, DetectionMS.MS)
+                            new Intensity("file", "group2", 20),
+                            new Intensity("file", "group2", 40),
+                            new Intensity("file", "group2", 30),
+                            new Intensity("file", "group2", 60)
                         },
                         new List<string>() { "group1", "group2" }, 1),
                    new Peptide("Seq3", "Seq3", "Prot", "Gene", "Organism",
                         new List<Intensity>() {
-                            new Intensity("file", "group1", 100, DetectionMS.MS),
-                            new Intensity("file", "group1", 20, DetectionMS.MS),
-                            new Intensity("file", "group1", 50, DetectionMS.MS),
-                            new Intensity("file", "group1", 600, DetectionMS.MS),
+                            new Intensity("file", "group1", 100),
+                            new Intensity("file", "group1", 20),
+                            new Intensity("file", "group1", 50),
+                            new Intensity("file", "group1", 600),
 
-                            new Intensity("file", "group2", 80, DetectionMS.MS),
-                            new Intensity("file", "group2", 600, DetectionMS.MS),
-                            new Intensity("file", "group2", 40, DetectionMS.MS),
-                            new Intensity("file", "group2", 3, DetectionMS.MS)
+                            new Intensity("file", "group2", 80),
+                            new Intensity("file", "group2", 600),
+                            new Intensity("file", "group2", 40),
+                            new Intensity("file", "group2", 3)
                         },
                         new List<string>() { "group1", "group2" }, 1),
                    new Peptide("Seq4", "Seq4", "Prot", "Gene", "Organism",
                         new List<Intensity>() {
-                            new Intensity("file", "group1", 20, DetectionMS.MS),
-                            new Intensity("file", "group1", 40, DetectionMS.MS),
-                            new Intensity("file", "group1", 30, DetectionMS.MS),
-                            new Intensity("file", "group1", 60, DetectionMS.MS),
+                            new Intensity("file", "group1", 20),
+                            new Intensity("file", "group1", 40),
+                            new Intensity("file", "group1", 30),
+                            new Intensity("file", "group1", 60),
 
-                            new Intensity("file", "group2", 20, DetectionMS.MS),
-                            new Intensity("file", "group2", 40, DetectionMS.MS),
-                            new Intensity("file", "group2", 30, DetectionMS.MS),
-                            new Intensity("file", "group2", 60, DetectionMS.MS)
+                            new Intensity("file", "group2", 20),
+                            new Intensity("file", "group2", 40),
+                            new Intensity("file", "group2", 30),
+                            new Intensity("file", "group2", 60)
                         },
                         new List<string>() { "group1", "group2" }, 1),
                    new Peptide("Seq4", "Seq4", "Prot", "Gene", "Organism",
                         new List<Intensity>() {
-                            new Intensity("file", "group1", 20, DetectionMS.MS),
-                            new Intensity("file", "group1", 40, DetectionMS.MS),
-                            new Intensity("file", "group1", 30, DetectionMS.MS),
-                            new Intensity("file", "group1", 60, DetectionMS.MS),
+                            new Intensity("file", "group1", 20),
+                            new Intensity("file", "group1", 40),
+                            new Intensity("file", "group1", 30),
+                            new Intensity("file", "group1", 60),
 
-                            new Intensity("file", "group2", 20, DetectionMS.MS),
-                            new Intensity("file", "group2", 40, DetectionMS.MS),
-                            new Intensity("file", "group2", 30, DetectionMS.MS),
-                            new Intensity("file", "group2", 60, DetectionMS.MS)
+                            new Intensity("file", "group2", 20),
+                            new Intensity("file", "group2", 40),
+                            new Intensity("file", "group2", 30),
+                            new Intensity("file", "group2", 60)
                         },
                         new List<string>() { "group1", "group2" }, 1),
                    new Peptide("Seq5a", "Seq5", "Prot", "Gene", "Organism",
                         new List<Intensity>() {
-                            new Intensity("file", "group1", 20, DetectionMS.MS),
-                            new Intensity("file", "group1", 40, DetectionMS.MS),
-                            new Intensity("file", "group1", 30, DetectionMS.MS),
-                            new Intensity("file", "group1", 60, DetectionMS.MS),
+                            new Intensity("file", "group1", 20),
+                            new Intensity("file", "group1", 40),
+                            new Intensity("file", "group1", 30),
+                            new Intensity("file", "group1", 60),
 
-                            new Intensity("file", "group2", 20, DetectionMS.MS),
-                            new Intensity("file", "group2", 40, DetectionMS.MS),
-                            new Intensity("file", "group2", 30, DetectionMS.MS),
-                            new Intensity("file", "group2", 60, DetectionMS.MS)
+                            new Intensity("file", "group2", 20),
+                            new Intensity("file", "group2", 40),
+                            new Intensity("file", "group2", 30),
+                            new Intensity("file", "group2", 60)
                         },
                         new List<string>() { "group1", "group2" }, 1)
                 },
@@ -499,67 +499,67 @@ namespace Test
                 {
                     new Peptide("Seq1", "Seq1", "Prot", "Gene", "Organism",
                         new List<Intensity>() {
-                            new Intensity("file", "group1", 10, DetectionMS.MS),
-                            new Intensity("file", "group1", 20, DetectionMS.MS),
-                            new Intensity("file", "group1", 15, DetectionMS.MS),
-                            new Intensity("file", "group1", 30, DetectionMS.MS),
+                            new Intensity("file", "group1", 10),
+                            new Intensity("file", "group1", 20),
+                            new Intensity("file", "group1", 15),
+                            new Intensity("file", "group1", 30),
 
-                            new Intensity("file", "group2", 10, DetectionMS.MS),
-                            new Intensity("file", "group2", 20, DetectionMS.MS),
-                            new Intensity("file", "group2", 15, DetectionMS.MS),
-                            new Intensity("file", "group2", 30, DetectionMS.MS)
+                            new Intensity("file", "group2", 10),
+                            new Intensity("file", "group2", 20),
+                            new Intensity("file", "group2", 15),
+                            new Intensity("file", "group2", 30)
                         },
                         new List<string>() { "group1", "group2" }, 1),
                    new Peptide("Seq2", "Seq2", "Prot", "Gene", "Organism",
                         new List<Intensity>() {
-                            new Intensity("file", "group1", 20, DetectionMS.MS),
-                            new Intensity("file", "group1", 40, DetectionMS.MS),
-                            new Intensity("file", "group1", 30, DetectionMS.MS),
-                            new Intensity("file", "group1", 60, DetectionMS.MS),
+                            new Intensity("file", "group1", 20),
+                            new Intensity("file", "group1", 40),
+                            new Intensity("file", "group1", 30),
+                            new Intensity("file", "group1", 60),
 
-                            new Intensity("file", "group2", 20, DetectionMS.MS),
-                            new Intensity("file", "group2", 40, DetectionMS.MS),
-                            new Intensity("file", "group2", 30, DetectionMS.MS),
-                            new Intensity("file", "group2", 60, DetectionMS.MS)
+                            new Intensity("file", "group2", 20),
+                            new Intensity("file", "group2", 40),
+                            new Intensity("file", "group2", 30),
+                            new Intensity("file", "group2", 60)
                         },
                         new List<string>() { "group1", "group2" }, 1),
                    new Peptide("Seq3", "Seq3", "Prot", "Gene", "Organism",
                         new List<Intensity>() {
-                            new Intensity("file", "group1", 100, DetectionMS.MS),
-                            new Intensity("file", "group1", 20, DetectionMS.MS),
-                            new Intensity("file", "group1", 50, DetectionMS.MS),
-                            new Intensity("file", "group1", 600, DetectionMS.MS),
+                            new Intensity("file", "group1", 100),
+                            new Intensity("file", "group1", 20),
+                            new Intensity("file", "group1", 50),
+                            new Intensity("file", "group1", 600),
 
-                            new Intensity("file", "group2", 80, DetectionMS.MS),
-                            new Intensity("file", "group2", 600, DetectionMS.MS),
-                            new Intensity("file", "group2", 40, DetectionMS.MS),
-                            new Intensity("file", "group2", 3, DetectionMS.MS)
+                            new Intensity("file", "group2", 80),
+                            new Intensity("file", "group2", 600),
+                            new Intensity("file", "group2", 40),
+                            new Intensity("file", "group2", 3)
                         },
                         new List<string>() { "group1", "group2"}, 1),
                    new Peptide("Seq4", "Seq4", "Prot", "Gene", "Organism",
                         new List<Intensity>() {
-                            new Intensity("file", "group1", 150, DetectionMS.MS),
-                            new Intensity("file", "group1", 50, DetectionMS.MS),
-                            new Intensity("file", "group1", 75, DetectionMS.MS),
-                            new Intensity("file", "group1", 200, DetectionMS.MS),
+                            new Intensity("file", "group1", 150),
+                            new Intensity("file", "group1", 50),
+                            new Intensity("file", "group1", 75),
+                            new Intensity("file", "group1", 200),
 
-                            new Intensity("file", "group2", 90, DetectionMS.MS),
-                            new Intensity("file", "group2", 100, DetectionMS.MS),
-                            new Intensity("file", "group2", 50, DetectionMS.MS),
-                            new Intensity("file", "group2", 10, DetectionMS.MS)
+                            new Intensity("file", "group2", 90),
+                            new Intensity("file", "group2", 100),
+                            new Intensity("file", "group2", 50),
+                            new Intensity("file", "group2", 10)
                         },
                         new List<string>() { "group1", "group2"}, 1),
                    new Peptide("Seq5a", "Seq5", "Prot", "Gene", "Organism",
                         new List<Intensity>() {
-                            new Intensity("file", "group1", 160, DetectionMS.MS),
-                            new Intensity("file", "group1", 55, DetectionMS.MS),
-                            new Intensity("file", "group1", 80, DetectionMS.MS),
-                            new Intensity("file", "group1", 240, DetectionMS.MS),
+                            new Intensity("file", "group1", 160),
+                            new Intensity("file", "group1", 55),
+                            new Intensity("file", "group1", 80),
+                            new Intensity("file", "group1", 240),
 
-                            new Intensity("file", "group2", 110, DetectionMS.MS),
-                            new Intensity("file", "group2", 120, DetectionMS.MS),
-                            new Intensity("file", "group2", 75, DetectionMS.MS),
-                            new Intensity("file", "group2", 24, DetectionMS.MS)
+                            new Intensity("file", "group2", 110),
+                            new Intensity("file", "group2", 120),
+                            new Intensity("file", "group2", 75),
+                            new Intensity("file", "group2", 24)
                         },
                         new List<string>() { "group1", "group2"}, 1)
 
@@ -600,92 +600,92 @@ namespace Test
                 {
                     new Peptide("Seq1a", "Seq1", "Prot", "Gene", "Organism",
                         new List<Intensity>() {
-                            new Intensity("file", "group1", 10, DetectionMS.MS),
-                            new Intensity("file", "group1", 20, DetectionMS.MS),
-                            new Intensity("file", "group1", 15, DetectionMS.MS),
-                            new Intensity("file", "group1", 30, DetectionMS.MS),
+                            new Intensity("file", "group1", 10),
+                            new Intensity("file", "group1", 20),
+                            new Intensity("file", "group1", 15),
+                            new Intensity("file", "group1", 30),
 
-                            new Intensity("file", "group2", 10, DetectionMS.MS),
-                            new Intensity("file", "group2", 20, DetectionMS.MS),
-                            new Intensity("file", "group2", 15, DetectionMS.MS),
-                            new Intensity("file", "group2", 30, DetectionMS.MS),
+                            new Intensity("file", "group2", 10),
+                            new Intensity("file", "group2", 20),
+                            new Intensity("file", "group2", 15),
+                            new Intensity("file", "group2", 30),
 
-                            new Intensity("file", "group3", 10, DetectionMS.MS),
-                            new Intensity("file", "group3", 20, DetectionMS.MS),
-                            new Intensity("file", "group3", 15, DetectionMS.MS),
-                            new Intensity("file", "group3", 30, DetectionMS.MS)
+                            new Intensity("file", "group3", 10),
+                            new Intensity("file", "group3", 20),
+                            new Intensity("file", "group3", 15),
+                            new Intensity("file", "group3", 30)
                         },
                         new List<string>() { "group1", "group2", "group3" }, 1),
                    new Peptide("Seq2b", "Seq2", "Prot", "Gene", "Organism",
                         new List<Intensity>() {
-                            new Intensity("file", "group1", 20, DetectionMS.MS),
-                            new Intensity("file", "group1", 40, DetectionMS.MS),
-                            new Intensity("file", "group1", 30, DetectionMS.MS),
-                            new Intensity("file", "group1", 60, DetectionMS.MS),
+                            new Intensity("file", "group1", 20),
+                            new Intensity("file", "group1", 40),
+                            new Intensity("file", "group1", 30),
+                            new Intensity("file", "group1", 60),
 
-                            new Intensity("file", "group2", 20, DetectionMS.MS),
-                            new Intensity("file", "group2", 40, DetectionMS.MS),
-                            new Intensity("file", "group2", 30, DetectionMS.MS),
-                            new Intensity("file", "group2", 60, DetectionMS.MS),
+                            new Intensity("file", "group2", 20),
+                            new Intensity("file", "group2", 40),
+                            new Intensity("file", "group2", 30),
+                            new Intensity("file", "group2", 60),
 
-                            new Intensity("file", "group3", 20, DetectionMS.MS),
-                            new Intensity("file", "group3", 40, DetectionMS.MS),
-                            new Intensity("file", "group3", 30, DetectionMS.MS),
-                            new Intensity("file", "group3", 60, DetectionMS.MS)
+                            new Intensity("file", "group3", 20),
+                            new Intensity("file", "group3", 40),
+                            new Intensity("file", "group3", 30),
+                            new Intensity("file", "group3", 60)
                         },
                         new List<string>() { "group1", "group2", "group3" }, 1),
                    new Peptide("Seq3", "Seq3", "Prot", "Gene", "Organism",
                         new List<Intensity>() {
-                            new Intensity("file", "group1", 100, DetectionMS.MS),
-                            new Intensity("file", "group1", 20, DetectionMS.MS),
-                            new Intensity("file", "group1", 50, DetectionMS.MS),
-                            new Intensity("file", "group1", 600, DetectionMS.MS),
+                            new Intensity("file", "group1", 100),
+                            new Intensity("file", "group1", 20),
+                            new Intensity("file", "group1", 50),
+                            new Intensity("file", "group1", 600),
 
-                            new Intensity("file", "group2", 80, DetectionMS.MS),
-                            new Intensity("file", "group2", 600, DetectionMS.MS),
-                            new Intensity("file", "group2", 40, DetectionMS.MS),
-                            new Intensity("file", "group2", 3, DetectionMS.MS),
+                            new Intensity("file", "group2", 80),
+                            new Intensity("file", "group2", 600),
+                            new Intensity("file", "group2", 40),
+                            new Intensity("file", "group2", 3),
 
-                            new Intensity("file", "group3", 80, DetectionMS.MS),
-                            new Intensity("file", "group3", 600, DetectionMS.MS),
-                            new Intensity("file", "group3", 40, DetectionMS.MS),
-                            new Intensity("file", "group3", 3, DetectionMS.MS)
+                            new Intensity("file", "group3", 80),
+                            new Intensity("file", "group3", 600),
+                            new Intensity("file", "group3", 40),
+                            new Intensity("file", "group3", 3)
                         },
                         new List<string>() { "group1", "group2", "group3" }, 1),
                    new Peptide("Seq4", "Seq4", "Prot", "Gene", "Organism",
                         new List<Intensity>() {
-                            new Intensity("file", "group1", 150, DetectionMS.MS),
-                            new Intensity("file", "group1", 50, DetectionMS.MS),
-                            new Intensity("file", "group1", 75, DetectionMS.MS),
-                            new Intensity("file", "group1", 200, DetectionMS.MS),
+                            new Intensity("file", "group1", 150),
+                            new Intensity("file", "group1", 50),
+                            new Intensity("file", "group1", 75),
+                            new Intensity("file", "group1", 200),
 
-                            new Intensity("file", "group2", 90, DetectionMS.MS),
-                            new Intensity("file", "group2", 100, DetectionMS.MS),
-                            new Intensity("file", "group2", 50, DetectionMS.MS),
-                            new Intensity("file", "group2", 10, DetectionMS.MS),
+                            new Intensity("file", "group2", 90),
+                            new Intensity("file", "group2", 100),
+                            new Intensity("file", "group2", 50),
+                            new Intensity("file", "group2", 10),
 
-                            new Intensity("file", "group3", 90, DetectionMS.MS),
-                            new Intensity("file", "group3", 100, DetectionMS.MS),
-                            new Intensity("file", "group3", 50, DetectionMS.MS),
-                            new Intensity("file", "group3", 10, DetectionMS.MS)
+                            new Intensity("file", "group3", 90),
+                            new Intensity("file", "group3", 100),
+                            new Intensity("file", "group3", 50),
+                            new Intensity("file", "group3", 10)
                         },
                         new List<string>() { "group1", "group2", "group3" }, 1),
                    new Peptide("Seq5", "Seq5", "Prot", "Gene", "Organism",
                         new List<Intensity>() {
-                            new Intensity("file", "group1", 160, DetectionMS.MS),
-                            new Intensity("file", "group1", 55, DetectionMS.MS),
-                            new Intensity("file", "group1", 80, DetectionMS.MS),
-                            new Intensity("file", "group1", 240, DetectionMS.MS),
+                            new Intensity("file", "group1", 160),
+                            new Intensity("file", "group1", 55),
+                            new Intensity("file", "group1", 80),
+                            new Intensity("file", "group1", 240),
 
-                            new Intensity("file", "group2", 110, DetectionMS.MS),
-                            new Intensity("file", "group2", 120, DetectionMS.MS),
-                            new Intensity("file", "group2", 75, DetectionMS.MS),
-                            new Intensity("file", "group2", 24, DetectionMS.MS),
+                            new Intensity("file", "group2", 110),
+                            new Intensity("file", "group2", 120),
+                            new Intensity("file", "group2", 75),
+                            new Intensity("file", "group2", 24),
 
-                            new Intensity("file", "group3", 110, DetectionMS.MS),
-                            new Intensity("file", "group3", 120, DetectionMS.MS),
-                            new Intensity("file", "group3", 75, DetectionMS.MS),
-                            new Intensity("file", "group3", 24, DetectionMS.MS)
+                            new Intensity("file", "group3", 110),
+                            new Intensity("file", "group3", 120),
+                            new Intensity("file", "group3", 75),
+                            new Intensity("file", "group3", 24)
                         },
                         new List<string>() { "group1", "group2", "group3" }, 1)
 

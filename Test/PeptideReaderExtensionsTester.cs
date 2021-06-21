@@ -23,7 +23,7 @@ namespace Test
             //var noFilePeptideReaderTest = PeptideReader.ReadTsv("", filePathGroupsOnePeptideTest);
             //Assert.Throws(, onePeptideReaderTest.Count);
 
-            List<Peptide> pepsInFile = PeptideReader.ReadTsv(filePath, groupPath, reqNumPepMeasurements);
+            List<Peptide> pepsInFile = PeptideReader.ReadTsv(filePath, groupPath, reqNumPepMeasurements, 5, "FlashLFQ");
             Assert.AreEqual(peptideCount, pepsInFile.Count());
 
             //test group dictonaries & lists!
@@ -36,8 +36,8 @@ namespace Test
         [Test]
         public void Extensions_IncludeSharedPeptides_Pass(string filePathSharedPeptides, string groupPath, int reqNumPepMeasurements, string filePathUniquePeptides, int numRazorPep)
         {
-            List<Peptide> sharedPeps = PeptideReader.ReadTsv(filePathSharedPeptides, groupPath, reqNumPepMeasurements);
-            List<Peptide> uniquePeps = PeptideReader.ReadTsv(filePathUniquePeptides, groupPath, reqNumPepMeasurements);
+            List<Peptide> sharedPeps = PeptideReader.ReadTsv(filePathSharedPeptides, groupPath, reqNumPepMeasurements, 5, "FlashLFQ");
+            List<Peptide> uniquePeps = PeptideReader.ReadTsv(filePathUniquePeptides, groupPath, reqNumPepMeasurements, 5, "FlashLFQ");
 
             //include razor peptides
             sharedPeps = Extensions.IncludeSharedPeptides(sharedPeps, true);
@@ -66,7 +66,7 @@ namespace Test
             
             Dictionary<string, string> groups = PeptideReader.GetGroups(filepathgroups);
             List<string> groupsList = PeptideReader.GetGroupList(filepathgroups);
-            List<Peptide> testPeptide = PeptideReader.ReadTsv(filepathpeptides, filepathgroups, 3);
+            List<Peptide> testPeptide = PeptideReader.ReadTsv(filepathpeptides, filepathgroups, 3, 5, "FlashLFQ");
             testPeptide = Extensions.IncludeSharedPeptides(testPeptide, false);
 
             //group peptides by protein
