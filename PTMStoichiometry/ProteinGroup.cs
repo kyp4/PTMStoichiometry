@@ -12,7 +12,7 @@ namespace PTMStoichiometry
     {
         public List<Peptide> PeptidesInProtein { get; }
         public string ProteinName { get; }
-        public Boolean useProt { get; set; } //determine whether prot is useful for stoichiometry calc - needs to have both mod & unmod state
+        public bool useProt { get; set; } //determine whether prot is useful for stoichiometry calc - needs to have both mod & unmod state
         public int NumPeptidesInProtein { get; }
         public List<Peptide> BaselinePeptides { get; } //peptides to compare others to: must be unmodified, covary with each other, and not be in other proteins & must be the same baseline for all groups
         public List<PairwiseCompairison> ProteinPairwiseComparisons { get; } //compare peptides by group within protein
@@ -26,16 +26,21 @@ namespace PTMStoichiometry
         //correlationCutOff - min value at which two peptides will be considered to be correlated
         //compareUnmod - if false (default) only compare modified peptides to baseline, not unmodified peptides
 
+        //holds all data related to an unmodified protein - so several modified proteins may fall into this groups
+        //maybe make proteinGroup object then remove all PTMS to find unmod seq?
+        //maybe take each protein and if a peptide falls into another protein also grab all those peptides?
+
+        
         public ProteinGroup(string proteinAccession, List<Peptide> peptides, int reqNumUnmodPeptides, int reqNumModPeptides, int reqNumOfPepeptides) 
         {
             this.ProteinName = proteinAccession;
-            this.PeptidesInProtein = peptides.Where(p => p.ProteinGroup == ProteinName).Where(p => p.DetectedMinNum).ToList();
+            this.PeptidesInProtein = peptides.Where(p => p.ProteinGroup.Contains(ProteinName)).Where(p => p.DetectedMinNum).ToList(); 
             this.NumPeptidesInProtein = this.PeptidesInProtein.Count();
             this.useProt = isProteinUseful(this.PeptidesInProtein, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides);
         }
 
         public ProteinGroup(string proteinAccession, List<Peptide> peptides, List<string> groups, int reqNumUnmodPeptides, int reqNumModPeptides, int reqNumOfPepeptides,
-        Boolean useBaselinePeptides, int reqNumBaselinePeptides, int reqNumBaselineMeasurements, double correlationCutOff, Boolean compareUnmod, int minNumStoichiometries) : this (proteinAccession, peptides, reqNumUnmodPeptides, 
+        bool useBaselinePeptides, int reqNumBaselinePeptides, int reqNumBaselineMeasurements, double correlationCutOff, bool compareUnmod, int minNumStoichiometries) : this (proteinAccession, peptides, reqNumUnmodPeptides, 
         reqNumModPeptides, reqNumOfPepeptides)
         {
             if (!this.useProt) return;
@@ -60,7 +65,7 @@ namespace PTMStoichiometry
 
         //overload if given groupToCompare - single group to compare against, this is the group name (e.g. a control group) (default = null)
         public ProteinGroup(string proteinAccession, List<Peptide> peptides, List<string> groups, int reqNumUnmodPeptides, int reqNumModPeptides, int reqNumOfPepeptides,
-        Boolean useBaselinePeptides, int reqNumBaselinePeptides, int reqNumBaselineMeasurements, double correlationCutOff, Boolean compareUnmod, int minNumStoichiometries, string groupToCompare) : 
+        bool useBaselinePeptides, int reqNumBaselinePeptides, int reqNumBaselineMeasurements, double correlationCutOff, bool compareUnmod, int minNumStoichiometries, string groupToCompare) : 
             this(proteinAccession, peptides, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides)
         {
             if (!this.useProt) return;
@@ -146,7 +151,7 @@ namespace PTMStoichiometry
             return correlation;
         }
 
-        public void setUseProt(Boolean newBool)
+        public void setUseProt(bool newBool)
         {
             this.useProt = newBool;
         }
@@ -154,7 +159,7 @@ namespace PTMStoichiometry
 
 
         //function to check whether the protein meets criteria input
-        private Boolean isProteinUseful(List<Peptide> pepsInProt, int reqNumUnmodPeptides, int reqNumModPeptides, int reqNumOfPepeptides)
+        private bool isProteinUseful(List<Peptide> pepsInProt, int reqNumUnmodPeptides, int reqNumModPeptides, int reqNumOfPepeptides)
         {
             //ensure have enough peptides, mod, & unmod peptides
             if (pepsInProt.Count() >= reqNumOfPepeptides || pepsInProt.Where(p => !p.Mod).ToList().Count() >= reqNumUnmodPeptides || 
@@ -182,7 +187,7 @@ namespace PTMStoichiometry
         }
 
         //baseline case: function to compare all modified peptides in protein against baseline using PairwiseCompairison 
-        private List<PairwiseCompairison> calcComparison(List<Peptide> PepsInProt, List<string> groups, Boolean compareUnmod, int minNumStoichiometries)
+        private List<PairwiseCompairison> calcComparison(List<Peptide> PepsInProt, List<string> groups, bool compareUnmod, int minNumStoichiometries)
         {
             List<PairwiseCompairison> comparePeps = new List<PairwiseCompairison>();
             List<Peptide> PeptidesToCompare = PepsInProt;
@@ -210,7 +215,7 @@ namespace PTMStoichiometry
         }
 
         //overload calcComparison (baseline averaged comparing against only one group) function to compare all modified peptides in protein against baseline using PairwiseCompairison 
-        private List<PairwiseCompairison> calcComparison(List<Peptide> PepsInProt, List<string> groups, Boolean compareUnmod, int minNumStoichiometries, string groupToCompare)
+        private List<PairwiseCompairison> calcComparison(List<Peptide> PepsInProt, List<string> groups, bool compareUnmod, int minNumStoichiometries, string groupToCompare)
         {
             List<PairwiseCompairison> comparePeps = new List<PairwiseCompairison>();
             List<Peptide> PeptidesToCompare = PepsInProt;

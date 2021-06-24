@@ -13,13 +13,15 @@ namespace PTMStoichiometry
     {
         public string Sequence { get; } //Seq w mods from MM search output
         public string BaseSeq { get; } //Seq without mods 
-        public List<string> Modifications { get; } //Seq mods
-        public string ProteinGroup { get; } //Accession number(s)
+        public List<PostTranslationalModification> Modifications { get; } //Seq mods
+
+
+        public List<string> ProteinGroup { get; } //Accession number(s)
         public string GeneName { get; }
         public List<Intensity> Intensities { get; } 
-        public Boolean IsUnique { get; set; } // is true is peptide is in only one protein group, false otherwise
-        public Boolean DetectedMinNum { get; } // is true if peptide is detected (>0) in all group the min num of times (reqNumPepMeasurements, default=3), false otherwise
-        public Boolean Mod { get; } //true if peptide is modified and modification is not one of the "to ignore" modifications
+        public bool IsUnique { get; } // is true is peptide is in only one protein group, false otherwise
+        public bool DetectedMinNum { get; } // is true if peptide is detected (>0) in all group the min num of times (reqNumPepMeasurements, default=3), false otherwise
+        public bool Mod { get; } //true if peptide is modified and modification is not one of the "to ignore" modifications
 
         IEnumerable<string> fixedPTMs = File.ReadLines(@"C:\Users\KAP\source\repos\PTMStoichiometry_master\PTMStoichiometry\FixedPTMs.txt");
         public Peptide(string Seq, string BaseSeq, string ProteinGroup, string GeneName, string Organism, List<Intensity> Intensities, 
@@ -27,7 +29,8 @@ namespace PTMStoichiometry
         {
             this.Sequence = Seq;
             this.BaseSeq = BaseSeq;
-            this.ProteinGroup = ProteinGroup;
+            this.ProteinGroup = ProteinGroup.Split(";").ToList();
+            this.IsUnique = this.ProteinGroup.Count() == 1;
             this.GeneName = GeneName;
             this.Intensities = Intensities;
             this.DetectedMinNum = DetectCount(this.Intensities, groupsList, reqNumPepMeasurements);
@@ -46,8 +49,12 @@ namespace PTMStoichiometry
             {
                 this.Sequence = spl[0];
                 this.BaseSeq = spl[1];
-                this.Modifications = this.Sequence.Split('[', ']').Where((item, index) => index % 2 != 0).ToList();
-                this.ProteinGroup = spl[2];
+                //this.Modifications = this.Sequence.Split('[', ']').Where((item, index) => index % 2 != 0).ToList();
+                //this.LocalizedMods = GetLocalizedModifications(this.Sequence, this.Modifications, "FlashLFQ"); 
+                this.Modifications = GetModifications(this.Sequence);
+
+                this.ProteinGroup = spl[2].Split(";").ToList();
+                this.IsUnique = this.ProteinGroup.Count() == 1;
                 this.GeneName = spl[3];
                 this.Intensities = GetIntensities(spl.SubArray(intensityIndex, spl.Length - intensityIndex), groups);
                 this.DetectedMinNum = DetectCount(this.Intensities, groupsList, reqNumPepMeasurements);
@@ -57,13 +64,13 @@ namespace PTMStoichiometry
             {
                 this.Sequence = spl[0] + spl[1];
                 this.BaseSeq = spl[0];
-                this.Modifications = spl[1].Split(';').ToList();
-                this.ProteinGroup = spl[5];
+                this.Modifications = GetModifications(this.Sequence);
+                this.ProteinGroup = spl[5].Split(";").ToList();
+                this.IsUnique = this.ProteinGroup.Count() == 1;
                 this.GeneName = spl[6];
                 this.Intensities = GetIntensities(spl.SubArray(intensityIndex, spl.Length - intensityIndex), groups);
-                //this.Intensities = GetIntensities(spl.SubArray(12 + groups.Count() + 11, spl.Length - (12 + groups.Count() + 11)), groups);
                 this.DetectedMinNum = DetectCount(this.Intensities, groupsList, reqNumPepMeasurements);
-                this.Mod = this.Modifications[0] != "Unmodified";
+                //this.Mod = this.Modifications[0] != "Unmodified";
 
             }
             else
@@ -72,9 +79,46 @@ namespace PTMStoichiometry
             }
         }
 
-        
+        private List<PostTranslationalModification> GetModifications(string sequence)
+        {
+            List<PostTranslationalModification> ptms = new List<PostTranslationalModification>();
+            List<string> mods = this.Sequence.Split('[', ']').Where((item, index) => index % 2 != 0).ToList();
+            List<string> localizedMods = GetLocalizedModifications(sequence, mods);
+            for (int i = 0; i < mods.Count(); i++)
+            {
+                ptms.Add(new PostTranslationalModification(mods[i], localizedMods[i]));
+            }
+            return ptms;
+        }
 
-        
+        public static List<string> GetLocalizedModifications(string seq, List<string> mods)
+        {
+            List<string> localized = new List<string>();
+
+       
+            
+                List<string> splitSeq = seq.Split('[', ']').ToList();
+                List<string> modsCopy = new List<string>(mods);
+
+                // List<string> splitBaseSeq = splitSeq.Where((item, index) => index % 2 != 1).ToList();
+
+                for (int i = 0; i < mods.Count(); i++)
+                {
+                    //if (!mods[i].Contains("on X"))
+                    //{
+                        modsCopy.Remove(mods[i]);
+                        localized.Add(string.Join("", seq.Split('[', ']').ToList().Where(p => !modsCopy.Contains(p)).ToList()));
+
+                        modsCopy.Add(mods[i]);
+                        //localized.Add(seq.Split('[', ']').ToList().RemoveAll(p => p.StartsWith("[") if(p != mods[i])).ToString());
+                   // }
+                }
+            
+            
+            return localized;
+        }
+
+
 
         //determine if the number of detections is greater than the min set
         private bool DetectCount(List<Intensity> intensities, List<string> groupsList, int reqNumPepMeasurements)
@@ -131,19 +175,6 @@ namespace PTMStoichiometry
             return intensities;
         }
 
-        public void setIsUnique(List<Peptide> Peps)
-        {
-            this.IsUnique = true;
-            foreach (Peptide pep in Peps)
-            {
-                if (pep.Sequence == this.Sequence && pep != this)
-                {
-                    this.IsUnique = false;
-                    return;
-                }
-            }
-            this.IsUnique = true;
-        }
 
     }
 }

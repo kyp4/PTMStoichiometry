@@ -17,24 +17,7 @@ namespace PTMStoichiometry
             return result;
         }
 
-        //remove shared peptides if parameter set to false, otherwise include shared peptides in calculations
-        //sets the IsUnique parameter in Peptide
-        public static List<Peptide> IncludeSharedPeptides(List<Peptide> Peps, bool IncludeRazorPep)
-        {
-
-            foreach (Peptide pep in Peps)
-            {
-                pep.setIsUnique(Peps);
-            }
-
-            if (!IncludeRazorPep)
-            {
-                return Peps.Where(p => p.IsUnique).ToList();
-            }
-            return Peps;
-        }
-
-        
+       
 
         //apply Benjamini-Hochberg p-value correct - correct the p-values
         //set the corrected p-values in pairwise comparisons

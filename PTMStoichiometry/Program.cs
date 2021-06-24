@@ -54,7 +54,7 @@ namespace PTMStoichiometry
             string filepathpeptides = @"D:\PTMStoichiometry\TestData\PXD003881\2021-06-09-09-54-45\Task3-SearchTask\AllQuantifiedPeptides.tsv";
             string filepathgroups = @"D:\PTMStoichiometry\TestData\PXD003881\2021-06-09-09-54-45\Task3-SearchTask\PXD003881_MM_Groups.txt";
             string directory = @"D:\PTMStoichiometry\TestData\PXD003881\2021-06-09-09-54-45\Task3-SearchTask\";
-            string stoichiometryfileout = "20210621a_PXD003881_FlashLFQ";
+            string stoichiometryfileout = "20210624a_PXD003881_FlashLFQ";
             string paramsfile = stoichiometryfileout + "_params";
 
             if (File.ReadAllLines(filepathpeptides, Encoding.UTF8)[0].Split("\t")[4] == "Organism")
@@ -76,18 +76,18 @@ namespace PTMStoichiometry
             Dictionary<string, string> groups = PeptideReader.GetGroups(filepathgroups);
             List<string> groupsList = PeptideReader.GetGroupList(filepathgroups);
             List<Peptide> testPeptide = PeptideReader.ReadTsv(filepathpeptides, filepathgroups, reqNumPepMeasurements, intensityIndex, dataType);
-            testPeptide = Extensions.IncludeSharedPeptides(testPeptide, false); 
+            //testPeptide = Extensions.IncludeSharedPeptides(testPeptide, false); 
 
 
             //group peptides by protein
-            var proteins = testPeptide.Select(p => p.ProteinGroup).Distinct().ToArray();
+            var proteins = testPeptide.Where(p => p.ProteinGroup.Count() == 1).Select(p => p.ProteinGroup).Distinct().ToArray(); //TODO: chance of leaving things out? - think it is okay bc if doesn't make it past this has NO unique peps
             List<ProteinGroup> testProt = new List<ProteinGroup>();
-
+            
             if (groupToCompare != null)
             {
                 for (int i = 0; i < proteins.Length; i++)
                 {
-                    testProt.Add(new ProteinGroup(proteins[i], testPeptide, groupsList, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides,
+                    testProt.Add(new ProteinGroup(proteins[i][0], testPeptide, groupsList, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides,
                     useBaselinePeptides, reqNumBaselinePeptides, reqNumBaselineMeasurements, correlationCutOff, compareUnmod, minNumStoichiometries, groupToCompare));
                 }
             }
@@ -95,7 +95,7 @@ namespace PTMStoichiometry
             {
                 for (int i = 0; i < proteins.Length; i++)
                 {
-                    testProt.Add(new ProteinGroup(proteins[i], testPeptide, groupsList, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides,
+                    testProt.Add(new ProteinGroup(proteins[i][0], testPeptide, groupsList, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides,
                     useBaselinePeptides, reqNumBaselinePeptides, reqNumBaselineMeasurements, correlationCutOff, compareUnmod, minNumStoichiometries));
                 }
             }

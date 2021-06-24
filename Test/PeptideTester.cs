@@ -9,6 +9,32 @@ namespace Test
     [TestFixture]
     class PeptideTester
     {
+        private static readonly object[] _calcTest =
+        {
+            new object[] {
+                "KTEM[Common Variable:Oxidation on M]VSSVPAE[Metal:FeIII on E]NKSVLNEHQETSK",
+                 new List<string>() { "[Common Variable:Oxidation on M]", "[Metal:FeIII on E]" },
+                 "FlashLFQ",
+                 new List<string>() { "KTEM[Common Variable:Oxidation on M]VSSVPAENKSVLNEHQETSK", "KTEMVSSVPAE[Metal:FeIII on E]NKSVLNEHQETSK" }
+            },
+            new object[] {
+                "[Common Biological:Acetylation on X]RAEEPC[Common Fixed:Carbamidomethyl on C]APGAPSALGAQR",
+                 new List<string>() { "[Common Biological:Acetylation on X]", "[Common Fixed:Carbamidomethyl on C]" },
+                 "FlashLFQ",
+                 new List<string>() { "RAEEPC[Common Fixed:Carbamidomethyl on C]APGAPSALGAQR" }
+            },
+        };
+
+        [Test]
+        //KTEM[Common Variable:Oxidation on M]VSSVPAE[Metal:Fe[III] on E]NKSVLNEHQETSK
+        //[Common Biological:Acetylation on X]RAEEPC[Common Fixed:Carbamidomethyl on C]APGAPSALGAQR
+        [TestCaseSource("_calcTest")]
+        public void Peptide_GetLocalizedModifications_Pass(string seq, List<string> mods, string dataType, List<string> localized)
+        {
+            List<string> testGetLocalizedModifications = Peptide.GetLocalizedModifications(seq, mods, dataType);
+            Assert.AreEqual(localized, testGetLocalizedModifications);
+        }
+
         //test that Peptide is reading in information from FlashLFQ lines and setting isUnique correctly
         [Test]
         [TestCase(@"C:\Users\KAP\source\repos\PTMStoichiometryTester20200415a\TestData\AllQuantifiedPeptidesPhosphoTinyTest.txt",
@@ -46,7 +72,7 @@ namespace Test
             Assert.AreEqual(detectedMinNum, pepsInFile[lineToCompare].DetectedMinNum);
 
             //check setting isUnique
-            Extensions.IncludeSharedPeptides(pepsInFile, true);
+            //Extensions.IncludeSharedPeptides(pepsInFile, true);
             Assert.AreEqual(isUnique, pepsInFile[lineToCompare].IsUnique);
 
             //check intensities
@@ -121,7 +147,10 @@ namespace Test
             }
         };
 
+        /*
+
         [Test]
+
         [TestCaseSource("_isUniqueLists")]
         public void Peptide_IsUnique_Pass(List<Peptide> peps, List<bool> isUnique)
         {
@@ -131,5 +160,6 @@ namespace Test
             }
             Assert.AreEqual(isUnique, peps.Select(peps => peps.IsUnique));
         }
+        */
     }
 }

@@ -40,10 +40,10 @@ namespace Test
             List<Peptide> uniquePeps = PeptideReader.ReadTsv(filePathUniquePeptides, groupPath, reqNumPepMeasurements, 5, "FlashLFQ");
 
             //include razor peptides
-            sharedPeps = Extensions.IncludeSharedPeptides(sharedPeps, true);
+            //sharedPeps = Extensions.IncludeSharedPeptides(sharedPeps, true);
             Assert.AreNotEqual(uniquePeps.Count(), sharedPeps.Count());
             //remove razor peptides
-            sharedPeps = Extensions.IncludeSharedPeptides(sharedPeps, false);
+            //sharedPeps = Extensions.IncludeSharedPeptides(sharedPeps, false);
 
             Assert.AreEqual(uniquePeps.Count(), sharedPeps.Count());
         }
@@ -67,14 +67,14 @@ namespace Test
             Dictionary<string, string> groups = PeptideReader.GetGroups(filepathgroups);
             List<string> groupsList = PeptideReader.GetGroupList(filepathgroups);
             List<Peptide> testPeptide = PeptideReader.ReadTsv(filepathpeptides, filepathgroups, 3, 5, "FlashLFQ");
-            testPeptide = Extensions.IncludeSharedPeptides(testPeptide, false);
+            //testPeptide = Extensions.IncludeSharedPeptides(testPeptide, false);
 
             //group peptides by protein
             var proteins = testPeptide.Select(p => p.ProteinGroup).Distinct().ToArray();
             List<ProteinGroup> testProt = new List<ProteinGroup>();
             for (int i = 0; i < proteins.Length; i++)
             {
-                testProt.Add(new ProteinGroup(proteins[i], testPeptide, groupsList, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides,
+                testProt.Add(new ProteinGroup(proteins[i][0], testPeptide, groupsList, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides,
                     useBaselinePeptides, reqNumUnmodPeptides, reqNumBaselineMeasurements, 0.5, false, 3));
             }
             var correctPValsUnGroupedProt = testProt.Where(p => p.ProteinPairwiseComparisons != null).ToList();

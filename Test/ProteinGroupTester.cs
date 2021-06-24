@@ -357,7 +357,7 @@ namespace Test
         public void ProteinGroup_getBaseLinePeptides_Pass(string proteinAccession, List<Peptide> peptides, List<string> groups, int reqNumUnmodPeptides, int reqNumModPeptides, int reqNumOfPepeptides,
             Boolean useBaselinePeptides, int reqNumBaselinePeptides, double correlationCutOff, Boolean compareUnmod, int minNumStoichiometries, string groupToCompare, List<string> baselinePeptideSeq)
         {
-            Extensions.IncludeSharedPeptides(peptides, true); //set isUnique
+           // Extensions.IncludeSharedPeptides(peptides, true); //set isUnique
             ProteinGroup ProteinGroupAllGroupsTest = new ProteinGroup(proteinAccession, peptides, groups, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides, useBaselinePeptides, 
                 reqNumBaselinePeptides, 3, correlationCutOff, compareUnmod, minNumStoichiometries);
             ProteinGroup ProteinGroupSetGroupTest = new ProteinGroup(proteinAccession, peptides, groups, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides, useBaselinePeptides,
@@ -703,7 +703,7 @@ namespace Test
             int numPairwiseCompairisonsPeptidePeptideSetGroup)
         {
 
-            Extensions.IncludeSharedPeptides(peptides, true); //set isUnique
+            //Extensions.IncludeSharedPeptides(peptides, true); //set isUnique
             ProteinGroup ProteinGroupBaselineAllGroupTest = new ProteinGroup(proteinAccession, peptides, groups, 3, 1, 4, true,
                 3, 3, 0.5, false, 3);
             ProteinGroup ProteinGroupBaselineSetGroupTest = new ProteinGroup(proteinAccession, peptides, groups, 3, 1, 4, true,

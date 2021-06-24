@@ -18,7 +18,7 @@ namespace PTMStoichiometry
             {
                 if (useBaselinePeptides)
                 {
-                    output.WriteLine("Peptide\tModifications\tBaseline\tGroup1\tGroup2\tProtein\tTotalNumPeptidesProt\tMWStat\tMWPVal\tBHPVal\t" 
+                    output.WriteLine("Peptide\tModifications\tLocalizedModifications\tBaseline\tGroup1\tGroup2\tProtein\tTotalNumPeptidesProt\tMWStat\tMWPVal\tBHPVal\t" 
                         + "MedianStoichiometryGroup1\tMedianStoichiometryGroup2\tMinStoichiometryGroup1\tMinStoichiometryGroup2\t"
                         + "MaxStoichiometryGroup1\tMaxStoichiometryGroup2\tStoichiometriesGroup1\tStoichiometriesGroup2");
                     foreach (ProteinGroup prot in proteinGroups)
@@ -31,10 +31,11 @@ namespace PTMStoichiometry
                                 output.WriteLine(
                                     pc.PeptideOne.Sequence
                                     + "\t" + String.Join(";", pc.PeptideOne.Modifications)
+                                    + "\t" + String.Join(";", pc.PeptideOne.LocalizedMods)
                                     + "\t" + String.Join(";", prot.BaselinePeptides.Select(p => p.Sequence))
                                     + "\t" + pc.GroupOne
                                     + "\t" + pc.GroupTwo
-                                    + "\t" + prot.ProteinName
+                                    + "\t" + String.Join(";", prot.ProteinName)
                                     + "\t" + prot.NumPeptidesInProtein.ToString()
                                     + "\t" + pc.MWStat.ToString()
                                     + "\t" + pc.MWPVal.ToString()
