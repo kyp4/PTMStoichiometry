@@ -41,7 +41,7 @@ namespace PTMStoichiometry
             int reqNumOfPepeptides = reqNumUnmodPeptides + reqNumModPeptides;
             bool useBaselinePeptides = true;
             int reqNumBaselinePeptides = reqNumUnmodPeptides;
-            int reqNumBaselineMeasurements = 3; //allow one missing value
+            int reqNumBaselineMeasurements = 5; //allow one missing value
             double correlationCutOff = 0.75;
             bool compareUnmod = false;
             int minNumStoichiometries = 3;
@@ -51,11 +51,10 @@ namespace PTMStoichiometry
             string groupToCompare = null;
             string dataType = "unknown";
 
-            string filepathpeptides = @"D:\PTMStoichiometry\TestData\PXD003881\2021-06-09-09-54-45\Task3-SearchTask\AllQuantifiedPeptides.tsv";
-            string filepathgroups = @"D:\PTMStoichiometry\TestData\PXD003881\2021-06-09-09-54-45\Task3-SearchTask\PXD003881_MM_Groups.txt";
-            string directory = @"D:\PTMStoichiometry\TestData\PXD003881\2021-06-09-09-54-45\Task3-SearchTask\";
-            string stoichiometryfileout = "20210624a_PXD003881_FlashLFQ";
-            string paramsfile = stoichiometryfileout + "_params";
+            string filepathpeptides = @"D:\PTMStoichiometry\TestData\MSV000086126\2021-06-03-16-11-24\Task3-SearchTask\AllQuantifiedPeptides.tsv";
+            string filepathgroups = @"D:\PTMStoichiometry\TestData\MSV000086126\2021-06-03-16-11-24\Task3-SearchTask\MSV000086126Groups.txt";
+            string directory = @"D:\PTMStoichiometry\TestData\MSV000086126\2021-06-03-16-11-24\Task3-SearchTask\";
+            
 
             if (File.ReadAllLines(filepathpeptides, Encoding.UTF8)[0].Split("\t")[4] == "Organism")
             {
@@ -65,6 +64,10 @@ namespace PTMStoichiometry
             {
                 dataType = "MaxQuant";
             }
+            string subdirectory = "20210628a";
+            string peptidestoichiometryfileout = subdirectory + "PeptideAnalysis";
+            string ptmstoichiometryfileout = subdirectory + "PTMAnalysis";
+            string paramsfile = subdirectory + "params";
 
             int intensityIndex = 5;
             if (dataType == "MaxQuant")
@@ -104,10 +107,11 @@ namespace PTMStoichiometry
             Extensions.CalcCorrectedPValue(testProt, groupPepsForPValCalc, alpha);
             List<ProteinGroup> ProteinsToUse = testProt.Where(p => p.useProt).ToList();
             
-            WriteFile.ParamsWriter(paramsfile, filepathpeptides, filepathgroups, directory, stoichiometryfileout, reqNumUnmodPeptides, reqNumModPeptides,
+            WriteFile.ParamsWriter(paramsfile, filepathpeptides, filepathgroups, directory, peptidestoichiometryfileout, reqNumUnmodPeptides, reqNumModPeptides,
                 reqNumOfPepeptides, useBaselinePeptides, reqNumBaselinePeptides, reqNumBaselineMeasurements, correlationCutOff, compareUnmod,
                 minNumStoichiometries, reqNumPepMeasurements, groupPepsForPValCalc, alpha, groupToCompare);
-            WriteFile.StoichiometryDataWriter(ProteinsToUse, useBaselinePeptides, minNumStoichiometries, directory, stoichiometryfileout);
+            WriteFile.StoichiometryPeptideDataWriter(ProteinsToUse, useBaselinePeptides, minNumStoichiometries, directory, peptidestoichiometryfileout);
+            WriteFile.StoichiometryPTMDataWriter(ProteinsToUse, useBaselinePeptides, minNumStoichiometries, directory, ptmstoichiometryfileout);
 
         }
     }

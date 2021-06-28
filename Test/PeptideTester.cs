@@ -9,30 +9,57 @@ namespace Test
     [TestFixture]
     class PeptideTester
     {
-        private static readonly object[] _calcTest =
+        private static readonly object[] _getModificationsTest =
         {
             new object[] {
                 "KTEM[Common Variable:Oxidation on M]VSSVPAE[Metal:FeIII on E]NKSVLNEHQETSK",
-                 new List<string>() { "[Common Variable:Oxidation on M]", "[Metal:FeIII on E]" },
-                 "FlashLFQ",
-                 new List<string>() { "KTEM[Common Variable:Oxidation on M]VSSVPAENKSVLNEHQETSK", "KTEMVSSVPAE[Metal:FeIII on E]NKSVLNEHQETSK" }
+                 new List<string>()
+                 {
+                     "Common Variable:Oxidation on M",
+                     "Metal:FeIII on E"
+                 },
+                 new List<bool>()
+                 {
+                     true,
+                     true
+                 },
+                 new List<string>()
+                 {
+                     "KTEMCommon Variable:Oxidation on MVSSVPAENKSVLNEHQETSK",
+                     "KTEMVSSVPAEMetal:FeIII on ENKSVLNEHQETSK"
+                 },
             },
             new object[] {
                 "[Common Biological:Acetylation on X]RAEEPC[Common Fixed:Carbamidomethyl on C]APGAPSALGAQR",
-                 new List<string>() { "[Common Biological:Acetylation on X]", "[Common Fixed:Carbamidomethyl on C]" },
-                 "FlashLFQ",
-                 new List<string>() { "RAEEPC[Common Fixed:Carbamidomethyl on C]APGAPSALGAQR" }
+                new List<string>()
+                 {
+                     "Common Biological:Acetylation on X",
+                     "Common Fixed:Carbamidomethyl on C"
+                 },
+                 new List<bool>()
+                 {
+                     false,
+                     true
+                 },
+                 new List<string>()
+                 {
+                     "Common Biological:Acetylation on XRAEEPCAPGAPSALGAQR",
+                     "RAEEPCCommon Fixed:Carbamidomethyl on CAPGAPSALGAQR"
+                 },
             },
         };
 
         [Test]
         //KTEM[Common Variable:Oxidation on M]VSSVPAE[Metal:Fe[III] on E]NKSVLNEHQETSK
         //[Common Biological:Acetylation on X]RAEEPC[Common Fixed:Carbamidomethyl on C]APGAPSALGAQR
-        [TestCaseSource("_calcTest")]
-        public void Peptide_GetLocalizedModifications_Pass(string seq, List<string> mods, string dataType, List<string> localized)
+        [TestCaseSource("_getModificationsTest")]
+        public void Peptide_GetModifications_Pass(string seq, List<string> mods, List<bool> localized, List<string> localizedMods)
         {
-            List<string> testGetLocalizedModifications = Peptide.GetLocalizedModifications(seq, mods, dataType);
-            Assert.AreEqual(localized, testGetLocalizedModifications);
+            List<PostTranslationalModification> postTranslationalModifications = Peptide.GetModifications(seq);
+
+            Assert.AreEqual(mods, postTranslationalModifications.Select(p => p.Modification));
+            Assert.AreEqual(localized, postTranslationalModifications.Select(p => p.Localized));
+            Assert.AreEqual(localizedMods, postTranslationalModifications.Select(p => p.ModificationInPeptideSequence));
         }
 
         //test that Peptide is reading in information from FlashLFQ lines and setting isUnique correctly

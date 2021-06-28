@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace PTMStoichiometry
 {
@@ -8,14 +9,26 @@ namespace PTMStoichiometry
     public class Stoichiometry
     {
         public double StoichiometryVal { get; } //intensity of pep/baseline or pep1/pep2 ;
-        public Boolean usefulStoichiometry { get; } //true if pep Intensity > 0, false otherwise
-        public Stoichiometry(Intensity Pep, double baseline)
+        public bool usefulStoichiometry { get; } //true if pep Intensity > 0, false otherwise
+        public Stoichiometry(List<Intensity> Pep, double baseline)
         { 
+            this.StoichiometryVal = Pep.Select(p => p.IntensityVal).Sum() / baseline;
+            this.usefulStoichiometry = (Pep.Select(p => p.IntensityVal).Sum() > 0); 
+        }
+
+        public Stoichiometry(Intensity Pep, double baseline)
+        {
             this.StoichiometryVal = Pep.IntensityVal / baseline;
-            this.usefulStoichiometry = (Pep.IntensityVal > 0); 
+            this.usefulStoichiometry = (Pep.IntensityVal > 0);
         }
 
         //overload for peptide:peptide case
+        public Stoichiometry(List<Intensity> Pep1, Intensity Pep2)
+        {
+            this.StoichiometryVal = Pep1.Select(p => p.IntensityVal).Sum() / Pep2.IntensityVal;
+            this.usefulStoichiometry = (Pep1.Select(p => p.IntensityVal).Sum() > 0 && Pep2.IntensityVal > 0);
+        }
+
         public Stoichiometry(Intensity Pep1, Intensity Pep2)
         {
             this.StoichiometryVal = Pep1.IntensityVal / Pep2.IntensityVal;

@@ -13,9 +13,7 @@ namespace PTMStoichiometry
     {
         public string Sequence { get; } //Seq w mods from MM search output
         public string BaseSeq { get; } //Seq without mods 
-        public List<PostTranslationalModification> Modifications { get; } //Seq mods
-
-
+        public List<PostTranslationalModification> PostTranslationalModifications { get; } //Seq mods
         public List<string> ProteinGroup { get; } //Accession number(s)
         public string GeneName { get; }
         public List<Intensity> Intensities { get; } 
@@ -51,7 +49,7 @@ namespace PTMStoichiometry
                 this.BaseSeq = spl[1];
                 //this.Modifications = this.Sequence.Split('[', ']').Where((item, index) => index % 2 != 0).ToList();
                 //this.LocalizedMods = GetLocalizedModifications(this.Sequence, this.Modifications, "FlashLFQ"); 
-                this.Modifications = GetModifications(this.Sequence);
+                this.PostTranslationalModifications = GetModifications(this.Sequence);
 
                 this.ProteinGroup = spl[2].Split(";").ToList();
                 this.IsUnique = this.ProteinGroup.Count() == 1;
@@ -64,7 +62,7 @@ namespace PTMStoichiometry
             {
                 this.Sequence = spl[0] + spl[1];
                 this.BaseSeq = spl[0];
-                this.Modifications = GetModifications(this.Sequence);
+                this.PostTranslationalModifications = GetModifications(this.Sequence);
                 this.ProteinGroup = spl[5].Split(";").ToList();
                 this.IsUnique = this.ProteinGroup.Count() == 1;
                 this.GeneName = spl[6];
@@ -79,11 +77,11 @@ namespace PTMStoichiometry
             }
         }
 
-        private List<PostTranslationalModification> GetModifications(string sequence)
+        public static List<PostTranslationalModification> GetModifications(string sequence)
         {
             List<PostTranslationalModification> ptms = new List<PostTranslationalModification>();
-            List<string> mods = this.Sequence.Split('[', ']').Where((item, index) => index % 2 != 0).ToList();
-            List<string> localizedMods = GetLocalizedModifications(sequence, mods);
+            List<string> mods = sequence.Split('[', ']').Where((item, index) => index % 2 != 0).ToList();
+            List<string> localizedMods = Peptide.GetLocalizedModifications(sequence, mods);
             for (int i = 0; i < mods.Count(); i++)
             {
                 ptms.Add(new PostTranslationalModification(mods[i], localizedMods[i]));
@@ -94,9 +92,6 @@ namespace PTMStoichiometry
         public static List<string> GetLocalizedModifications(string seq, List<string> mods)
         {
             List<string> localized = new List<string>();
-
-       
-            
                 List<string> splitSeq = seq.Split('[', ']').ToList();
                 List<string> modsCopy = new List<string>(mods);
 

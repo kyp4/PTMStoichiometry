@@ -20,6 +20,4 @@ namespace PTMStoichiometry
             this.IntensityVal = intensity;
         }
     }
-
-   
 }

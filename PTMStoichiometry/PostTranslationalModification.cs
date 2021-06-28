@@ -5,19 +5,17 @@ using System.Text;
 
 namespace PTMStoichiometry
 {
-    class PostTranslationalModification
+    public class PostTranslationalModification
     {
-        bool Localized { get; }
-        string Modification { get; }
-        string ModificationInPeptideSequence { get; }
+        public bool Localized { get; }
+        public string Modification { get; }
+        public string ModificationInPeptideSequence { get; }
 
         public PostTranslationalModification(string modification, string modificationInPeptideSequence)
         {
             this.Modification = modification;
-            this.Localized = !this.Modification.Contains("in X");
+            this.Localized = !this.Modification.Contains("on X");
             this.ModificationInPeptideSequence = modificationInPeptideSequence;
-
-
         }
 
     }

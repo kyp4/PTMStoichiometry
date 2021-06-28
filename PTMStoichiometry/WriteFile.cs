@@ -9,7 +9,7 @@ namespace PTMStoichiometry
     public class WriteFile
     {
 
-        public static void StoichiometryDataWriter(List<ProteinGroup> proteinGroups, bool useBaselinePeptides, int minNumStoichiometries, string outputFolder, string fileName)
+        public static void StoichiometryPeptideDataWriter(List<ProteinGroup> proteinGroups, bool useBaselinePeptides, int minNumStoichiometries, string outputFolder, string fileName)
         {
             if (proteinGroups.Count == 0)
             { return; }
@@ -30,8 +30,7 @@ namespace PTMStoichiometry
                             {
                                 output.WriteLine(
                                     pc.PeptideOne.Sequence
-                                    + "\t" + String.Join(";", pc.PeptideOne.Modifications)
-                                    + "\t" + String.Join(";", pc.PeptideOne.LocalizedMods)
+                                    + "\t" + String.Join(";", pc.PeptideOne.PostTranslationalModifications.Select(p => p.Modification))
                                     + "\t" + String.Join(";", prot.BaselinePeptides.Select(p => p.Sequence))
                                     + "\t" + pc.GroupOne
                                     + "\t" + pc.GroupTwo
@@ -65,9 +64,9 @@ namespace PTMStoichiometry
                             {
                                 output.WriteLine(
                                     pc.PeptideOne.Sequence
-                                    + "\t" + String.Join(";", pc.PeptideOne.Modifications)
+                                    + "\t" + String.Join(";", pc.PeptideOne.PostTranslationalModifications.Select(p => p.Modification))
                                     + "\t" + pc.PeptideTwo.Sequence
-                                    + "\t" + String.Join(";", pc.PeptideTwo.Modifications)
+                                    + "\t" + String.Join(";", pc.PeptideTwo.PostTranslationalModifications.Select(p => p.Modification))
                                     + "\t" + pc.GroupOne
                                     + "\t" + pc.GroupTwo
                                     + "\t" + prot.ProteinName
@@ -86,7 +85,55 @@ namespace PTMStoichiometry
             }
         }
 
-     
+
+        public static void StoichiometryPTMDataWriter(List<ProteinGroup> proteinGroups, bool useBaselinePeptides, int minNumStoichiometries, string outputFolder, string fileName)
+        {
+            if (proteinGroups.Count == 0)
+            { return; }
+            var writtenFile = Path.Combine(outputFolder, fileName + ".txt");
+            using (StreamWriter output = new StreamWriter(writtenFile))
+            {
+                if (useBaselinePeptides)
+                {
+                    output.WriteLine("Modification\tPeptides\tProtein\tBaseline\tGroup1\tGroup2\tMWStat\tMWPVal\tBHPVal\t"
+                        + "MedianStoichiometryGroup1\tMedianStoichiometryGroup2\tMinStoichiometryGroup1\tMinStoichiometryGroup2\t"
+                        + "MaxStoichiometryGroup1\tMaxStoichiometryGroup2\tStoichiometriesGroup1\tStoichiometriesGroup2");
+                    foreach (ProteinGroup prot in proteinGroups)
+                    {
+                        foreach (PairwiseCompairison pc in prot.PTMPairwiseCompairisons)
+                        {
+                            if (pc.PeptideStoichiometriesGroupOne.Count() > minNumStoichiometries &&
+                                pc.PeptideStoichiometriesGroupTwo.Count() > minNumStoichiometries)
+                            {
+                                output.WriteLine(
+                                    pc.PTM
+                                    + "\t" + String.Join(";", pc.PeptidesWithPTM.Select(p => p.Sequence))
+                                    + "\t" + String.Join(";", prot.ProteinName)
+                                    + "\t" + String.Join(";", prot.BaselinePeptides.Select(p => p.Sequence))
+                                    + "\t" + pc.GroupOne
+                                    + "\t" + pc.GroupTwo
+                                    + "\t" + pc.MWStat.ToString()
+                                    + "\t" + pc.MWPVal.ToString()
+                                    + "\t" + pc.CorrectedpVal.ToString()
+                                    + "\t" + pc.PeptideStoichiometriesGroupOneMedian.ToString()
+                                    + "\t" + pc.PeptideStoichiometriesGroupTwoMedian.ToString()
+                                    + "\t" + pc.PeptideStoichiometriesGroupOneMin.ToString()
+                                    + "\t" + pc.PeptideStoichiometriesGroupTwoMin.ToString()
+                                    + "\t" + pc.PeptideStoichiometriesGroupOneMax.ToString()
+                                    + "\t" + pc.PeptideStoichiometriesGroupTwoMax.ToString()
+                                    + "\t" + String.Join(";", pc.PeptideStoichiometriesGroupOne.Select(p => p.StoichiometryVal))
+                                    + "\t" + String.Join(";", pc.PeptideStoichiometriesGroupTwo.Select(p => p.StoichiometryVal))
+                                );
+                            }
+                        }
+                    }
+                }
+                
+
+            }
+        }
+
+
 
         public static void ParamsWriter(string paramsfile, string filepathpeptides, string filepathgroups, string directory, string stoichiometryfileout, 
             int reqNumUnmodPeptides = 1, int reqNumModPeptides = 3, int reqNumOfPepeptides = 4, bool useBaselinePeptides = true,

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Easy.Common.Extensions;
 using MathNet.Numerics.Statistics;
 
 namespace PTMStoichiometry
@@ -16,6 +17,7 @@ namespace PTMStoichiometry
         public int NumPeptidesInProtein { get; }
         public List<Peptide> BaselinePeptides { get; } //peptides to compare others to: must be unmodified, covary with each other, and not be in other proteins & must be the same baseline for all groups
         public List<PairwiseCompairison> ProteinPairwiseComparisons { get; } //compare peptides by group within protein
+        public List<PairwiseCompairison> PTMPairwiseCompairisons { get; } 
 
         //reqNumOfPepeptides - min num of peptides that must be observed for a protein in order to consider it
         //reqNumModPeptides - min num of modified peptides that must be observed for a protein in order to consider it (default=1)
@@ -30,7 +32,7 @@ namespace PTMStoichiometry
         //maybe make proteinGroup object then remove all PTMS to find unmod seq?
         //maybe take each protein and if a peptide falls into another protein also grab all those peptides?
 
-        
+
         public ProteinGroup(string proteinAccession, List<Peptide> peptides, int reqNumUnmodPeptides, int reqNumModPeptides, int reqNumOfPepeptides) 
         {
             this.ProteinName = proteinAccession;
@@ -55,11 +57,13 @@ namespace PTMStoichiometry
                     return;
                 }
                 this.ProteinPairwiseComparisons = calcComparison(this.PeptidesInProtein, groups, compareUnmod, minNumStoichiometries);
+                this.PTMPairwiseCompairisons = ptmcalcComparison(this.PeptidesInProtein, groups, minNumStoichiometries);
             }
             //don't use averaged baseline - compare each protein to others
             else
             {
                 this.ProteinPairwiseComparisons = calcComparison(this.PeptidesInProtein, groups, minNumStoichiometries);
+                this.PTMPairwiseCompairisons =  ptmcalcComparison(this.PeptidesInProtein, groups, minNumStoichiometries);
             }
         }
 
@@ -80,11 +84,13 @@ namespace PTMStoichiometry
                     return;
                 }
                 this.ProteinPairwiseComparisons = calcComparison(this.PeptidesInProtein, groups, compareUnmod, minNumStoichiometries, groupToCompare);
+                this.PTMPairwiseCompairisons = ptmcalcComparison(this.PeptidesInProtein, groups, minNumStoichiometries, groupToCompare);
             }
             //don't use averaged baseline - compare each protein to others
             else
             {
                 this.ProteinPairwiseComparisons = calcComparison(this.PeptidesInProtein, groups, minNumStoichiometries, groupToCompare);
+                this.PTMPairwiseCompairisons = ptmcalcComparison(this.PeptidesInProtein, groups, minNumStoichiometries, groupToCompare);
             }
         }
 
@@ -184,6 +190,99 @@ namespace PTMStoichiometry
             }
 
             return BaselinePepIntensity;
+        }
+
+        //baseline case: grouped by localization modification ratios 
+        private List<PairwiseCompairison> ptmcalcComparison(List<Peptide> PepsInProt, List<string> groups, int minNumStoichiometries)
+        {
+            List<PairwiseCompairison> comparePeps = new List<PairwiseCompairison>();
+            List<Peptide> PeptidesToCompare = PepsInProt.Where(p => p.Mod).ToList();
+
+            //collect ptms
+            Dictionary<string, string> ptms = new Dictionary<string, string> { };
+            Dictionary<string, List<Peptide>> ptmDict = new Dictionary<string, List<Peptide>> { };
+            foreach (Peptide pep in PeptidesToCompare)
+            {
+                //ptms.Concat(pep.PostTranslationalModifications.Select(p => p.ModificationInPeptideSequence));
+                foreach (PostTranslationalModification mod in pep.PostTranslationalModifications)
+                {
+                    if (!ptms.ContainsKey(mod.ModificationInPeptideSequence))
+                    {
+                        ptms.Add(mod.ModificationInPeptideSequence, mod.Modification);
+                    }
+                        
+                    if (ptmDict.ContainsKey(mod.ModificationInPeptideSequence))
+                    {
+                        ptmDict[mod.ModificationInPeptideSequence].Add(pep);
+                    }
+                    else
+                    {
+                        ptmDict.Add(mod.ModificationInPeptideSequence, new List<Peptide>() { pep });
+                    }
+                }
+                
+            }
+
+            //loop over all mod, group, group permutations 
+            foreach (string ptm in ptms.Keys)
+            {
+                for (int g1 = 0; g1 < groups.Count(); ++g1)
+                {
+                    for (int g2 = (g1 + 1); g2 < groups.Count(); ++g2)
+                    {
+                        //rabbit - need way to put multiple peptides into PairwiseCompairison
+                        PairwiseCompairison temp = new PairwiseCompairison(ptmDict[ptm], getBaselineIntensities(), groups[g1], groups[g2], minNumStoichiometries, ptms[ptm]);
+                        if (temp.PeptideStoichiometriesGroupOne.Count() >= minNumStoichiometries && temp.PeptideStoichiometriesGroupTwo.Count() >= minNumStoichiometries)
+                        {
+                            comparePeps.Add(temp);
+                        }
+                    }
+                }
+            }
+            return comparePeps;
+        }
+
+        //baseline case: grouped by localization modification ratios with group to compare against
+        private List<PairwiseCompairison> ptmcalcComparison(List<Peptide> PepsInProt, List<string> groups, int minNumStoichiometries, string groupToCompare)
+        {
+            List<PairwiseCompairison> comparePeps = new List<PairwiseCompairison>();
+            List<Peptide> PeptidesToCompare = PepsInProt.Where(p => p.Mod).ToList();
+
+            //collect ptms
+            List<string> ptms = new List<string>();
+            Dictionary<string, List<Peptide>> ptmDict = new Dictionary<string, List<Peptide>> { };
+            foreach (Peptide pep in PeptidesToCompare)
+            {
+                ptms.Concat(pep.PostTranslationalModifications.Select(p => p.ModificationInPeptideSequence));
+                foreach (string mod in pep.PostTranslationalModifications.Select(p => p.ModificationInPeptideSequence))
+                {
+                    if (ptmDict[mod] != null)
+                    {
+                        ptmDict[mod].Add(pep);
+                    }
+                    else
+                    {
+                        ptmDict.Add(mod, new List<Peptide>() { pep });
+                    }
+                }
+
+            }
+            ptms.Distinct();
+            //loop over all mod, group, group permutations 
+            for (int p1 = 0; p1 < ptms.Count(); ++p1)
+            {
+                for (int g1 = 0; g1 < groups.Count(); ++g1)
+                {
+                   
+                        PairwiseCompairison temp = new PairwiseCompairison(ptmDict[ptms[p1]], getBaselineIntensities(), groups[g1], groupToCompare, minNumStoichiometries, ptms[p1]);
+                        if (temp.PeptideStoichiometriesGroupOne.Count() >= minNumStoichiometries && temp.PeptideStoichiometriesGroupTwo.Count() >= minNumStoichiometries)
+                        {
+                            comparePeps.Add(temp);
+                        }
+     
+                }
+            }
+            return comparePeps;
         }
 
         //baseline case: function to compare all modified peptides in protein against baseline using PairwiseCompairison 

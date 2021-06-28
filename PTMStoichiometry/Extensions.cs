@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+//using UsefulProteomicsDatabases;
 
 namespace PTMStoichiometry
 {
@@ -16,8 +17,6 @@ namespace PTMStoichiometry
             Array.Copy(array, offset, result, 0, length);
             return result;
         }
-
-       
 
         //apply Benjamini-Hochberg p-value correct - correct the p-values
         //set the corrected p-values in pairwise comparisons
