@@ -36,8 +36,8 @@ namespace PTMStoichiometry
             //groupPepsForPValCalc - choose to apply p-valuse correction within each protein (grouped) or across all proteins
             //alpha - chosen significance (default=0.05)
 
-            int reqNumUnmodPeptides = 1;
-            int reqNumModPeptides = 3;
+            int reqNumUnmodPeptides = 3;
+            int reqNumModPeptides = 1;
             int reqNumOfPepeptides = reqNumUnmodPeptides + reqNumModPeptides;
             bool useBaselinePeptides = true;
             int reqNumBaselinePeptides = reqNumUnmodPeptides;
@@ -51,10 +51,14 @@ namespace PTMStoichiometry
             string groupToCompare = null;
             string dataType = "unknown";
 
+            //string filepathpeptides = @"D:\PTMStoichiometry\TestData\PXD003881\2021-06-09-09-54-45\Task3-SearchTask\AllQuantifiedPeptides.tsv";
+            //string filepathgroups = @"D:\PTMStoichiometry\TestData\PXD003881\2021-06-09-09-54-45\Task3-SearchTask\PXD003881_MM_Groups.txt";
+            //string directory = @"D:\PTMStoichiometry\TestData\PXD003881\2021-06-09-09-54-45\Task3-SearchTask\";
+
             string filepathpeptides = @"D:\PTMStoichiometry\TestData\MSV000086126\2021-06-03-16-11-24\Task3-SearchTask\AllQuantifiedPeptides.tsv";
             string filepathgroups = @"D:\PTMStoichiometry\TestData\MSV000086126\2021-06-03-16-11-24\Task3-SearchTask\MSV000086126Groups.txt";
             string directory = @"D:\PTMStoichiometry\TestData\MSV000086126\2021-06-03-16-11-24\Task3-SearchTask\";
-            
+
 
             if (File.ReadAllLines(filepathpeptides, Encoding.UTF8)[0].Split("\t")[4] == "Organism")
             {
@@ -64,7 +68,7 @@ namespace PTMStoichiometry
             {
                 dataType = "MaxQuant";
             }
-            string subdirectory = "20210628a";
+            string subdirectory = "20210705d";
             string peptidestoichiometryfileout = subdirectory + "PeptideAnalysis";
             string ptmstoichiometryfileout = subdirectory + "PTMAnalysis";
             string paramsfile = subdirectory + "params";

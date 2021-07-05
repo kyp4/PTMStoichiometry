@@ -50,7 +50,7 @@ namespace PTMStoichiometry
 
         //two different methods of considering peptides for p-value correction: 
         //either correction within each protein (grouped) or across all proteins
-        public static void CalcCorrectedPValue(List<ProteinGroup> protein, Boolean grouped = false, double alpha = 0.05)
+        public static void CalcCorrectedPValue(List<ProteinGroup> protein, bool grouped = false, double alpha = 0.05)
         {
             if (grouped)
             {
@@ -58,24 +58,32 @@ namespace PTMStoichiometry
                 foreach (ProteinGroup prot in protein)
                 {
                     BenjaminiHochberg(prot.ProteinPairwiseComparisons, alpha);
+                    BenjaminiHochberg(prot.PTMPairwiseCompairisons, alpha);
                 }
             }
             //apply correction to all pairwise compairsons at once, regardless of what protein they belong to
             else
             {
-                List<PairwiseCompairison> pairwiseComparisons = new List<PairwiseCompairison>();
+                List<PairwiseCompairison> protPairwiseComparisons = new List<PairwiseCompairison>();
+                List<PairwiseCompairison> ptmPairwiseComparisons = new List<PairwiseCompairison>();
                 foreach (ProteinGroup prot in protein)
                 {
                     foreach (PairwiseCompairison comp in prot.ProteinPairwiseComparisons)
                     {
-                        pairwiseComparisons.Add(comp);
+                        protPairwiseComparisons.Add(comp);
+
+                    }
+                    foreach (PairwiseCompairison c in prot.PTMPairwiseCompairisons)
+                    {
+                        ptmPairwiseComparisons.Add(c);
+
                     }
                 }
                
-                //foreach (ProteinGroup prot in protein)
-                //{
-                    BenjaminiHochberg(pairwiseComparisons, alpha);
-                //}
+                
+                BenjaminiHochberg(protPairwiseComparisons, alpha);
+                BenjaminiHochberg(ptmPairwiseComparisons, alpha);
+                
             }
         }
 

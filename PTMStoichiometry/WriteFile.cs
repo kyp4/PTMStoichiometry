@@ -18,7 +18,7 @@ namespace PTMStoichiometry
             {
                 if (useBaselinePeptides)
                 {
-                    output.WriteLine("Peptide\tModifications\tLocalizedModifications\tBaseline\tGroup1\tGroup2\tProtein\tTotalNumPeptidesProt\tMWStat\tMWPVal\tBHPVal\t" 
+                    output.WriteLine("Peptide\tModifications\tBaseline\tGroup1\tGroup2\tProtein\tTotalNumPeptidesProt\tMWStat\tMWPVal\tBHPVal\t" 
                         + "MedianStoichiometryGroup1\tMedianStoichiometryGroup2\tMinStoichiometryGroup1\tMinStoichiometryGroup2\t"
                         + "MaxStoichiometryGroup1\tMaxStoichiometryGroup2\tStoichiometriesGroup1\tStoichiometriesGroup2");
                     foreach (ProteinGroup prot in proteinGroups)
