@@ -14,7 +14,7 @@ namespace PTMStoichiometry
         //Peptides being compared (in baseline case, there is only one peptide)
         public Peptide PeptideOne { get; }
         public Peptide PeptideTwo { get; }
-
+        //list of Peptides with PTMs
         public List<Peptide> PeptidesWithPTM { get; }
         //groups being compared
         public string GroupOne { get; }
@@ -34,11 +34,21 @@ namespace PTMStoichiometry
         public double MWStat { get; }
         //p-value
         public double MWPVal { get; }
+        //Benjamini-Hochberg corrected p-value
         public double CorrectedpVal { get; set; }
+        //the post-translational modification
         public string PTM { get; }
 
-        //minNumStoichiometries - min num of stoichiometries req in both groups before run test (default=3)
-        public PairwiseCompairison(Peptide Pep, List<Intensity> BaselinePepsIntensity, string G1, string G2, int minNumStoichiometries)
+        /// <summary>
+        /// object to hold the stats compairing a peptide to the baseline
+        /// </summary>
+        /// <param name="Pep">Peptide being compared</param>
+        /// <param name="BaselinePepsIntensity">Intensities forming the baseline</param>
+        /// <param name="G1">Group one of groups being compared</param>
+        /// <param name="G2">Group two of groups being compared</param>
+        /// <param name="minNumStoichiometries">minimum number of stoichiometries to require (default=3)</param>
+        public PairwiseCompairison(Peptide Pep, List<Intensity> BaselinePepsIntensity, string G1, string G2,
+            int minNumStoichiometries)
         {
             this.PeptideOne = Pep;
             this.GroupOne = G1;
@@ -59,7 +69,17 @@ namespace PTMStoichiometry
             }
         }
 
-        public PairwiseCompairison(List<Peptide> Peps, List<Intensity> BaselinePepsIntensity, string G1, string G2, int minNumStoichiometries, string ptm)
+        /// <summary>
+        /// object to hold the stats compairing peptides with the same PTM to the baseline
+        /// </summary>
+        /// <param name="Peps">list of Peptides being compared to baseline</param>
+        /// <param name="BaselinePepsIntensity">Intensities forming the baseline</param>
+        /// <param name="G1">Group one of groups being compared</param>
+        /// <param name="G2">Group two of groups being compared</param>
+        /// <param name="minNumStoichiometries">minimum number of stoichiometries to require (default=3)</param>
+        /// <param name="ptm">post-translational modification being compared</param>
+        public PairwiseCompairison(List<Peptide> Peps, List<Intensity> BaselinePepsIntensity, string G1, string G2, 
+            int minNumStoichiometries, string ptm)
         {
             this.PeptidesWithPTM = Peps;
             this.PTM = ptm;
@@ -80,7 +100,15 @@ namespace PTMStoichiometry
                 this.PeptideStoichiometriesGroupTwoMax = calcMWStats()[7];
             }
         }
-        //overload: for peptide to peptide case
+      
+        /// <summary>
+        /// object to hold the stats compairing a peptide to another peptide
+        /// </summary>
+        /// <param name="Pep1">Peptide to compare</param>
+        /// <param name="Pep2">Peptide to serve as baseline</param>
+        /// <param name="G1">Group one of groups being compared</param>
+        /// <param name="G2">Group two of groups being compared</param>
+        /// <param name="minNumStoichiometries">minimum number of stoichiometries to require (default=3)</param>
         public PairwiseCompairison(Peptide Pep1, Peptide Pep2, string G1, string G2, int minNumStoichiometries)
         {
             this.PeptideOne = Pep1;
@@ -104,11 +132,23 @@ namespace PTMStoichiometry
             }
         }
 
+        /// <summary>
+        /// Function to set CorrectedpVal
+        /// </summary>
+        /// <param name="correctPVal">the corrected p-value</param>
         public void setCorrectedpVal(double correctPVal)
         {
             this.CorrectedpVal = correctPVal;
         }
 
+        /// <summary>
+        /// Function to calculate the stoichiometries of a peptide compared to a baseline
+        /// </summary>
+        /// <param name="pep">Peptide to compare</param>
+        /// <param name="group">group to compare</param>
+        /// <param name="baselineIntensity">baseline intesities</param>
+        /// <returns>list of stoichiometries</returns>
+        /// <see cref="Stoichiometry"/>
         private List<Stoichiometry> calcStoichiometry(Peptide pep, string group, List<Intensity> baselineIntensity)
         {
             List<Stoichiometry> stoich = new List<Stoichiometry>();
@@ -123,7 +163,14 @@ namespace PTMStoichiometry
             return stoich;
         }
 
-        //calculate stoichiometries for all intensities
+        /// <summary>
+        /// Function to calculate the stoichiometries of peptides compared to a baseline
+        /// </summary>
+        /// <param name="peps">Peptides with same ptm to compare</param>
+        /// <param name="group">group to compare</param>
+        /// <param name="baselineIntensity">baseline intesities</param>
+        /// <returns>list of stoichiometries</returns>
+        /// <see cref="Stoichiometry"/>
         private List<Stoichiometry> calcStoichiometry(List<Peptide> peps, string group, List<Intensity> baselineIntensity)
         {
             List<Stoichiometry> stoich = new List<Stoichiometry>();
@@ -146,7 +193,14 @@ namespace PTMStoichiometry
             return stoich;
         }
 
-        //overload: peptide to peptide case
+        /// <summary>
+        /// Function to calculate the stoichiometries of peptide compared to another peptide
+        /// </summary>
+        /// <param name="pep1">Peptide to compare</param>
+        /// <param name="pep2">Peptide to serve as baseline</param>
+        /// <param name="group">group to compare</param>
+        /// <returns>list of stoichiometries</returns>
+        /// <see cref="Stoichiometry"/>
         private List<Stoichiometry> calcStoichiometry(Peptide pep1, Peptide pep2, string group)
         {
             List<Stoichiometry> stoich = new List<Stoichiometry>();
@@ -165,12 +219,19 @@ namespace PTMStoichiometry
             return stoich;
         }
 
-        //function to calc Mann-Whitney statistics
+        /// <summary>
+        /// Function to calculate Mann-Whitney stats
+        /// </summary>
+        /// <returns>stats - array of the stoichiometries [Mann-Whitney stat, probability, group 1 median, 
+        /// group 1 min, group 1 max, group 2 median, group 2 min, group 2 max]</returns>
         private double[] calcMWStats()
         {
-            double[] stats = new double[8]; //to store final stats
-            List<double> stoichsG1 = new List<double>(); //double[(this.PeptideStoichiometriesGroupOne.Count()]; //list to store distribution of group one stoichiometries
-            List<double> stoichsG2 = new List<double>(); //double[(this.PeptideStoichiometriesGroupTwo.Count()]; //list to store distribution of group two stoichiometries
+            //to store final stats
+            double[] stats = new double[8];
+            //list to store distribution of group one stoichiometries
+            List<double> stoichsG1 = new List<double>();
+            //list to store distribution of group two stoichiometries
+            List<double> stoichsG2 = new List<double>();  
             foreach (Stoichiometry S1 in (this.PeptideStoichiometriesGroupOne)) {
                 stoichsG1.Add(S1.StoichiometryVal);
             }

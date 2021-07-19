@@ -33,15 +33,15 @@ namespace PTMStoichiometry
             //pvalueAdjust - if true (default) use Benjamini-Hochberg analysis to adjust all p-values, else report raw p-values
             //alpha - significance value
             //minNumStoichiometries - min num of stoichiometries req in both groups before run test
-            //groupPepsForPValCalc - choose to apply p-valuse correction within each protein (grouped) or across all proteins
+            //groupPepsForPValCalc - choose to apply p-value correction within each protein (grouped) or across all proteins
             //alpha - chosen significance (default=0.05)
 
-            int reqNumUnmodPeptides = 3;
+            int reqNumUnmodPeptides = 1;
             int reqNumModPeptides = 1;
             int reqNumOfPepeptides = reqNumUnmodPeptides + reqNumModPeptides;
             bool useBaselinePeptides = true;
-            int reqNumBaselinePeptides = reqNumUnmodPeptides;
-            int reqNumBaselineMeasurements = 5; //allow one missing value
+            int reqNumBaselinePeptides = 3;
+            int reqNumBaselineMeasurements = 3; 
             double correlationCutOff = 0.75;
             bool compareUnmod = false;
             int minNumStoichiometries = 3;
@@ -51,13 +51,13 @@ namespace PTMStoichiometry
             string groupToCompare = null;
             string dataType = "unknown";
 
-            //string filepathpeptides = @"D:\PTMStoichiometry\TestData\PXD003881\2021-06-09-09-54-45\Task3-SearchTask\AllQuantifiedPeptides.tsv";
-            //string filepathgroups = @"D:\PTMStoichiometry\TestData\PXD003881\2021-06-09-09-54-45\Task3-SearchTask\PXD003881_MM_Groups.txt";
-            //string directory = @"D:\PTMStoichiometry\TestData\PXD003881\2021-06-09-09-54-45\Task3-SearchTask\";
+            //string filepathpeptides = @"D:\PTMStoichiometry\TestData\PXD003881\2021-07-07-09-11-30\Task3-SearchTask\AllQuantifiedPeptides.tsv";
+            //string filepathgroups = @"D:\PTMStoichiometry\TestData\PXD003881\2021-07-07-09-11-30\Task3-SearchTask\PXD003881_MM_Groups.txt";
+            //string directory = @"D:\PTMStoichiometry\TestData\PXD003881\2021-07-07-09-11-30\Task3-SearchTask\";
 
-            string filepathpeptides = @"D:\PTMStoichiometry\TestData\MSV000086126\2021-06-03-16-11-24\Task3-SearchTask\AllQuantifiedPeptides.tsv";
-            string filepathgroups = @"D:\PTMStoichiometry\TestData\MSV000086126\2021-06-03-16-11-24\Task3-SearchTask\MSV000086126Groups.txt";
-            string directory = @"D:\PTMStoichiometry\TestData\MSV000086126\2021-06-03-16-11-24\Task3-SearchTask\";
+            string filepathpeptides = @"D:\PTMStoichiometry\TestData\MSV000086126\2021-07-07-08-59-09\Task3-SearchTask\AllQuantifiedPeptides.tsv";
+            string filepathgroups = @"D:\PTMStoichiometry\TestData\MSV000086126\2021-07-07-08-59-09\Task3-SearchTask\MSV000086126GlobalGroups.txt";
+            string directory = @"D:\PTMStoichiometry\TestData\MSV000086126\2021-07-07-08-59-09\Task3-SearchTask\";
 
 
             if (File.ReadAllLines(filepathpeptides, Encoding.UTF8)[0].Split("\t")[4] == "Organism")
@@ -68,7 +68,7 @@ namespace PTMStoichiometry
             {
                 dataType = "MaxQuant";
             }
-            string subdirectory = "20210705d";
+            string subdirectory = "MSV000086126-20210708a";
             string peptidestoichiometryfileout = subdirectory + "PeptideAnalysis";
             string ptmstoichiometryfileout = subdirectory + "PTMAnalysis";
             string paramsfile = subdirectory + "params";

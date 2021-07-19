@@ -8,31 +8,33 @@ using MathNet.Numerics.Statistics;
 
 namespace PTMStoichiometry
 {
-    //work with protein data from MM and FlashLFQ
+    //class to work with protein data from MM and FlashLFQ
     public class ProteinGroup
     {
+        //list of all peptides within a protein
         public List<Peptide> PeptidesInProtein { get; }
+        //protein ascension 
         public string ProteinName { get; }
-        public bool useProt { get; set; } //determine whether prot is useful for stoichiometry calc - needs to have both mod & unmod state
+        //determine whether prot is useful for stoichiometry calc - needs to have both mod & unmod state
+        public bool useProt { get; set; } 
+        //number of peptides in a protein
         public int NumPeptidesInProtein { get; }
-        public List<Peptide> BaselinePeptides { get; } //peptides to compare others to: must be unmodified, covary with each other, and not be in other proteins & must be the same baseline for all groups
-        public List<PairwiseCompairison> ProteinPairwiseComparisons { get; } //compare peptides by group within protein
-        public List<PairwiseCompairison> PTMPairwiseCompairisons { get; } 
+        //peptides to compare others to: must be unmodified (or fixed mods), covary with each other, 
+        //and not be in other proteins & must have the same baseline for all groups
+        public List<Peptide> BaselinePeptides { get; }
+        //compare peptides by group within protein (peptide/baseline or peptide/peptide)
+        public List<PairwiseCompairison> ProteinPairwiseComparisons { get; }
+        //compare ptms by group within protein (peptides (with same ptm)/baseline or peptides (with same ptm)/peptide)
+        public List<PairwiseCompairison> PTMPairwiseCompairisons { get; }
 
-        //reqNumOfPepeptides - min num of peptides that must be observed for a protein in order to consider it
-        //reqNumModPeptides - min num of modified peptides that must be observed for a protein in order to consider it (default=1)
-        //reqNumUnmodPeptides - min num of modified peptides that must be observed for a protein in order to consider it (default=3)
-        //Baseline params:
-        //useBaselinePeptides - if true (default) use an averaged baseline of covarying peptides
-        //reqNumBaselinePeptides - min num of baseline peptides that must be observed for a protein in order to consider it (default=3)
-        //correlationCutOff - min value at which two peptides will be considered to be correlated
-        //compareUnmod - if false (default) only compare modified peptides to baseline, not unmodified peptides
-
-        //holds all data related to an unmodified protein - so several modified proteins may fall into this groups
-        //maybe make proteinGroup object then remove all PTMS to find unmod seq?
-        //maybe take each protein and if a peptide falls into another protein also grab all those peptides?
-
-
+        /// <summary>
+        /// object to hold data relating to a protein group
+        /// </summary>
+        /// <param name="proteinAccession">protein ascension </param>
+        /// <param name="peptides">all peptides (not just those in protein group)</param>
+        /// <param name="reqNumUnmodPeptides">min num of unmodified peptides that must be observed for a protein in order to consider the protein group (default=1)</param>
+        /// <param name="reqNumModPeptides">min num of modified peptides that must be observed for a protein in order to consider the protein group (default=3)</param>
+        /// <param name="reqNumOfPepeptides">min num of peptides that must be observed for a protein in order to consider the protein group </param>
         public ProteinGroup(string proteinAccession, List<Peptide> peptides, int reqNumUnmodPeptides, int reqNumModPeptides, int reqNumOfPepeptides) 
         {
             this.ProteinName = proteinAccession;
@@ -41,6 +43,23 @@ namespace PTMStoichiometry
             this.useProt = isProteinUseful(this.PeptidesInProtein, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides);
         }
 
+        /// <summary>
+        /// object to hold data relating to a protein group
+        /// </summary>
+        /// <param name="proteinAccession">protein ascension </param>
+        /// <param name="peptides">all peptides (not just those in protein group)</param>
+        /// <param name="groups">list of all groups</param>
+        /// <param name="reqNumUnmodPeptides">min num of unmodified peptides that must be observed for a protein in order to consider the protein group (default=1)</param>
+        /// <param name="reqNumModPeptides">min num of modified peptides that must be observed for a protein in order to consider the protein group (default=3)</param>
+        /// <param name="reqNumOfPepeptides">min num of peptides that must be observed for a protein in order to consider the protein group </param>
+        /// <param name="useBaselinePeptides">if true use baseline proteins (pep/baseline) else compare peptide to peptide (pep/pep)</param>
+        /// <param name="reqNumBaselinePeptides">min num of baseline peptides that must be observed for a protein in order to consider it (default=3)</param>
+        /// <param name="reqNumBaselineMeasurements">min num of intensities (non zero -> MS or MSMS detection) that must be observed for in a 
+        ///baseline peptide (non zero -> MS or MSMS detection) - increasing this value will decrease the number of baseline peptides  
+        ///that are not observed in samples and therefore the number of non numeric stoichiometry values found in baseline case</param>
+        /// <param name="correlationCutOff">min value at which two peptides will be considered to be correlated</param>
+        /// <param name="compareUnmod">if false (default) only compare modified peptides to baseline, not unmodified peptides</param>
+        /// <param name="minNumStoichiometries">min num of stoichiometries req in both groups before run test</param>
         public ProteinGroup(string proteinAccession, List<Peptide> peptides, List<string> groups, int reqNumUnmodPeptides, int reqNumModPeptides, int reqNumOfPepeptides,
         bool useBaselinePeptides, int reqNumBaselinePeptides, int reqNumBaselineMeasurements, double correlationCutOff, bool compareUnmod, int minNumStoichiometries) : this (proteinAccession, peptides, reqNumUnmodPeptides, 
         reqNumModPeptides, reqNumOfPepeptides)
@@ -50,7 +69,7 @@ namespace PTMStoichiometry
             //use averaged baseline
             if (useBaselinePeptides)
             {
-                this.BaselinePeptides = getBaseLinePeptides(this.PeptidesInProtein, peptides, groups, correlationCutOff, reqNumBaselineMeasurements);
+                this.BaselinePeptides = getBaseLinePeptides(this.PeptidesInProtein, groups, correlationCutOff, reqNumBaselineMeasurements);
                 if (this.BaselinePeptides.Count() < reqNumBaselinePeptides)
                 {
                     this.setUseProt(false);
@@ -67,7 +86,24 @@ namespace PTMStoichiometry
             }
         }
 
-        //overload if given groupToCompare - single group to compare against, this is the group name (e.g. a control group) (default = null)
+        /// <summary>
+        /// object to hold data relating to a protein group
+        /// </summary>
+        /// <param name="proteinAccession">protein ascension </param>
+        /// <param name="peptides">all peptides (not just those in protein group)</param>
+        /// <param name="groups">list of all groups</param>
+        /// <param name="reqNumUnmodPeptides">min num of unmodified peptides that must be observed for a protein in order to consider the protein group (default=1)</param>
+        /// <param name="reqNumModPeptides">min num of modified peptides that must be observed for a protein in order to consider the protein group (default=3)</param>
+        /// <param name="reqNumOfPepeptides">min num of peptides that must be observed for a protein in order to consider the protein group </param>
+        /// <param name="useBaselinePeptides">if true use baseline proteins (pep/baseline) else compare peptide to peptide (pep/pep)</param>
+        /// <param name="reqNumBaselinePeptides">min num of baseline peptides that must be observed for a protein in order to consider it (default=3)</param>
+        /// <param name="reqNumBaselineMeasurements">min num of intensities (non zero -> MS or MSMS detection) that must be observed for in a 
+        ///baseline peptide (non zero -> MS or MSMS detection) - increasing this value will decrease the number of baseline peptides  
+        ///that are not observed in samples and therefore the number of non numeric stoichiometry values found in baseline case</param>
+        /// <param name="correlationCutOff">min value at which two peptides will be considered to be correlated</param>
+        /// <param name="compareUnmod">if false (default) only compare modified peptides to baseline, not unmodified peptides</param>
+        /// <param name="minNumStoichiometries">min num of stoichiometries req in both groups before run test</param>
+        /// <param name="groupToCompare">single group to compare all other groups to</param>
         public ProteinGroup(string proteinAccession, List<Peptide> peptides, List<string> groups, int reqNumUnmodPeptides, int reqNumModPeptides, int reqNumOfPepeptides,
         bool useBaselinePeptides, int reqNumBaselinePeptides, int reqNumBaselineMeasurements, double correlationCutOff, bool compareUnmod, int minNumStoichiometries, string groupToCompare) : 
             this(proteinAccession, peptides, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides)
@@ -77,7 +113,7 @@ namespace PTMStoichiometry
             //use averaged baseline
             if (useBaselinePeptides)
             {
-                this.BaselinePeptides = getBaseLinePeptides(this.PeptidesInProtein, peptides, groups, correlationCutOff, reqNumBaselineMeasurements);
+                this.BaselinePeptides = getBaseLinePeptides(this.PeptidesInProtein, groups, correlationCutOff, reqNumBaselineMeasurements);
                 if (this.BaselinePeptides.Count() < reqNumBaselinePeptides)
                 {
                     this.setUseProt(false);
@@ -96,7 +132,17 @@ namespace PTMStoichiometry
 
 
         //function to find baseline peptides to compare against
-        private List<Peptide> getBaseLinePeptides(List<Peptide> peptidesInProtein, List<Peptide> Allpeptides, List<string> groups, 
+        /// <summary>
+        /// Function to find the baseline peptides
+        /// </summary>
+        /// <param name="peptidesInProtein">list of peptides in the protein</param>
+        /// <param name="groups">all groups</param>
+        /// <param name="correlationCutOff">min value at which two peptides will be considered to be correlated</param>
+        /// <param name="reqNumBaselineMeasurements">min num of intensities (non zero -> MS or MSMS detection) that must be observed for in a 
+        ///baseline peptide (non zero -> MS or MSMS detection) - increasing this value will decrease the number of baseline peptides  
+        ///that are not observed in samples and therefore the number of non numeric stoichiometry values found in baseline case</param>
+        /// <returns>list of baseline peptides</returns>
+        private List<Peptide> getBaseLinePeptides(List<Peptide> peptidesInProtein, List<string> groups, 
             double correlationCutOff, int reqNumBaselineMeasurements)
         {
             List<Peptide>  unmodPep = peptidesInProtein.Where(p => !p.Mod).Where(p => p.IsUnique).ToList();
@@ -122,7 +168,14 @@ namespace PTMStoichiometry
             return unmodPepCov;
         }
 
-        //function to calc Correlation in each group - returns min correlation
+        /// <summary>
+        /// Function to calculate the pearson correlation between the peptides within each group
+        /// </summary>
+        /// <param name="Peptide1">list of intensities from a peptide to compare</param>
+        /// <param name="Peptide2">list of intensities from a peptide to comapre</param>
+        /// <param name="groups">list of all groups</param>
+        /// <param name="reqNumBaselineMeasurements">required number of measurements in each group to perform compairison (must be at least 3)</param>
+        /// <returns>the min correlation between the peptide intensities within each group</returns>
         private double GroupCorrelation(List<Intensity> Peptide1, List<Intensity> Peptide2, List<string> groups, int reqNumBaselineMeasurements)
         {
             List<Intensity> Peptide1Vals = Peptide1.Where(p => p.IntensityVal > 0).ToList();
@@ -130,7 +183,7 @@ namespace PTMStoichiometry
 
             foreach (string group in groups)
             {
-                //require at least three measurements in each group
+                //require at least reqNumBaselineMeasurements measurements in each group
                 if (Peptide1Vals.Where(p => p.GroupID == group).Count() < reqNumBaselineMeasurements || 
                     Peptide2Vals.Where(p => p.GroupID == group).Count() < reqNumBaselineMeasurements) 
                 {
@@ -157,14 +210,23 @@ namespace PTMStoichiometry
             return correlation;
         }
 
+        /// <summary>
+        /// Function to set UseProt
+        /// </summary>
+        /// <param name="newBool">bool to set UseProt</param>
         public void setUseProt(bool newBool)
         {
             this.useProt = newBool;
         }
 
-
-
-        //function to check whether the protein meets criteria input
+        /// <summary>
+        /// Function to determine whether protein group meets criteria to be useful
+        /// </summary>
+        /// <param name="pepsInProt">peptides in protein group</param>
+        /// <param name="reqNumUnmodPeptides">min num of unmodified peptides that must be observed for a protein in order to consider the protein group (default=1)</param>
+        /// <param name="reqNumModPeptides">min num of modified peptides that must be observed for a protein in order to consider the protein group (default=3)</param>
+        /// <param name="reqNumOfPepeptides">min num of peptides that must be observed for a protein in order to consider the protein group </param>
+        /// <returns>bool indicating whether protein group meets input criteria for a useful protein group</returns>
         private bool isProteinUseful(List<Peptide> pepsInProt, int reqNumUnmodPeptides, int reqNumModPeptides, int reqNumOfPepeptides)
         {
             //ensure have enough peptides, mod, & unmod peptides
@@ -176,7 +238,10 @@ namespace PTMStoichiometry
             return false;
         }
 
-        //function to get list of intensities of baseline peptides
+        /// <summary>
+        /// function to get list of intensities of baseline peptides
+        /// </summary>
+        /// <returns>list of intenisties from the baseline peptides</returns>
         private List<Intensity> getBaselineIntensities()
         {
             List<Intensity> BaselinePepIntensity = new List<Intensity>(); //intensities baseline for group of interest
@@ -191,8 +256,14 @@ namespace PTMStoichiometry
 
             return BaselinePepIntensity;
         }
-
-        //baseline case: grouped by localization modification ratios 
+ 
+        /// <summary>
+        /// Function to calculate PairwiseCompairisons in the baseline case grouped by localization modification ratios 
+        /// </summary>
+        /// <param name="PepsInProt">list of peptides in protein group</param>
+        /// <param name="groups">list of groups</param>
+        /// <param name="minNumStoichiometries">min num of stoichiometries req in both groups before run test</param>
+        /// <returns>list of pairwisecompairisons for ptms</returns>
         private List<PairwiseCompairison> ptmcalcComparison(List<Peptide> PepsInProt, List<string> groups, int minNumStoichiometries)
         {
             List<PairwiseCompairison> comparePeps = new List<PairwiseCompairison>();
@@ -242,7 +313,15 @@ namespace PTMStoichiometry
             return comparePeps;
         }
 
-        //baseline case: grouped by localization modification ratios with group to compare against
+        /// <summary>
+        /// Function to calculate PairwiseCompairisons in the baseline case grouped by localization modification ratios
+        /// with a group to compare against
+        /// </summary>
+        /// <param name="PepsInProt">list of peptides in protein group</param>
+        /// <param name="groups">list of groups</param>
+        /// <param name="minNumStoichiometries">min num of stoichiometries req in both groups before run test</param>
+        /// <param name="groupToCompare"></param>
+        /// <returns>list of pairwisecompairisons for ptms</returns>
         private List<PairwiseCompairison> ptmcalcComparison(List<Peptide> PepsInProt, List<string> groups, int minNumStoichiometries, string groupToCompare)
         {
             List<PairwiseCompairison> comparePeps = new List<PairwiseCompairison>();
@@ -285,7 +364,15 @@ namespace PTMStoichiometry
             return comparePeps;
         }
 
-        //baseline case: function to compare all modified peptides in protein against baseline using PairwiseCompairison 
+         
+        /// <summary>
+        /// Function to calculate PairwiseCompairisons
+        /// baseline case: function to compare all modified peptides in protein against baseline using PairwiseCompairison
+        /// </summary>
+        /// <param name="PepsInProt">list of peptides in protein group</param>
+        /// <param name="groups">list of groups</param>
+        /// <param name="minNumStoichiometries">min num of stoichiometries req in both groups before run test</param>
+        /// <returns>list of pairwisecompairisons for peptides</returns>
         private List<PairwiseCompairison> calcComparison(List<Peptide> PepsInProt, List<string> groups, bool compareUnmod, int minNumStoichiometries)
         {
             List<PairwiseCompairison> comparePeps = new List<PairwiseCompairison>();
@@ -313,7 +400,16 @@ namespace PTMStoichiometry
             return comparePeps;
         }
 
-        //overload calcComparison (baseline averaged comparing against only one group) function to compare all modified peptides in protein against baseline using PairwiseCompairison 
+        /// <summary>
+        /// Function to calculate PairwiseCompairisons
+        /// baseline case: function to compare all modified peptides in protein against baseline using PairwiseCompairison
+        /// when there is a given group to compare against
+        /// </summary>
+        /// <param name="PepsInProt">list of peptides in protein group</param>
+        /// <param name="groups">list of groups</param>
+        /// <param name="minNumStoichiometries">min num of stoichiometries req in both groups before run test</param>
+        /// <param name="groupToCompare"></param>
+        /// <returns>list of pairwisecompairisons for peptides</returns>
         private List<PairwiseCompairison> calcComparison(List<Peptide> PepsInProt, List<string> groups, bool compareUnmod, int minNumStoichiometries, string groupToCompare)
         {
             List<PairwiseCompairison> comparePeps = new List<PairwiseCompairison>();
@@ -340,7 +436,14 @@ namespace PTMStoichiometry
             return comparePeps;
         }
 
-        //overload calcComparison (this one is for the non baseline case comparing all groups) PairwiseCompairsons for each pair of peptides and every pair of groups
+        /// <summary>
+        /// Function to calculate PairwiseCompairisons
+        /// peptide:peptide case: function to compare all modified peptides in protein against other peptidse using PairwiseCompairison
+        /// </summary>
+        /// <param name="PepsInProt">list of peptides in protein group</param>
+        /// <param name="groups">list of groups</param>
+        /// <param name="minNumStoichiometries">min num of stoichiometries req in both groups before run test</param>
+        /// <returns>list of pairwisecompairisons for peptides</returns>
         private List<PairwiseCompairison> calcComparison(List<Peptide> PepsInProt, List<string> groups, int minNumStoichiometries)
         {
             List<PairwiseCompairison> comparePeps = new List<PairwiseCompairison>();
@@ -367,7 +470,16 @@ namespace PTMStoichiometry
             return comparePeps;
         }
 
-        //overload calcComparison (this one is for the non baseline case comparing to one group) PairwiseCompairsons for each pair of peptides and each group to one group
+        /// <summary>
+        /// Function to calculate PairwiseCompairisons
+        /// peptide:peptide case: function to compare all modified peptides in protein against other peptidse using PairwiseCompairison
+        /// when a group to compare against is given
+        /// </summary>
+        /// <param name="PepsInProt">list of peptides in protein group</param>
+        /// <param name="groups">list of groups</param>
+        /// <param name="minNumStoichiometries">min num of stoichiometries req in both groups before run test</param>
+        /// <param name="groupToCompare"></param>
+        /// <returns>list of pairwisecompairisons for peptides</returns>
         private List<PairwiseCompairison> calcComparison(List<Peptide> PepsInProt, List<string> groups, int minNumStoichiometries, string groupToCompare)
         {
             List<PairwiseCompairison> comparePeps = new List<PairwiseCompairison>();

@@ -1,16 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
-//using UsefulProteomicsDatabases;
 
 namespace PTMStoichiometry
 {
     //helper functions
     public static class Extensions
     {
-        //read in data from tsv
-        //written by Dr. Shortreed
+
+        /// <summary>
+        /// Function to create subarray from an array
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="array">the original array</param> 
+        /// <param name="offset">where to start copying from in the original array</param>
+        /// <param name="length">the length of the final subarray</param> 
+        /// <returns name="result">subarray of the array starting at offset</returns>
         public static T[] SubArray<T>(this T[] array, int offset, int length)
         {
             T[] result = new T[length];
@@ -18,8 +23,12 @@ namespace PTMStoichiometry
             return result;
         }
 
-        //apply Benjamini-Hochberg p-value correct - correct the p-values
-        //set the corrected p-values in pairwise comparisons
+        /// <summary>
+        /// Function to apply the Benjamini-Hochberg p-value correction
+        /// calls setCorrectedpVal in PairwiseCompairison
+        /// </summary>
+        /// <param name="pairwiseComparisons">all the PairwiseCompirison objects which contain p-values</param>
+        /// <param name="alpha">level of significance</param>
         public static void BenjaminiHochberg(List<PairwiseCompairison> pairwiseComparisons, double alpha = 0.05)
         {
             List<PairwiseCompairison> sortedPairwiseComparisons = pairwiseComparisons.OrderBy(p => p.MWPVal).ToList();
@@ -50,12 +59,22 @@ namespace PTMStoichiometry
 
         //two different methods of considering peptides for p-value correction: 
         //either correction within each protein (grouped) or across all proteins
-        public static void CalcCorrectedPValue(List<ProteinGroup> protein, bool grouped = false, double alpha = 0.05)
+        /// <summary>
+        /// Function to calculate the the Benjamini-Hochberg corrected p-value via tweo different methods:
+        /// with the PairwiseCompairisons grouped by protein and the BH correction applied separately to 
+        /// each protein, or with the BH correction applied to all PairwiseCompairisons
+        /// </summary>
+        /// <param name="proteins">list of protein groups</param>
+        /// <param name="grouped">whether to apply BH correction separately to each protein (true)
+        /// or with proteins together (false)</param>
+        /// <param name="alpha">significance level</param>
+        /// <see cref="BenjaminiHochberg"/>
+        public static void CalcCorrectedPValue(List<ProteinGroup> proteins, bool grouped = false, double alpha = 0.05)
         {
             if (grouped)
             {
                 //apply correction to the pairwise compairisons in each protein individually 
-                foreach (ProteinGroup prot in protein)
+                foreach (ProteinGroup prot in proteins)
                 {
                     BenjaminiHochberg(prot.ProteinPairwiseComparisons, alpha);
                     BenjaminiHochberg(prot.PTMPairwiseCompairisons, alpha);
@@ -66,7 +85,7 @@ namespace PTMStoichiometry
             {
                 List<PairwiseCompairison> protPairwiseComparisons = new List<PairwiseCompairison>();
                 List<PairwiseCompairison> ptmPairwiseComparisons = new List<PairwiseCompairison>();
-                foreach (ProteinGroup prot in protein)
+                foreach (ProteinGroup prot in proteins)
                 {
                     foreach (PairwiseCompairison comp in prot.ProteinPairwiseComparisons)
                     {
