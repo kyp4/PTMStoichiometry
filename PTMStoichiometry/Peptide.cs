@@ -127,7 +127,7 @@ namespace PTMStoichiometry
             List<string> localizedMods = Peptide.GetLocalizedModifications(sequence, mods);
             for (int i = 0; i < mods.Count(); i++)
             {
-                ptms.Add(new PostTranslationalModification(mods[i], localizedMods[i]));
+                ptms.Add(new PostTranslationalModification(mods[i], localizedMods[i], sequence));
             }
             return ptms;
         }

@@ -75,8 +75,8 @@ namespace PTMStoichiometry
                     this.setUseProt(false);
                     return;
                 }
-                this.ProteinPairwiseComparisons = calcComparison(this.PeptidesInProtein, groups, compareUnmod, minNumStoichiometries);
-                this.PTMPairwiseCompairisons = ptmcalcComparison(this.PeptidesInProtein, groups, minNumStoichiometries);
+                this.ProteinPairwiseComparisons = calcComparison(this.PeptidesInProtein, groups, compareUnmod, minNumStoichiometries).Distinct().ToList();
+                this.PTMPairwiseCompairisons = ptmcalcComparison(this.PeptidesInProtein, groups, minNumStoichiometries).Distinct().ToList(); //TODO
             }
             //don't use averaged baseline - compare each protein to others
             else
@@ -277,18 +277,18 @@ namespace PTMStoichiometry
                 //ptms.Concat(pep.PostTranslationalModifications.Select(p => p.ModificationInPeptideSequence));
                 foreach (PostTranslationalModification mod in pep.PostTranslationalModifications)
                 {
-                    if (!ptms.ContainsKey(mod.ModificationInPeptideSequence))
+                    if (!ptms.ContainsKey(mod.Modification))
                     {
-                        ptms.Add(mod.ModificationInPeptideSequence, mod.Modification);
+                        ptms.Add(mod.Modification, mod.ModificationInPeptideSequence);
                     }
                         
-                    if (ptmDict.ContainsKey(mod.ModificationInPeptideSequence))
+                    if (ptmDict.ContainsKey(mod.Modification))
                     {
-                        ptmDict[mod.ModificationInPeptideSequence].Add(pep);
+                        ptmDict[mod.Modification].Add(pep);
                     }
                     else
                     {
-                        ptmDict.Add(mod.ModificationInPeptideSequence, new List<Peptide>() { pep });
+                        ptmDict.Add(mod.Modification, new List<Peptide>() { pep });
                     }
                 }
                 
@@ -302,7 +302,7 @@ namespace PTMStoichiometry
                     for (int g2 = (g1 + 1); g2 < groups.Count(); ++g2)
                     {
                         //rabbit - need way to put multiple peptides into PairwiseCompairison
-                        PairwiseCompairison temp = new PairwiseCompairison(ptmDict[ptm], getBaselineIntensities(), groups[g1], groups[g2], minNumStoichiometries, ptms[ptm]);
+                        PairwiseCompairison temp = new PairwiseCompairison(ptmDict[ptm], getBaselineIntensities(), groups[g1], groups[g2], minNumStoichiometries, ptm);
                         if (temp.PeptideStoichiometriesGroupOne.Count() >= minNumStoichiometries && temp.PeptideStoichiometriesGroupTwo.Count() >= minNumStoichiometries)
                         {
                             comparePeps.Add(temp);
@@ -313,6 +313,7 @@ namespace PTMStoichiometry
             return comparePeps;
         }
 
+        //TODO:fix
         /// <summary>
         /// Function to calculate PairwiseCompairisons in the baseline case grouped by localization modification ratios
         /// with a group to compare against
