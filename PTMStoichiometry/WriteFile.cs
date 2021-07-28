@@ -46,7 +46,6 @@ namespace PTMStoichiometry
                                     + "\t" + prot.NumPeptidesInProtein.ToString()
                                     + "\t" + pc.MWStat.ToString()
                                     + "\t" + pc.MWPVal.ToString()
-                                    + "\t" + pc.CorrectedpVal.ToString()
                                     + "\t" + pc.PeptideStoichiometriesGroupOneMedian.ToString()
                                     + "\t" + pc.PeptideStoichiometriesGroupTwoMedian.ToString()
                                     + "\t" + pc.PeptideStoichiometriesGroupOneMin.ToString()
@@ -81,7 +80,6 @@ namespace PTMStoichiometry
                                     + "\t" + prot.NumPeptidesInProtein.ToString()
                                     + "\t" + pc.MWStat.ToString()
                                     + "\t" + pc.MWPVal.ToString()
-                                    + "\t" + pc.CorrectedpVal.ToString()
                                     + "\t" + String.Join(";", pc.PeptideStoichiometriesGroupOne.Select(p => p.StoichiometryVal))
                                     + "\t" + String.Join(";", pc.PeptideStoichiometriesGroupTwo.Select(p => p.StoichiometryVal))
                                 );
@@ -129,7 +127,6 @@ namespace PTMStoichiometry
                                     + "\t" + pc.GroupTwo
                                     + "\t" + pc.MWStat.ToString()
                                     + "\t" + pc.MWPVal.ToString()
-                                    + "\t" + pc.CorrectedpVal.ToString()
                                     + "\t" + pc.PeptideStoichiometriesGroupOneMedian.ToString()
                                     + "\t" + pc.PeptideStoichiometriesGroupTwoMedian.ToString()
                                     + "\t" + pc.PeptideStoichiometriesGroupOneMin.ToString()
@@ -169,15 +166,11 @@ namespace PTMStoichiometry
         /// <param name="compareUnmod">if false (default) only compare modified peptides to baseline, not unmodified peptides</param>
         /// <param name="minNumStoichiometries">min num of stoichiometries req in both groups before run test</param>
         /// <param name="reqNumPepMeasurements">min num of peptide intensities that must be observed (non zero -> MS or MSMS detection)</param>
-        /// <param name="groupPepsForPValCalc">choose to apply p-value correction within each protein sepearately (grouped) or 
-        /// across all proteins</param>
-        /// <param name="alpha">significance level</param>
         /// <param name="groupToCompare">single group to compare all other groups to (not a required parameter)</param>
         public static void ParamsWriter(string paramsfile, string filepathpeptides, string filepathgroups, string directory, string stoichiometryfileout,
             int reqNumUnmodPeptides = 1, int reqNumModPeptides = 3, int reqNumOfPepeptides = 4, bool useBaselinePeptides = true,
             int reqNumBaselinePeptides = 3, int reqNumBaselineMeasurements = 3, double correlationCutOff = 0.5,
-            bool compareUnmod = false, int minNumStoichiometries = 3, int reqNumPepMeasurements = 3, bool groupPepsForPValCalc = true,
-            double alpha = 0.05, string groupToCompare = null)
+            bool compareUnmod = false, int minNumStoichiometries = 3, int reqNumPepMeasurements = 3, string groupToCompare = null)
         {
             if (filepathpeptides == null || filepathgroups == null)
             { return; }
@@ -199,8 +192,6 @@ namespace PTMStoichiometry
                     + "\n" + "compareUnmod:" + "\t" + compareUnmod
                     + "\n" + "minNumStoichiometries:" + "\t" + minNumStoichiometries
                     + "\n" + "reqNumPepMeasurements:" + "\t" + reqNumPepMeasurements
-                    + "\n" + "groupPepsForPValCalc:" + "\t" + groupPepsForPValCalc
-                    + "\n" + "alpha:" + "\t" + alpha
                     + "\n" + "groupToCompare:" + "\t" + groupToCompare
                     );
 

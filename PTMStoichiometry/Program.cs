@@ -30,11 +30,8 @@ namespace PTMStoichiometry
 
             //useRazorPeptides - if false (default) peptides in more than one protein are removed
             //test - currently only MW available, want to add t-test and ANOVA
-            //pvalueAdjust - if true (default) use Benjamini-Hochberg analysis to adjust all p-values, else report raw p-values
-            //alpha - significance value
+            
             //minNumStoichiometries - min num of stoichiometries req in both groups before run test
-            //groupPepsForPValCalc - choose to apply p-value correction within each protein (grouped) or across all proteins
-            //alpha - chosen significance (default=0.05)
 
             int reqNumUnmodPeptides = 1;
             int reqNumModPeptides = 1;
@@ -46,8 +43,7 @@ namespace PTMStoichiometry
             bool compareUnmod = false;
             int minNumStoichiometries = 3;
             int reqNumPepMeasurements = 3;
-            bool groupPepsForPValCalc = true;
-            double alpha = 0.05;
+
             string groupToCompare = null;
             string dataType = "unknown";
 
@@ -72,7 +68,7 @@ namespace PTMStoichiometry
             {
                 dataType = "MaxQuant";
             }
-            string subdirectory = "MSV000086126-2021-07-07-08-59-09-AllQuantifiedPeptides-10000PeptidesProteinAlphabetized-20210727a";
+            string subdirectory = "MSV000086126-2021-07-07-08-59-09-AllQuantifiedPeptides-10000PeptidesProteinAlphabetized-20210728a";
             string peptidestoichiometryfileout = subdirectory + "PeptideAnalysis";
             string ptmstoichiometryfileout = subdirectory + "PTMAnalysis";
             string paramsfile = subdirectory + "params";
@@ -120,12 +116,12 @@ namespace PTMStoichiometry
             }
 
             testProt = testProt.Where(p => p.ProteinPairwiseComparisons != null).Distinct().ToList(); //hmmm
-            Extensions.CalcCorrectedPValue(testProt, groupPepsForPValCalc, alpha);
+            
             List<ProteinGroup> ProteinsToUse = testProt.Where(p => p.useProt).ToList();
             
             WriteFile.ParamsWriter(paramsfile, filepathpeptides, filepathgroups, directory, peptidestoichiometryfileout, reqNumUnmodPeptides, reqNumModPeptides,
                 reqNumOfPepeptides, useBaselinePeptides, reqNumBaselinePeptides, reqNumBaselineMeasurements, correlationCutOff, compareUnmod,
-                minNumStoichiometries, reqNumPepMeasurements, groupPepsForPValCalc, alpha, groupToCompare);
+                minNumStoichiometries, reqNumPepMeasurements, groupToCompare);
             WriteFile.StoichiometryPeptideDataWriter(ProteinsToUse, useBaselinePeptides, minNumStoichiometries, directory, peptidestoichiometryfileout);
             WriteFile.StoichiometryPTMDataWriter(ProteinsToUse, useBaselinePeptides, minNumStoichiometries, directory, ptmstoichiometryfileout);
 

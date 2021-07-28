@@ -34,8 +34,6 @@ namespace PTMStoichiometry
         public double MWStat { get; }
         //p-value
         public double MWPVal { get; }
-        //Benjamini-Hochberg corrected p-value
-        public double CorrectedpVal { get; set; }
         //the post-translational modification
         public string PTM { get; }
 
@@ -132,14 +130,7 @@ namespace PTMStoichiometry
             }
         }
 
-        /// <summary>
-        /// Function to set CorrectedpVal
-        /// </summary>
-        /// <param name="correctPVal">the corrected p-value</param>
-        public void setCorrectedpVal(double correctPVal)
-        {
-            this.CorrectedpVal = correctPVal;
-        }
+  
 
         /// <summary>
         /// Function to calculate the stoichiometries of a peptide compared to a baseline
