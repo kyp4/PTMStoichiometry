@@ -11,11 +11,22 @@ namespace PTMStoichiometry
     //PeptideReader class written with Dr. Shortreed
     public class PeptideReader
     {
-        public static List<Peptide> ReadTsv(string peptidefilepath, string groupfilepath, int reqNumPepMeasurements, int intensityIndex, string dataType)
+        /// <summary>
+        /// Function to read in Peptide data from tsv files
+        /// </summary>
+        /// <param name="peptidefilepath">file path to the tsv file containing Peptide data</param>
+        /// <param name="groupfilepath">file path to tsv file containing group data</param>
+        /// <param name="reqNumPepMeasurements">min num of peptide intensities that must be observed 
+        /// (non zero -> MS or MSMS detection)</param>
+        /// <param name="intensityIndex">index where Intensity data starts in file</param>
+        /// <param name="dataType">type of data: FlashLFQ or MaxQuant</param>
+        /// <returns>list of peptides</returns>
+        public static List<Peptide> ReadTsv(string peptidefilepath, string groupfilepath, int reqNumPepMeasurements,
+            int intensityIndex, string dataType)
         {
             List<Peptide> peptides = new List<Peptide>();
             string[] lines = File.ReadAllLines(peptidefilepath, Encoding.UTF8);
-            //string[] files = GetFile(lines[0]);
+   
             Dictionary<string, string> groups = GetGroups(groupfilepath);
             List<string> groupList = GetGroupList(groupfilepath);
 
@@ -26,6 +37,11 @@ namespace PTMStoichiometry
             return peptides;
         }
 
+        /// <summary>
+        /// Function to build dictionary of which file is related to which group 
+        /// </summary>
+        /// <param name="groupfilepath">file path to tsv file containing group data</param>
+        /// <returns>dictionary of which file is in which group</returns>
         public static Dictionary<string, string> GetGroups(string groupfilepath)
         {
             string[] groupsWithFiles = File.ReadAllLines(groupfilepath, Encoding.UTF8);
@@ -39,6 +55,11 @@ namespace PTMStoichiometry
             return groups;
         }
 
+        /// <summary>
+        /// Function which returns a list all groups
+        /// </summary>
+        /// <param name="groupfilepath">file path to tsv file containing group data</param>
+        /// <returns>list of all groups</returns>
         public static List<string> GetGroupList(string groupfilepath)
         {
             string[] groupsWithFiles = File.ReadAllLines(groupfilepath, Encoding.UTF8);
@@ -52,25 +73,18 @@ namespace PTMStoichiometry
             return groups.Distinct().ToList();
         }
 
-        //function to find index of a key string in a header
+        /// <summary>
+        /// Function to find index of a key string in a header
+        /// </summary>
+        /// <param name="filepath">file path to the tsv file with a header containing find</param>
+        /// <param name="find">string to find in header</param>
+        /// <returns>the index of find in the header</returns>
         public static int IndexFind(string filepath, string find)
         {
             string headerline = File.ReadAllLines(filepath, Encoding.UTF8)[0];
             List<string> header = headerline.Split("\t").ToList();
 
             return header.IndexOf(find);
-        }
-
-        private static string[] GetFile(string v)
-        {
-            string[] headerEntries = v.Split('\t');
-    
-            int length = (headerEntries.Length - 5) / 2;
-                //for (int i = 5; i < length + 5; i++)
-                //{
-                //headerEntries[i] = headerEntries[i].Replace("Intensity_", "");
-                //}
-            return headerEntries.SubArray(5, length);
         }
     }
 }

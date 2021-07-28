@@ -33,15 +33,15 @@ namespace PTMStoichiometry
             //pvalueAdjust - if true (default) use Benjamini-Hochberg analysis to adjust all p-values, else report raw p-values
             //alpha - significance value
             //minNumStoichiometries - min num of stoichiometries req in both groups before run test
-            //groupPepsForPValCalc - choose to apply p-valuse correction within each protein (grouped) or across all proteins
+            //groupPepsForPValCalc - choose to apply p-value correction within each protein (grouped) or across all proteins
             //alpha - chosen significance (default=0.05)
 
             int reqNumUnmodPeptides = 1;
-            int reqNumModPeptides = 3;
+            int reqNumModPeptides = 1;
             int reqNumOfPepeptides = reqNumUnmodPeptides + reqNumModPeptides;
             bool useBaselinePeptides = true;
-            int reqNumBaselinePeptides = reqNumUnmodPeptides;
-            int reqNumBaselineMeasurements = 3; //allow one missing value
+            int reqNumBaselinePeptides = 3;
+            int reqNumBaselineMeasurements = 3; 
             double correlationCutOff = 0.75;
             bool compareUnmod = false;
             int minNumStoichiometries = 3;
@@ -51,11 +51,18 @@ namespace PTMStoichiometry
             string groupToCompare = null;
             string dataType = "unknown";
 
-            string filepathpeptides = @"D:\PTMStoichiometry\TestData\PXD003881\2021-06-09-09-54-45\Task3-SearchTask\AllQuantifiedPeptides.tsv";
-            string filepathgroups = @"D:\PTMStoichiometry\TestData\PXD003881\2021-06-09-09-54-45\Task3-SearchTask\PXD003881_MM_Groups.txt";
-            string directory = @"D:\PTMStoichiometry\TestData\PXD003881\2021-06-09-09-54-45\Task3-SearchTask\";
-            string stoichiometryfileout = "20210621a_PXD003881_FlashLFQ";
-            string paramsfile = stoichiometryfileout + "_params";
+            string filepathpeptides = @"C:\Users\KAP\source\repos\PTMStoichiometry_master\Test\TestData\MSV000086126-2021-07-07-08-59-09-AllQuantifiedPeptides-10000PeptidesProteinAlphabetized.txt";
+            string filepathgroups = @"C:\Users\KAP\source\repos\PTMStoichiometry_master\Test\TestData\MSV000086126GlobalGroups.txt";
+            string directory = @"D:\PTMStoichiometry\UnitTests\";
+
+            //string filepathpeptides = @"D:\PTMStoichiometry\TestData\PXD003881\2021-07-07-09-11-30\Task3-SearchTask\AllQuantifiedPeptides.tsv";
+            //string filepathgroups = @"D:\PTMStoichiometry\TestData\PXD003881\2021-07-07-09-11-30\Task3-SearchTask\PXD003881_MM_Groups.txt";
+            //string directory = @"D:\PTMStoichiometry\TestData\PXD003881\2021-07-07-09-11-30\Task3-SearchTask\";
+
+            //string filepathpeptides = @"D:\PTMStoichiometry\TestData\MSV000086126\2021-07-07-08-59-09\Task3-SearchTask\AllQuantifiedPeptides.tsv";
+            //string filepathgroups = @"D:\PTMStoichiometry\TestData\MSV000086126\2021-07-07-08-59-09\Task3-SearchTask\MSV000086126GlobalGroups.txt";
+            //string directory = @"D:\PTMStoichiometry\TestData\MSV000086126\2021-07-07-08-59-09\Task3-SearchTask\";
+
 
             if (File.ReadAllLines(filepathpeptides, Encoding.UTF8)[0].Split("\t")[4] == "Organism")
             {
@@ -65,6 +72,10 @@ namespace PTMStoichiometry
             {
                 dataType = "MaxQuant";
             }
+            string subdirectory = "MSV000086126-2021-07-07-08-59-09-AllQuantifiedPeptides-10000PeptidesProteinAlphabetized-20210727a";
+            string peptidestoichiometryfileout = subdirectory + "PeptideAnalysis";
+            string ptmstoichiometryfileout = subdirectory + "PTMAnalysis";
+            string paramsfile = subdirectory + "params";
 
             int intensityIndex = 5;
             if (dataType == "MaxQuant")
@@ -76,38 +87,47 @@ namespace PTMStoichiometry
             Dictionary<string, string> groups = PeptideReader.GetGroups(filepathgroups);
             List<string> groupsList = PeptideReader.GetGroupList(filepathgroups);
             List<Peptide> testPeptide = PeptideReader.ReadTsv(filepathpeptides, filepathgroups, reqNumPepMeasurements, intensityIndex, dataType);
-            testPeptide = Extensions.IncludeSharedPeptides(testPeptide, false); 
+            //testPeptide = Extensions.IncludeSharedPeptides(testPeptide, false); 
 
 
             //group peptides by protein
-            var proteins = testPeptide.Select(p => p.ProteinGroup).Distinct().ToArray();
-            List<ProteinGroup> testProt = new List<ProteinGroup>();
+            //var proteins = testPeptide.Where(p => p.ProteinGroup.Count() == 1).Select(p => p.ProteinGroup).Distinct().ToArray(); //this is problem line!//TODO: chance of leaving things out? - think it is okay bc if doesn't make it past this has NO unique peps
+            var proteins = testPeptide.Where(p => p.ProteinGroup.Count() == 1).Select(p => p.ProteinGroup).Distinct().ToList();
 
+            List<string> proteinList = new List<string>(); //  proteins.Select(p => string p[0] { p = p }).ToList()
+            foreach (List<string> prot in proteins)
+            {
+                proteinList.Add(prot[0]);
+            }
+            proteinList = proteinList.Distinct().ToList();
+            List<ProteinGroup> testProt = new List<ProteinGroup>();
+            
             if (groupToCompare != null)
             {
-                for (int i = 0; i < proteins.Length; i++)
+                for (int i = 0; i < proteinList.Count(); i++)
                 {
-                    testProt.Add(new ProteinGroup(proteins[i], testPeptide, groupsList, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides,
+                    testProt.Add(new ProteinGroup(proteinList[i], testPeptide, groupsList, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides,
                     useBaselinePeptides, reqNumBaselinePeptides, reqNumBaselineMeasurements, correlationCutOff, compareUnmod, minNumStoichiometries, groupToCompare));
                 }
             }
             else
             {
-                for (int i = 0; i < proteins.Length; i++)
+                for (int i = 0; i < proteinList.Count(); i++)
                 {
-                    testProt.Add(new ProteinGroup(proteins[i], testPeptide, groupsList, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides,
+                    testProt.Add(new ProteinGroup(proteinList[i], testPeptide, groupsList, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides,
                     useBaselinePeptides, reqNumBaselinePeptides, reqNumBaselineMeasurements, correlationCutOff, compareUnmod, minNumStoichiometries));
                 }
             }
 
-            testProt = testProt.Where(p => p.ProteinPairwiseComparisons != null).ToList(); //hmmm
+            testProt = testProt.Where(p => p.ProteinPairwiseComparisons != null).Distinct().ToList(); //hmmm
             Extensions.CalcCorrectedPValue(testProt, groupPepsForPValCalc, alpha);
             List<ProteinGroup> ProteinsToUse = testProt.Where(p => p.useProt).ToList();
             
-            WriteFile.ParamsWriter(paramsfile, filepathpeptides, filepathgroups, directory, stoichiometryfileout, reqNumUnmodPeptides, reqNumModPeptides,
+            WriteFile.ParamsWriter(paramsfile, filepathpeptides, filepathgroups, directory, peptidestoichiometryfileout, reqNumUnmodPeptides, reqNumModPeptides,
                 reqNumOfPepeptides, useBaselinePeptides, reqNumBaselinePeptides, reqNumBaselineMeasurements, correlationCutOff, compareUnmod,
                 minNumStoichiometries, reqNumPepMeasurements, groupPepsForPValCalc, alpha, groupToCompare);
-            WriteFile.StoichiometryDataWriter(ProteinsToUse, useBaselinePeptides, minNumStoichiometries, directory, stoichiometryfileout);
+            WriteFile.StoichiometryPeptideDataWriter(ProteinsToUse, useBaselinePeptides, minNumStoichiometries, directory, peptidestoichiometryfileout);
+            WriteFile.StoichiometryPTMDataWriter(ProteinsToUse, useBaselinePeptides, minNumStoichiometries, directory, ptmstoichiometryfileout);
 
         }
     }

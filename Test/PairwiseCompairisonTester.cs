@@ -82,6 +82,16 @@ namespace Test
                 new List<double> { (38947.830453) / 89754.37958, (8907235.0893645) / 89754.37958, 0 }
             }
         };
+        /// <summary>
+        /// Test that checks that calcStoichiometry in the baseline case is returning the correct stoichiometry values
+        /// </summary>
+        /// <param name="pep">peptide to compare (numerator)</param>
+        /// <param name="baseline">the baseline value (denominator)</param>
+        /// <param name="g1">group to be compared</param>
+        /// <param name="g2">group to be compared</param>
+        /// <param name="minNumStoichiometries">min num of stoichiometries req in both groups before run test</param>
+        /// <param name="stoich1">correct stoichiometries in g1</param>
+        /// <param name="stoich2">correct stoichiometries in g2</param>
         [Test]
         [TestCaseSource("_calcStoichiometryBaselineCase")]
         public void PairwiseCompairison_calcStoichiometryBaselineCase_Pass(Peptide pep, List<Intensity> baseline, string g1, string g2, 
@@ -100,7 +110,7 @@ namespace Test
             }
         }
 
-
+        
         private static readonly object[] _calcStoichiometryPeptidePeptideCase =
         {
             new object[] {
@@ -213,6 +223,16 @@ namespace Test
                 new List<double> { 38947.830453 / 97435.938475, 8907235.0893645 / 89745.43956, 0, double.PositiveInfinity }
             }
         };
+        /// <summary>
+        /// Test that checks that calcStoichiometry in the peptide:peptide case is returning the correct stoichiometry values
+        /// </summary>
+        /// <param name="pep1">peptide to compare</param>
+        /// <param name="pep2">peptide to compare</param>
+        /// <param name="g1">group to be compared</param>
+        /// <param name="g2">group to be compared</param>
+        /// <param name="minNumStoichiometries">min num of stoichiometries req in both groups before run test</param>
+        /// <param name="stoich1">correct stoichiometries in g1</param>
+        /// <param name="stoich2">correct stoichiometries in g2</param>
         [Test]
         [TestCaseSource("_calcStoichiometryPeptidePeptideCase")]
         public void PairwiseCompairison_calcStoichiometryPeptidePeptideCase_Pass(Peptide pep1, Peptide pep2, string g1, string g2,
@@ -230,6 +250,147 @@ namespace Test
                 Assert.That(stoich2[i], Is.EqualTo(PairwiseCompairisonTest.PeptideStoichiometriesGroupTwo.Select(p => p.StoichiometryVal).ToList()[i]).Within(0.001));
             }
         }
+
+        private static readonly object[] _calcStoichiometryPTMBaselineCase =
+        {
+            new object[] {
+                new List<Peptide> 
+                {
+                    new Peptide("Seq1moda", "Seq1", "Prot", "Gene", "Organism",
+                    new List<Intensity>() {
+                        new Intensity("file", "group1", 100),
+                        new Intensity("file", "group2", 500) },
+                    new List<string>() { "group1", "group2" }, 1)
+                },
+                new List<Intensity> {
+                new Intensity("file", "group1", 1000),
+                new Intensity("file", "group2", 500)},
+                "group1", "group2", "moda",
+                3,
+                new List<double> { 0.1 },
+                new List<double> { 1 }
+                
+            },
+            /*
+            new object[] {
+                new List<Peptide>
+                {
+                    new Peptide("Seq1moda", "Seq1", "Prot", "Gene", "Organism",
+                        new List<Intensity>() {
+                            new Intensity("file", "group1", 500),
+                            new Intensity("file", "group2", 500) },
+                        new List<string>() { "group1", "group2" }, 1)
+                },
+                new List<Intensity> {
+                new Intensity("file", "group1", 1000),
+                new Intensity("file", "group2", 250)},
+                "group1", "group2", "moda",
+                3,
+                new List<double> { 0.5 },
+                new List<double> { 2 }
+            },
+            */
+            /*
+            new object[] {
+                new List<Peptide>
+                {
+                    new Peptide("Seq1modb", "Seq1", "Prot", "Gene", "Organism",
+                        new List<Intensity>() {
+                            new Intensity("file1", "group1", 500),
+                            new Intensity("file2", "group2", 200),
+                            new Intensity("file2", "group1", 500),
+                            new Intensity("file1", "group2", 200)},
+                        new List<string>() { "group1", "group2" }, 1),
+                    new Peptide("Seq1modb", "Seq1", "Prot", "Gene", "Organism",
+                        new List<Intensity>() {
+                            new Intensity("file1", "group1", 400),
+                            new Intensity("file1", "group2", 300),
+                            new Intensity("file2", "group1", 0),
+                            new Intensity("file2", "group2", 0)},
+                        new List<string>() { "group1", "group2" }, 1),
+                    new Peptide("Seq1modb", "Seq1", "Prot", "Gene", "Organism",
+                        new List<Intensity>() {
+                            new Intensity("file2", "group1", 100),
+                            new Intensity("file2", "group2", 600),
+                            new Intensity("file2", "group1", 0),
+                            new Intensity("file2", "group2", 0)},
+                        new List<string>() { "group1", "group2" }, 1)
+                },
+                new List<Intensity> {
+                new Intensity("file1", "group1", 1000),
+                new Intensity("file1", "group2", 250),
+                new Intensity("file2", "group1", 1000),
+                new Intensity("file2", "group2", 250)},
+                "group1", "group2", "modb",
+                3,
+                new List<double> { (500+400+0)/1000, (500+0+100)/1000 },
+                new List<double> { (0+300+0)/250, (200+0+600)/250 }
+            },
+            */
+            /*
+            new object[] {
+                new List<Peptide>
+                {
+                    new Peptide("Seq1moda", "Seq1", "Prot", "Gene", "Organism",
+                    new List<Intensity>() {
+                        new Intensity("file", "group1", 756019.37596012),
+                        new Intensity("file", "group1", 234667.023876),
+                        new Intensity("file", "group2", 38947.830453),
+                        new Intensity("file", "group2", 8907235.0893645),
+                        new Intensity("file", "group2", 0),
+                        new Intensity("file", "group3", 8907235.0893645),
+                        new Intensity("file", "group3", 3409750.2309)
+                    },
+                    new List<string>() { "group1", "group2" }, 1)
+                },
+                new List<Intensity> {
+                new Intensity("file", "group1", 23974.23487),
+                new Intensity("file", "group1", 807934.23874),
+                new Intensity("file", "group1", 23974.23487),
+                new Intensity("file", "group2", 89754.37958),
+                new Intensity("file", "group2", 357698.893275),
+                new Intensity("file", "group2", 32587.4569384),
+                new Intensity("file", "group3", 89754.37958),
+                new Intensity("file", "group3", 357698.893275),
+                new Intensity("file", "group3", 32587.4569384)},
+                "group1", "group2", "moda",
+                3,
+                new List<double> { (756019.37596012) / 23974.23487, (234667.023876) / 23974.23487 },
+                new List<double> { (38947.830453) / 89754.37958, (8907235.0893645) / 89754.37958, 0 }
+            }
+            */
+        };
+        /// <summary>
+        /// Test that checks that calcStoichiometry in the baseline case is returning the correct stoichiometry values
+        /// </summary>
+        /// <param name="peps">peptides to compare (numerator)</param>
+        /// <param name="baseline">the baseline value (denominator)</param>
+        /// <param name="g1">group to be compared</param>
+        /// <param name="g2">group to be compared</param>
+        /// <param name="minNumStoichiometries">min num of stoichiometries req in both groups before run test</param>
+        /// <param name="stoich1">correct stoichiometries in g1</param>
+        /// <param name="stoich2">correct stoichiometries in g2</param>
+        [Test]
+        [TestCaseSource("_calcStoichiometryPTMBaselineCase")]
+        public void PairwiseCompairison_calcStoichiometryPTMBaselineCase_Pass(List<Peptide> peps, List<Intensity> baseline, string g1, string g2,
+            string ptm, int minNumStoichiometries, List<double> stoich1, List<double> stoich2)
+        {
+            
+            PairwiseCompairison PairwiseCompairisonTest = new PairwiseCompairison(peps, baseline, g1, g2, minNumStoichiometries, ptm);
+            Assert.AreEqual(stoich1.Count(), PairwiseCompairisonTest.PeptideStoichiometriesGroupOne.Count());
+            Assert.AreEqual(stoich2.Count(), PairwiseCompairisonTest.PeptideStoichiometriesGroupTwo.Count());
+            for (int i = 0; i < stoich1.Count(); i++)
+            {
+                Assert.That(stoich1[i], Is.EqualTo(PairwiseCompairisonTest.PeptideStoichiometriesGroupOne.Select(p => p.StoichiometryVal).ToList()[i]).Within(0.001));
+            }
+            for (int i = 0; i < stoich2.Count(); i++)
+            {
+                Assert.That(stoich2[i], Is.EqualTo(PairwiseCompairisonTest.PeptideStoichiometriesGroupTwo.Select(p => p.StoichiometryVal).ToList()[i]).Within(0.001));
+            }
+        }
+
+
+       
 
         private static readonly object[] _calcMWStatsBaselineCase =
         {
@@ -348,6 +509,22 @@ namespace Test
             }
 
         };
+        /// <summary>
+        /// Test to check that calcMWStats is returning the correct values
+        /// </summary>
+        /// <param name="pep">peptide to compare (numerator)</param>
+        /// <param name="baseline">baseline (denominator)</param>
+        /// <param name="g1">group to be compared</param>
+        /// <param name="g2">group to be compared</param>
+        /// <param name="minNumStoichiometries">min num of stoichiometries req in both groups before run test</param>
+        /// <param name="mwStat">Mann-Whitney statistic (calculated in R)</param>
+        /// <param name="mwPVal">Mann-Whitney p-value (calculated in R)</param>
+        /// <param name="g1Med">median of g1 stoichiometries</param>
+        /// <param name="g2Med">median of g2 stoichiometries</param>
+        /// <param name="g1Min">minimum of g1 stoichiometries</param>
+        /// <param name="g2Min">minimum of g2 stoichiometries</param>
+        /// <param name="g1Max">maximum of g1 stoichiometries</param>
+        /// <param name="g2Max">maximum of g2 stoichiometries</param>
         [Test]
         [TestCaseSource("_calcMWStatsBaselineCase")]
         public void PairwiseCompairison_calcMWStatsBaselineCase_Pass(Peptide pep, List<Intensity> baseline, string g1, string g2, int minNumStoichiometries, 

@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using PTMStoichiometry;
 using System.Linq;
+using System.Text;
+using System.IO;
 
 namespace Test
 {
@@ -355,9 +357,9 @@ namespace Test
         [Test]
         [TestCaseSource("_getBaseLinePeptides")]
         public void ProteinGroup_getBaseLinePeptides_Pass(string proteinAccession, List<Peptide> peptides, List<string> groups, int reqNumUnmodPeptides, int reqNumModPeptides, int reqNumOfPepeptides,
-            Boolean useBaselinePeptides, int reqNumBaselinePeptides, double correlationCutOff, Boolean compareUnmod, int minNumStoichiometries, string groupToCompare, List<string> baselinePeptideSeq)
+            bool useBaselinePeptides, int reqNumBaselinePeptides, double correlationCutOff, Boolean compareUnmod, int minNumStoichiometries, string groupToCompare, List<string> baselinePeptideSeq)
         {
-            Extensions.IncludeSharedPeptides(peptides, true); //set isUnique
+           // Extensions.IncludeSharedPeptides(peptides, true); //set isUnique
             ProteinGroup ProteinGroupAllGroupsTest = new ProteinGroup(proteinAccession, peptides, groups, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides, useBaselinePeptides, 
                 reqNumBaselinePeptides, 3, correlationCutOff, compareUnmod, minNumStoichiometries);
             ProteinGroup ProteinGroupSetGroupTest = new ProteinGroup(proteinAccession, peptides, groups, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides, useBaselinePeptides,
@@ -575,7 +577,7 @@ namespace Test
         [Test]
         [TestCaseSource("_useProt")]
         public void ProteinGroup_useProt_Pass(string proteinAccession, List<Peptide> peptides, List<string> groups, int reqNumUnmodPeptides, int reqNumModPeptides, int reqNumOfPepeptides,
-            double correlationCutOff, Boolean compareUnmod, int minNumStoichiometries, string groupToCompare, bool useProtBaseline, bool useProtPeptidePeptide)
+            double correlationCutOff, bool compareUnmod, int minNumStoichiometries, string groupToCompare, bool useProtBaseline, bool useProtPeptidePeptide)
         {
             ProteinGroup ProteinGroupBaselineAllGroupTest = new ProteinGroup(proteinAccession, peptides, groups, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides, true,
                 reqNumUnmodPeptides, 3, correlationCutOff, compareUnmod, minNumStoichiometries);
@@ -592,8 +594,10 @@ namespace Test
             Assert.AreEqual(useProtPeptidePeptide, ProteinGroupPeptidePeptideSetGroupTest.useProt);
         }
 
+
+
         private static readonly object[] _calCompairison =
-{
+ {
             new object[] {
                 "Prot",
                 new List<Peptide>
@@ -698,12 +702,12 @@ namespace Test
         //calcComparison - since PairwiseCompairison is tested elsewhere, just want to check is returning correct number of PairwiseCompairisons depending on inputs 
         [Test]
         [TestCaseSource("_calCompairison")]
-        public void ProteinGroup_calcComparison_Pass(string proteinAccession, List<Peptide> peptides, List<string> groups, string groupToCompare, 
-            int numPairwiseCompairisonsBaselineAllGroup, int numPairwiseCompairisonsBaselineSetGroup, int numPairwiseCompairisonsPeptidePeptideAllGroup, 
+        public void ProteinGroup_calcComparison_Pass(string proteinAccession, List<Peptide> peptides, List<string> groups, string groupToCompare,
+            int numPairwiseCompairisonsBaselineAllGroup, int numPairwiseCompairisonsBaselineSetGroup, int numPairwiseCompairisonsPeptidePeptideAllGroup,
             int numPairwiseCompairisonsPeptidePeptideSetGroup)
         {
 
-            Extensions.IncludeSharedPeptides(peptides, true); //set isUnique
+            //Extensions.IncludeSharedPeptides(peptides, true); //set isUnique
             ProteinGroup ProteinGroupBaselineAllGroupTest = new ProteinGroup(proteinAccession, peptides, groups, 3, 1, 4, true,
                 3, 3, 0.5, false, 3);
             ProteinGroup ProteinGroupBaselineSetGroupTest = new ProteinGroup(proteinAccession, peptides, groups, 3, 1, 4, true,
@@ -720,3 +724,4 @@ namespace Test
         }
     }
 }
+
