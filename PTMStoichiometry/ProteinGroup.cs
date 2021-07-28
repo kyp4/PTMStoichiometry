@@ -290,8 +290,7 @@ namespace PTMStoichiometry
                     {
                         ptmDict.Add(mod.Modification, new List<Peptide>() { pep });
                     }
-                }
-                
+                } 
             }
 
             //loop over all mod, group, group permutations 
@@ -301,7 +300,7 @@ namespace PTMStoichiometry
                 {
                     for (int g2 = (g1 + 1); g2 < groups.Count(); ++g2)
                     {
-                        //rabbit - need way to put multiple peptides into PairwiseCompairison
+                        
                         PairwiseCompairison temp = new PairwiseCompairison(ptmDict[ptm], getBaselineIntensities(), groups[g1], groups[g2], minNumStoichiometries, ptm);
                         if (temp.PeptideStoichiometriesGroupOne.Count() >= minNumStoichiometries && temp.PeptideStoichiometriesGroupTwo.Count() >= minNumStoichiometries)
                         {
@@ -313,7 +312,7 @@ namespace PTMStoichiometry
             return comparePeps;
         }
 
-        //TODO:fix
+        
         /// <summary>
         /// Function to calculate PairwiseCompairisons in the baseline case grouped by localization modification ratios
         /// with a group to compare against
@@ -329,37 +328,42 @@ namespace PTMStoichiometry
             List<Peptide> PeptidesToCompare = PepsInProt.Where(p => p.Mod).ToList();
 
             //collect ptms
-            List<string> ptms = new List<string>();
+            Dictionary<string, string> ptms = new Dictionary<string, string> { };
             Dictionary<string, List<Peptide>> ptmDict = new Dictionary<string, List<Peptide>> { };
             foreach (Peptide pep in PeptidesToCompare)
             {
-                ptms.Concat(pep.PostTranslationalModifications.Select(p => p.ModificationInPeptideSequence));
-                foreach (string mod in pep.PostTranslationalModifications.Select(p => p.ModificationInPeptideSequence))
+                //ptms.Concat(pep.PostTranslationalModifications.Select(p => p.ModificationInPeptideSequence));
+                foreach (PostTranslationalModification mod in pep.PostTranslationalModifications)
                 {
-                    if (ptmDict[mod] != null)
+                    if (!ptms.ContainsKey(mod.Modification))
                     {
-                        ptmDict[mod].Add(pep);
+                        ptms.Add(mod.Modification, mod.ModificationInPeptideSequence);
+                    }
+
+                    if (ptmDict.ContainsKey(mod.Modification))
+                    {
+                        ptmDict[mod.Modification].Add(pep);
                     }
                     else
                     {
-                        ptmDict.Add(mod, new List<Peptide>() { pep });
+                        ptmDict.Add(mod.Modification, new List<Peptide>() { pep });
                     }
                 }
-
             }
-            ptms.Distinct();
+
+
             //loop over all mod, group, group permutations 
-            for (int p1 = 0; p1 < ptms.Count(); ++p1)
+            foreach (string ptm in ptms.Keys)
             {
                 for (int g1 = 0; g1 < groups.Count(); ++g1)
                 {
-                   
-                        PairwiseCompairison temp = new PairwiseCompairison(ptmDict[ptms[p1]], getBaselineIntensities(), groups[g1], groupToCompare, minNumStoichiometries, ptms[p1]);
-                        if (temp.PeptideStoichiometriesGroupOne.Count() >= minNumStoichiometries && temp.PeptideStoichiometriesGroupTwo.Count() >= minNumStoichiometries)
-                        {
-                            comparePeps.Add(temp);
-                        }
-     
+
+                    PairwiseCompairison temp = new PairwiseCompairison(ptmDict[ptm], getBaselineIntensities(), groups[g1], groupToCompare, minNumStoichiometries, ptm);
+                    if (temp.PeptideStoichiometriesGroupOne.Count() >= minNumStoichiometries && temp.PeptideStoichiometriesGroupTwo.Count() >= minNumStoichiometries)
+                    {
+                        comparePeps.Add(temp);
+                    }
+
                 }
             }
             return comparePeps;

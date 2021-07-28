@@ -16,25 +16,4 @@
     <ProjectReference Include="..\PTMStoichiometry\PTMStoichiometry.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="TestData\AllQuantifiedPeptidesPhosphoTinySharedPeptideTest.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="TestData\AllQuantifiedPeptidesPhosphoTinyTest.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="TestData\AllQuantifiedPeptidesPosphoLargeTest.tsv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="TestData\AllQuantifiedPeptidesPosphoSmallTest.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="TestData\groupsPhosphoStudy.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="TestData\twoGroupsPhosphoStudy.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

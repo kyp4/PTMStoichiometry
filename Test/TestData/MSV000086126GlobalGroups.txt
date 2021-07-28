@@ -1,0 +1,18 @@
+Intensity_1DLC122419QE_ZD_Kidney_global_#1-calib	Global Control
+Intensity_1DLC122419QE_ZD_Kidney_global_#10-calib	Global Day 2
+Intensity_1DLC122419QE_ZD_Kidney_global_#11-calib	Global Day 2
+Intensity_1DLC122419QE_ZD_Kidney_global_#12-calib	Global Day 2
+Intensity_1DLC122419QE_ZD_Kidney_global_#13-calib	Global Day 7
+Intensity_1DLC122419QE_ZD_Kidney_global_#14-calib	Global Day 7
+Intensity_1DLC122419QE_ZD_Kidney_global_#15-calib	Global Day 7
+Intensity_1DLC122419QE_ZD_Kidney_global_#16-calib	Global Day 7
+Intensity_1DLC122419QE_ZD_Kidney_global_#17-calib	Global Day 7
+Intensity_1DLC122419QE_ZD_Kidney_global_#18-calib	Global Day 7
+Intensity_1DLC122419QE_ZD_Kidney_global_#2-calib	Global Control
+Intensity_1DLC122419QE_ZD_Kidney_global_#3-calib	Global Control
+Intensity_1DLC122419QE_ZD_Kidney_global_#4-calib	Global Control
+Intensity_1DLC122419QE_ZD_Kidney_global_#5-calib	Global Control
+Intensity_1DLC122419QE_ZD_Kidney_global_#6-calib	Global Control
+Intensity_1DLC122419QE_ZD_Kidney_global_#7-calib	Global Day 2
+Intensity_1DLC122419QE_ZD_Kidney_global_#8-calib	Global Day 2
+Intensity_1DLC122419QE_ZD_Kidney_global_#9-calib	Global Day 2

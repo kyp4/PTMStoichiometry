@@ -90,7 +90,7 @@ namespace PTMStoichiometry
 
             if (this.PeptideStoichiometriesGroupOne.Count() >= minNumStoichiometries && this.PeptideStoichiometriesGroupTwo.Count() >= minNumStoichiometries)
             {
-                this.MWStat = calcMWStats()[0];
+                this.MWStat = calcMWStats()[0]; 
                 this.MWPVal = calcMWStats()[1];
                 this.PeptideStoichiometriesGroupOneMedian = calcMWStats()[2];
                 this.PeptideStoichiometriesGroupTwoMedian = calcMWStats()[3];
@@ -183,12 +183,13 @@ namespace PTMStoichiometry
             for (int i = 0; i < baselineFileNames.Count(); i++)
             {
                 List<Intensity> PepIntensity = new List<Intensity>();
+                
                 foreach (Peptide pep in peps)
                 {
                     //List<Intensity> pepInt = pep.Intensities.Where(p => p.GroupID == group).ToList();
                     PepIntensity.Add(pep.Intensities.Where(p => p.FileName.Equals(baselineFileNames[i])).ToList()[0]);
                 }
-                stoich.Add(new Stoichiometry(PepIntensity, baseline));               
+                stoich.Add(new Stoichiometry(PepIntensity, baseline)); 
             }
             return stoich;
         }
