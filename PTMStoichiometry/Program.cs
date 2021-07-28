@@ -15,8 +15,7 @@ namespace PTMStoichiometry
         {
             //user parameters - will need to validate input
 
-            //groupToCompare - single group to compare against, this is the group name (e.g. a control group) (default = null)
-            //useBaselinePeptides - if true (default) use an averaged baseline of covarying peptides
+            
             //reqNumBaselinePeptides - min num of baseline peptides that must be observed for a protein in order to consider it (default=3)
             //correlationCutOff - min value at which two peptides will be considered to be correlated
             //reqNumOfPepeptides - min num of peptides that must be observed for a protein in order to consider it
@@ -28,22 +27,18 @@ namespace PTMStoichiometry
             //that are not observed in samples and therefore the number of non numeric stoichiometry values found in baseline case
             //compareUnmod - if false (default) only compare modified peptides to baseline, not unmodified peptides
 
-            //useRazorPeptides - if false (default) peptides in more than one protein are removed
-            //test - currently only MW available, want to add t-test and ANOVA
-            
             //minNumStoichiometries - min num of stoichiometries req in both groups before run test
 
             int reqNumUnmodPeptides = 1;
             int reqNumModPeptides = 1;
             int reqNumOfPepeptides = reqNumUnmodPeptides + reqNumModPeptides;
-            bool useBaselinePeptides = true;
             int reqNumBaselinePeptides = 3;
             int reqNumBaselineMeasurements = 3; 
             double correlationCutOff = 0.75;
             bool compareUnmod = false;
             int minNumStoichiometries = 3;
             int reqNumPepMeasurements = 3;
-
+            //groupToCompare - single group to compare against, this is the group name (e.g. a control group) (default = null)
             string groupToCompare = null;
             string dataType = "unknown";
 
@@ -103,7 +98,7 @@ namespace PTMStoichiometry
                 for (int i = 0; i < proteinList.Count(); i++)
                 {
                     testProt.Add(new ProteinGroup(proteinList[i], testPeptide, groupsList, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides,
-                    useBaselinePeptides, reqNumBaselinePeptides, reqNumBaselineMeasurements, correlationCutOff, compareUnmod, minNumStoichiometries, groupToCompare));
+                   reqNumBaselinePeptides, reqNumBaselineMeasurements, correlationCutOff, compareUnmod, minNumStoichiometries, groupToCompare));
                 }
             }
             else
@@ -111,7 +106,7 @@ namespace PTMStoichiometry
                 for (int i = 0; i < proteinList.Count(); i++)
                 {
                     testProt.Add(new ProteinGroup(proteinList[i], testPeptide, groupsList, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides,
-                    useBaselinePeptides, reqNumBaselinePeptides, reqNumBaselineMeasurements, correlationCutOff, compareUnmod, minNumStoichiometries));
+                    reqNumBaselinePeptides, reqNumBaselineMeasurements, correlationCutOff, compareUnmod, minNumStoichiometries));
                 }
             }
 
@@ -120,10 +115,10 @@ namespace PTMStoichiometry
             List<ProteinGroup> ProteinsToUse = testProt.Where(p => p.useProt).ToList();
             
             WriteFile.ParamsWriter(paramsfile, filepathpeptides, filepathgroups, directory, peptidestoichiometryfileout, reqNumUnmodPeptides, reqNumModPeptides,
-                reqNumOfPepeptides, useBaselinePeptides, reqNumBaselinePeptides, reqNumBaselineMeasurements, correlationCutOff, compareUnmod,
+                reqNumOfPepeptides, reqNumBaselinePeptides, reqNumBaselineMeasurements, correlationCutOff, compareUnmod,
                 minNumStoichiometries, reqNumPepMeasurements, groupToCompare);
-            WriteFile.StoichiometryPeptideDataWriter(ProteinsToUse, useBaselinePeptides, minNumStoichiometries, directory, peptidestoichiometryfileout);
-            WriteFile.StoichiometryPTMDataWriter(ProteinsToUse, useBaselinePeptides, minNumStoichiometries, directory, ptmstoichiometryfileout);
+            WriteFile.StoichiometryPeptideDataWriter(ProteinsToUse, minNumStoichiometries, directory, peptidestoichiometryfileout);
+            WriteFile.StoichiometryPTMDataWriter(ProteinsToUse, minNumStoichiometries, directory, ptmstoichiometryfileout);
 
         }
     }

@@ -357,12 +357,12 @@ namespace Test
         [Test]
         [TestCaseSource("_getBaseLinePeptides")]
         public void ProteinGroup_getBaseLinePeptides_Pass(string proteinAccession, List<Peptide> peptides, List<string> groups, int reqNumUnmodPeptides, int reqNumModPeptides, int reqNumOfPepeptides,
-            bool useBaselinePeptides, int reqNumBaselinePeptides, double correlationCutOff, Boolean compareUnmod, int minNumStoichiometries, string groupToCompare, List<string> baselinePeptideSeq)
+            int reqNumBaselinePeptides, double correlationCutOff, bool compareUnmod, int minNumStoichiometries, string groupToCompare, List<string> baselinePeptideSeq)
         {
            // Extensions.IncludeSharedPeptides(peptides, true); //set isUnique
-            ProteinGroup ProteinGroupAllGroupsTest = new ProteinGroup(proteinAccession, peptides, groups, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides, useBaselinePeptides, 
+            ProteinGroup ProteinGroupAllGroupsTest = new ProteinGroup(proteinAccession, peptides, groups, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides, 
                 reqNumBaselinePeptides, 3, correlationCutOff, compareUnmod, minNumStoichiometries);
-            ProteinGroup ProteinGroupSetGroupTest = new ProteinGroup(proteinAccession, peptides, groups, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides, useBaselinePeptides,
+            ProteinGroup ProteinGroupSetGroupTest = new ProteinGroup(proteinAccession, peptides, groups, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides,
                 reqNumBaselinePeptides, 3, correlationCutOff, compareUnmod, minNumStoichiometries, groupToCompare);
 
             Assert.AreEqual(baselinePeptideSeq.Count(), ProteinGroupAllGroupsTest.BaselinePeptides.Count());
@@ -406,7 +406,7 @@ namespace Test
                 },
                 new List<string> { "group1", "group2" },
                 3, 1, 4, 0.5, false, 3, "group1",
-                false, false
+                false
             },
             new object[] {
                 "Prot",
@@ -493,7 +493,7 @@ namespace Test
                 },
                 new List<string> { "group1", "group2" },
                 3, 1, 4, 0.5, false, 3, "group1",
-                false, true
+                false
             },
             new object[] {
                 "Prot",
@@ -568,7 +568,7 @@ namespace Test
                 },
                 new List<string> { "group1", "group2" },
                 3, 1, 4, 0.5, false, 3, "group1",
-                false, true
+                false
             }
         };
 
@@ -577,21 +577,15 @@ namespace Test
         [Test]
         [TestCaseSource("_useProt")]
         public void ProteinGroup_useProt_Pass(string proteinAccession, List<Peptide> peptides, List<string> groups, int reqNumUnmodPeptides, int reqNumModPeptides, int reqNumOfPepeptides,
-            double correlationCutOff, bool compareUnmod, int minNumStoichiometries, string groupToCompare, bool useProtBaseline, bool useProtPeptidePeptide)
+            double correlationCutOff, bool compareUnmod, int minNumStoichiometries, string groupToCompare, bool useProtBaseline)
         {
-            ProteinGroup ProteinGroupBaselineAllGroupTest = new ProteinGroup(proteinAccession, peptides, groups, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides, true,
+            ProteinGroup ProteinGroupBaselineAllGroupTest = new ProteinGroup(proteinAccession, peptides, groups, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides,
                 reqNumUnmodPeptides, 3, correlationCutOff, compareUnmod, minNumStoichiometries);
-            ProteinGroup ProteinGroupBaselineSetGroupTest = new ProteinGroup(proteinAccession, peptides, groups, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides, true,
-                reqNumUnmodPeptides, 3, correlationCutOff, compareUnmod, minNumStoichiometries, groupToCompare);
-            ProteinGroup ProteinGroupPeptidePeptideAllGroupTest = new ProteinGroup(proteinAccession, peptides, groups, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides, false,
-                reqNumUnmodPeptides, 3, correlationCutOff, compareUnmod, minNumStoichiometries);
-            ProteinGroup ProteinGroupPeptidePeptideSetGroupTest = new ProteinGroup(proteinAccession, peptides, groups, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides, false,
+            ProteinGroup ProteinGroupBaselineSetGroupTest = new ProteinGroup(proteinAccession, peptides, groups, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides,
                 reqNumUnmodPeptides, 3, correlationCutOff, compareUnmod, minNumStoichiometries, groupToCompare);
 
             Assert.AreEqual(useProtBaseline, ProteinGroupBaselineAllGroupTest.useProt);
             Assert.AreEqual(useProtBaseline, ProteinGroupBaselineSetGroupTest.useProt);
-            Assert.AreEqual(useProtPeptidePeptide, ProteinGroupPeptidePeptideAllGroupTest.useProt);
-            Assert.AreEqual(useProtPeptidePeptide, ProteinGroupPeptidePeptideSetGroupTest.useProt);
         }
 
 
@@ -707,20 +701,14 @@ namespace Test
             int numPairwiseCompairisonsPeptidePeptideSetGroup)
         {
 
-            //Extensions.IncludeSharedPeptides(peptides, true); //set isUnique
-            ProteinGroup ProteinGroupBaselineAllGroupTest = new ProteinGroup(proteinAccession, peptides, groups, 3, 1, 4, true,
+            ProteinGroup ProteinGroupBaselineAllGroupTest = new ProteinGroup(proteinAccession, peptides, groups, 3, 1, 4,
                 3, 3, 0.5, false, 3);
-            ProteinGroup ProteinGroupBaselineSetGroupTest = new ProteinGroup(proteinAccession, peptides, groups, 3, 1, 4, true,
+            ProteinGroup ProteinGroupBaselineSetGroupTest = new ProteinGroup(proteinAccession, peptides, groups, 3, 1, 4,
                 3, 3, 0.5, false, 3, groupToCompare);
-            ProteinGroup ProteinGroupPeptidePeptideAllGroupTest = new ProteinGroup(proteinAccession, peptides, groups, 1, 1, 4, false,
-                0, 3, 0.5, false, 3);
-            ProteinGroup ProteinGroupPeptidePeptideSetGroupTest = new ProteinGroup(proteinAccession, peptides, groups, 1, 1, 2, false,
-                0, 3, 0.5, false, 3, groupToCompare);
 
             Assert.AreEqual(numPairwiseCompairisonsBaselineAllGroup, ProteinGroupBaselineAllGroupTest.ProteinPairwiseComparisons.Count());
             Assert.AreEqual(numPairwiseCompairisonsBaselineSetGroup, ProteinGroupBaselineSetGroupTest.ProteinPairwiseComparisons.Count());
-            Assert.AreEqual(numPairwiseCompairisonsPeptidePeptideAllGroup, ProteinGroupPeptidePeptideAllGroupTest.ProteinPairwiseComparisons.Count());
-            Assert.AreEqual(numPairwiseCompairisonsPeptidePeptideSetGroup, ProteinGroupPeptidePeptideSetGroupTest.ProteinPairwiseComparisons.Count());
+
         }
     }
 }

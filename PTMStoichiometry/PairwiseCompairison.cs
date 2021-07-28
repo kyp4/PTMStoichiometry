@@ -100,39 +100,6 @@ namespace PTMStoichiometry
         }
       
         /// <summary>
-        /// object to hold the stats compairing a peptide to another peptide
-        /// </summary>
-        /// <param name="Pep1">Peptide to compare</param>
-        /// <param name="Pep2">Peptide to serve as baseline</param>
-        /// <param name="G1">Group one of groups being compared</param>
-        /// <param name="G2">Group two of groups being compared</param>
-        /// <param name="minNumStoichiometries">minimum number of stoichiometries to require (default=3)</param>
-        public PairwiseCompairison(Peptide Pep1, Peptide Pep2, string G1, string G2, int minNumStoichiometries)
-        {
-            this.PeptideOne = Pep1;
-            this.PeptideTwo = Pep2;
-            this.GroupOne = G1;
-            this.GroupTwo = G2;
-            this.PeptideStoichiometriesGroupOne = calcStoichiometry(this.PeptideOne, this.PeptideTwo, this.GroupOne);
-            this.PeptideStoichiometriesGroupTwo = calcStoichiometry(this.PeptideOne, this.PeptideTwo, this.GroupTwo);
-
-            if (this.PeptideStoichiometriesGroupOne.Select( p => p.usefulStoichiometry).Count() >= minNumStoichiometries 
-                && this.PeptideStoichiometriesGroupTwo.Select(p => p.usefulStoichiometry).Count() >= minNumStoichiometries)
-            {
-                this.MWStat = calcMWStats()[0];
-                this.MWPVal = calcMWStats()[1];
-                this.PeptideStoichiometriesGroupOneMedian = calcMWStats()[2];
-                this.PeptideStoichiometriesGroupTwoMedian = calcMWStats()[3];
-                this.PeptideStoichiometriesGroupOneMin = calcMWStats()[4];
-                this.PeptideStoichiometriesGroupTwoMin = calcMWStats()[5];
-                this.PeptideStoichiometriesGroupOneMax = calcMWStats()[6];
-                this.PeptideStoichiometriesGroupTwoMax = calcMWStats()[7];
-            }
-        }
-
-  
-
-        /// <summary>
         /// Function to calculate the stoichiometries of a peptide compared to a baseline
         /// </summary>
         /// <param name="pep">Peptide to compare</param>
@@ -181,32 +148,6 @@ namespace PTMStoichiometry
                     PepIntensity.Add(pep.Intensities.Where(p => p.FileName.Equals(baselineFileNames[i])).ToList()[0]);
                 }
                 stoich.Add(new Stoichiometry(PepIntensity, baseline)); 
-            }
-            return stoich;
-        }
-
-        /// <summary>
-        /// Function to calculate the stoichiometries of peptide compared to another peptide
-        /// </summary>
-        /// <param name="pep1">Peptide to compare</param>
-        /// <param name="pep2">Peptide to serve as baseline</param>
-        /// <param name="group">group to compare</param>
-        /// <returns>list of stoichiometries</returns>
-        /// <see cref="Stoichiometry"/>
-        private List<Stoichiometry> calcStoichiometry(Peptide pep1, Peptide pep2, string group)
-        {
-            List<Stoichiometry> stoich = new List<Stoichiometry>();
-            List<Intensity> Pep1Intensity = pep1.Intensities.Where(p => p.GroupID == group).ToList();
-            List<Intensity> Pep2Intensity = pep2.Intensities.Where(p => p.GroupID == group).ToList();
-
-            foreach (Intensity i1 in Pep1Intensity)
-            {
-                Intensity i2 = Pep2Intensity.Where(p => p.FileName == i1.FileName).ToList()[0];
-                Stoichiometry calcStoich = new Stoichiometry(i1, i2);
-                if (i1.IntensityVal > 0 || i2.IntensityVal > 0)
-                {
-                    stoich.Add(calcStoich);
-                }
             }
             return stoich;
         }

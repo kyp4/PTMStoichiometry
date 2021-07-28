@@ -13,19 +13,17 @@ namespace PTMStoichiometry
         /// Function to write peptide stoichiometry data to tsv 
         /// </summary>
         /// <param name="proteinGroups">list of protein groups</param>
-        /// <param name="useBaselinePeptides">if true (default) use an averaged baseline of covarying peptides</param>
         /// <param name="minNumStoichiometries">min num of stoichiometries req in both groups before run test</param>
         /// <param name="outputFolder">folder to write data to</param>
         /// <param name="fileName">name of file to write to</param>
-        public static void StoichiometryPeptideDataWriter(List<ProteinGroup> proteinGroups, bool useBaselinePeptides, int minNumStoichiometries, string outputFolder, string fileName)
+        public static void StoichiometryPeptideDataWriter(List<ProteinGroup> proteinGroups, int minNumStoichiometries, string outputFolder, string fileName)
         {
             if (proteinGroups.Count == 0)
             { return; }
             var writtenFile = Path.Combine(outputFolder, fileName + ".txt");
             using (StreamWriter output = new StreamWriter(writtenFile))
             {
-                if (useBaselinePeptides)
-                {
+                
                     output.WriteLine("Peptide\tModifications\tBaseline\tGroup1\tGroup2\tProtein\tTotalNumPeptidesProt\tMWStat\tMWPVal\tBHPVal\t" 
                         + "MedianStoichiometryGroup1\tMedianStoichiometryGroup2\tMinStoichiometryGroup1\tMinStoichiometryGroup2\t"
                         + "MaxStoichiometryGroup1\tMaxStoichiometryGroup2\tStoichiometriesGroup1\tStoichiometriesGroup2");
@@ -58,35 +56,8 @@ namespace PTMStoichiometry
                             }
                         }
                     }
-                }
-                else
-                {
-                    output.WriteLine("Peptide1\tModifications1\tPeptide2\tModifications2\tGroup1\tGroup2\tProtein\tTotalNumPeptidesProt\tMWStat\tMWPVal\tBHPVal\tStoichiometriesGroup1\tStoichiometriesGroup2");
-                    foreach (ProteinGroup prot in proteinGroups)
-                    {
-                        foreach (PairwiseCompairison pc in prot.ProteinPairwiseComparisons)
-                        {
-                            if (pc.PeptideStoichiometriesGroupOne.Count() > minNumStoichiometries &&
-                                pc.PeptideStoichiometriesGroupTwo.Count() > minNumStoichiometries)
-                            {
-                                output.WriteLine(
-                                    pc.PeptideOne.Sequence
-                                    + "\t" + String.Join(";", pc.PeptideOne.PostTranslationalModifications.Select(p => p.Modification))
-                                    + "\t" + pc.PeptideTwo.Sequence
-                                    + "\t" + String.Join(";", pc.PeptideTwo.PostTranslationalModifications.Select(p => p.Modification))
-                                    + "\t" + pc.GroupOne
-                                    + "\t" + pc.GroupTwo
-                                    + "\t" + prot.ProteinName
-                                    + "\t" + prot.NumPeptidesInProtein.ToString()
-                                    + "\t" + pc.MWStat.ToString()
-                                    + "\t" + pc.MWPVal.ToString()
-                                    + "\t" + String.Join(";", pc.PeptideStoichiometriesGroupOne.Select(p => p.StoichiometryVal))
-                                    + "\t" + String.Join(";", pc.PeptideStoichiometriesGroupTwo.Select(p => p.StoichiometryVal))
-                                );
-                            }
-                        }
-                    }
-                }
+                
+                
                 
             }
         }
@@ -95,19 +66,17 @@ namespace PTMStoichiometry
         /// Function to write ptm stoichiometry data to tsv 
         /// </summary>
         /// <param name="proteinGroups">list of protein groups</param>
-        /// <param name="useBaselinePeptides">if true (default) use an averaged baseline of covarying peptides</param>
         /// <param name="minNumStoichiometries">min num of stoichiometries req in both groups before run test</param>
         /// <param name="outputFolder">folder to write data to</param>
         /// <param name="fileName">name of file to write to</param>
-        public static void StoichiometryPTMDataWriter(List<ProteinGroup> proteinGroups, bool useBaselinePeptides, int minNumStoichiometries, string outputFolder, string fileName)
+        public static void StoichiometryPTMDataWriter(List<ProteinGroup> proteinGroups, int minNumStoichiometries, string outputFolder, string fileName)
         {
             if (proteinGroups.Count == 0)
             { return; }
             var writtenFile = Path.Combine(outputFolder, fileName + ".txt");
             using (StreamWriter output = new StreamWriter(writtenFile))
             {
-                if (useBaselinePeptides)
-                {
+                
                     output.WriteLine("Modification\tPeptides\tProtein\tBaseline\tGroup1\tGroup2\tMWStat\tMWPVal\tBHPVal\t"
                         + "MedianStoichiometryGroup1\tMedianStoichiometryGroup2\tMinStoichiometryGroup1\tMinStoichiometryGroup2\t"
                         + "MaxStoichiometryGroup1\tMaxStoichiometryGroup2\tStoichiometriesGroup1\tStoichiometriesGroup2");
@@ -139,9 +108,6 @@ namespace PTMStoichiometry
                             }
                         }
                     }
-                }
-                
-
             }
         }
 
@@ -157,7 +123,6 @@ namespace PTMStoichiometry
         /// <param name="reqNumUnmodPeptides">min num of unmodified peptides that must be observed for a protein in order to consider the protein group (default=1)</param>
         /// <param name="reqNumModPeptides">min num of modified peptides that must be observed for a protein in order to consider the protein group (default=3)</param>
         /// <param name="reqNumOfPepeptides">min num of peptides that must be observed for a protein in order to consider the protein group </param>
-        /// <param name="useBaselinePeptides">if true use baseline proteins (pep/baseline) else compare peptide to peptide (pep/pep)</param>
         /// <param name="reqNumBaselinePeptides">min num of baseline peptides that must be observed for a protein in order to consider it (default=3)</param>
         /// <param name="reqNumBaselineMeasurements">min num of intensities (non zero -> MS or MSMS detection) that must be observed for in a 
         ///baseline peptide (non zero -> MS or MSMS detection) - increasing this value will decrease the number of baseline peptides  
@@ -168,7 +133,7 @@ namespace PTMStoichiometry
         /// <param name="reqNumPepMeasurements">min num of peptide intensities that must be observed (non zero -> MS or MSMS detection)</param>
         /// <param name="groupToCompare">single group to compare all other groups to (not a required parameter)</param>
         public static void ParamsWriter(string paramsfile, string filepathpeptides, string filepathgroups, string directory, string stoichiometryfileout,
-            int reqNumUnmodPeptides = 1, int reqNumModPeptides = 3, int reqNumOfPepeptides = 4, bool useBaselinePeptides = true,
+            int reqNumUnmodPeptides = 1, int reqNumModPeptides = 3, int reqNumOfPepeptides = 4,
             int reqNumBaselinePeptides = 3, int reqNumBaselineMeasurements = 3, double correlationCutOff = 0.5,
             bool compareUnmod = false, int minNumStoichiometries = 3, int reqNumPepMeasurements = 3, string groupToCompare = null)
         {
@@ -185,7 +150,6 @@ namespace PTMStoichiometry
                     + "\n" + "reqNumUnmodPeptides:" + "\t" + reqNumUnmodPeptides
                     + "\n" + "reqNumModPeptides:" + "\t" + reqNumModPeptides
                     + "\n" + "reqNumOfPepeptides:" + "\t" + reqNumOfPepeptides
-                    + "\n" + "useBaselinePeptides:" + "\t" + useBaselinePeptides
                     + "\n" + "reqNumBaselinePeptides:" + "\t" + reqNumBaselinePeptides
                     + "\n" + "reqNumBaselineMeasurements:" + "\t" + reqNumBaselineMeasurements
                     + "\n" + "correlationCutOff:" + "\t" + correlationCutOff
