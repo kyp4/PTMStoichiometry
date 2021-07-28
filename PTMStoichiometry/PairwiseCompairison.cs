@@ -132,12 +132,13 @@ namespace PTMStoichiometry
         private List<Stoichiometry> calcStoichiometry(List<Peptide> peps, string group, List<Intensity> baselineIntensity)
         {
             List<Stoichiometry> stoich = new List<Stoichiometry>();
-            //List<Intensity> PepIntensity = peps.Select(p => p.Intensities.Where(p => p.GroupID == group)).ToList(); //intensities pep1 for group of interest
+            //List<Intensity> PepGroup = peps.Select(p => p.Intensities.Where(p => p.GroupID == group)).ToList(); //intensities pep1 for group of interest
             List<Intensity> baselineGroupIntensity = baselineIntensity.Where(p => p.GroupID == group).ToList();
+            double baseline = baselineGroupIntensity.Select(p => p.IntensityVal).Median();
 
             List<string> baselineFileNames = baselineGroupIntensity.Select(p => p.FileName).Distinct().ToList();
 
-            double baseline = baselineGroupIntensity.Select(p => p.IntensityVal).Median();
+            
             for (int i = 0; i < baselineFileNames.Count(); i++)
             {
                 List<Intensity> PepIntensity = new List<Intensity>();
