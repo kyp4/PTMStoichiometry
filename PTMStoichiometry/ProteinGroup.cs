@@ -125,8 +125,7 @@ namespace PTMStoichiometry
         private List<Peptide> getBaseLinePeptides(List<Peptide> peptidesInProtein, List<string> groups, 
             double correlationCutOff, int reqNumBaselineMeasurements)
         {
-            List<Peptide> unmodPep = peptidesInProtein.Where(p => !p.Mod).ToList();
-                //.Where(p => p.IsUnique).ToList();
+            List<Peptide> unmodPep = peptidesInProtein.Where(p => !p.Mod).ToList().Where(p => p.IsUnique).ToList();
 
             //if pos Corr(X,Y) and pos Corr(X,Z) => pos Corr(Y,Z)
             List<Peptide> unmodPepCov = new List<Peptide>();
