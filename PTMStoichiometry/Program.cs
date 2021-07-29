@@ -15,39 +15,27 @@ namespace PTMStoichiometry
         {
             //user parameters - will need to validate input
 
-            //groupToCompare - single group to compare against, this is the group name (e.g. a control group) (default = null)
-            //useBaselinePeptides - if true (default) use an averaged baseline of covarying peptides
-            //reqNumBaselinePeptides - min num of baseline peptides that must be observed for a protein in order to consider it (default=3)
-            //correlationCutOff - min value at which two peptides will be considered to be correlated
-            //reqNumOfPepeptides - min num of peptides that must be observed for a protein in order to consider it
-            //reqNumModPeptides - min num of modified peptides that must be observed for a protein in order to consider it (default=1)
-            //reqNumUnmodPeptides - min num of modified peptides that must be observed for a protein in order to consider it (default=3)
-            //reqNumPepMeasurements - min num of peptide intensities that must be observed (non zero -> MS or MSMS detection)
-            //reqNumBaselineMeasurements - min num of intensities (non zero -> MS or MSMS detection) that must be observed for in a 
-            //baseline peptide (non zero -> MS or MSMS detection) - increasing this value will decrease the number of baseline peptides  
-            //that are not observed in samples and therefore the number of non numeric stoichiometry values found in baseline case
-            //compareUnmod - if false (default) only compare modified peptides to baseline, not unmodified peptides
-
-            //useRazorPeptides - if false (default) peptides in more than one protein are removed
-            //test - currently only MW available, want to add t-test and ANOVA
-            //pvalueAdjust - if true (default) use Benjamini-Hochberg analysis to adjust all p-values, else report raw p-values
-            //alpha - significance value
-            //minNumStoichiometries - min num of stoichiometries req in both groups before run test
-            //groupPepsForPValCalc - choose to apply p-value correction within each protein (grouped) or across all proteins
-            //alpha - chosen significance (default=0.05)
-
+            //reqNumUnmodPeptides - min num of modified peptides that must be observed for a protein in order to consider it
             int reqNumUnmodPeptides = 1;
+            //reqNumModPeptides - min num of modified peptides that must be observed for a protein in order to consider it
             int reqNumModPeptides = 1;
+            //reqNumOfPepeptides - min num of peptides that must be observed for a protein in order to consider it
             int reqNumOfPepeptides = reqNumUnmodPeptides + reqNumModPeptides;
-            bool useBaselinePeptides = true;
+            //reqNumBaselinePeptides - min num of baseline peptides that must be observed for a protein in order to consider it (default=3)
             int reqNumBaselinePeptides = 3;
-            int reqNumBaselineMeasurements = 3; 
+            //reqNumBaselineMeasurements - min num of intensities (non zero -> MS or MSMS detection) that must be observed for in a 
+            //baseline peptide (non zero -> MS or MSMS detection) - increasing this value will decrease the number of baseline peptides 
+            //that are not observed in samples and therefore the number of non numeric stoichiometry values found in baseline case
+            int reqNumBaselineMeasurements = 3;
+            //correlationCutOff - min value at which two peptides will be considered to be correlated
             double correlationCutOff = 0.75;
+            //compareUnmod - if false (default) only compare modified peptides to baseline, not unmodified peptides
             bool compareUnmod = false;
+            //minNumStoichiometries - min num of stoichiometries req in both groups before run test
             int minNumStoichiometries = 3;
+            //min num of peptide intensities that must be observed(non zero -> MS or MSMS detection)
             int reqNumPepMeasurements = 3;
-            bool groupPepsForPValCalc = true;
-            double alpha = 0.05;
+            //groupToCompare - single group to compare against, this is the group name (e.g. a control group) (default = null)
             string groupToCompare = null;
             string dataType = "unknown";
 
@@ -72,7 +60,7 @@ namespace PTMStoichiometry
             {
                 dataType = "MaxQuant";
             }
-            string subdirectory = "MSV000086126-2021-07-07-08-59-09-AllQuantifiedPeptides-10000PeptidesProteinAlphabetized-20210727a";
+            string subdirectory = "MSV000086126-2021-07-07-08-59-09-AllQuantifiedPeptides-10000PeptidesProteinAlphabetized-20210728a";
             string peptidestoichiometryfileout = subdirectory + "PeptideAnalysis";
             string ptmstoichiometryfileout = subdirectory + "PTMAnalysis";
             string paramsfile = subdirectory + "params";
@@ -107,7 +95,7 @@ namespace PTMStoichiometry
                 for (int i = 0; i < proteinList.Count(); i++)
                 {
                     testProt.Add(new ProteinGroup(proteinList[i], testPeptide, groupsList, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides,
-                    useBaselinePeptides, reqNumBaselinePeptides, reqNumBaselineMeasurements, correlationCutOff, compareUnmod, minNumStoichiometries, groupToCompare));
+                   reqNumBaselinePeptides, reqNumBaselineMeasurements, correlationCutOff, compareUnmod, minNumStoichiometries, groupToCompare));
                 }
             }
             else
@@ -115,19 +103,19 @@ namespace PTMStoichiometry
                 for (int i = 0; i < proteinList.Count(); i++)
                 {
                     testProt.Add(new ProteinGroup(proteinList[i], testPeptide, groupsList, reqNumUnmodPeptides, reqNumModPeptides, reqNumOfPepeptides,
-                    useBaselinePeptides, reqNumBaselinePeptides, reqNumBaselineMeasurements, correlationCutOff, compareUnmod, minNumStoichiometries));
+                    reqNumBaselinePeptides, reqNumBaselineMeasurements, correlationCutOff, compareUnmod, minNumStoichiometries));
                 }
             }
 
             testProt = testProt.Where(p => p.ProteinPairwiseComparisons != null).Distinct().ToList(); //hmmm
-            Extensions.CalcCorrectedPValue(testProt, groupPepsForPValCalc, alpha);
+            
             List<ProteinGroup> ProteinsToUse = testProt.Where(p => p.useProt).ToList();
             
             WriteFile.ParamsWriter(paramsfile, filepathpeptides, filepathgroups, directory, peptidestoichiometryfileout, reqNumUnmodPeptides, reqNumModPeptides,
-                reqNumOfPepeptides, useBaselinePeptides, reqNumBaselinePeptides, reqNumBaselineMeasurements, correlationCutOff, compareUnmod,
-                minNumStoichiometries, reqNumPepMeasurements, groupPepsForPValCalc, alpha, groupToCompare);
-            WriteFile.StoichiometryPeptideDataWriter(ProteinsToUse, useBaselinePeptides, minNumStoichiometries, directory, peptidestoichiometryfileout);
-            WriteFile.StoichiometryPTMDataWriter(ProteinsToUse, useBaselinePeptides, minNumStoichiometries, directory, ptmstoichiometryfileout);
+                reqNumOfPepeptides, reqNumBaselinePeptides, reqNumBaselineMeasurements, correlationCutOff, compareUnmod,
+                minNumStoichiometries, reqNumPepMeasurements, groupToCompare);
+            WriteFile.StoichiometryPeptideDataWriter(ProteinsToUse, minNumStoichiometries, directory, peptidestoichiometryfileout);
+            WriteFile.StoichiometryPTMDataWriter(ProteinsToUse, minNumStoichiometries, directory, ptmstoichiometryfileout);
 
         }
     }

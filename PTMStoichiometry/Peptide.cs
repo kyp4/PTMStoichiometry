@@ -51,6 +51,7 @@ namespace PTMStoichiometry
         {
             this.Sequence = Seq;
             this.BaseSeq = BaseSeq;
+            this.PostTranslationalModifications = GetModifications(this.Sequence);
             this.ProteinGroup = ProteinGroup.Split(";").ToList();
             this.IsUnique = this.ProteinGroup.Count() == 1;
             this.GeneName = GeneName;
@@ -104,6 +105,7 @@ namespace PTMStoichiometry
                 throw new Exception("Error: Unknown data input type: must be FlashLFQ or MaxQuant");
             }
         }
+
 
         /// <summary>
         /// Function which returns a list of the post transliational modifications in a sequence
