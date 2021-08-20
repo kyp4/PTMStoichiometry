@@ -164,7 +164,7 @@ namespace Test
                     new Peptide("Seq1modb", "Seq1", "Prot", "Gene", "Organism",
                         new List<Intensity>() {
                             new Intensity("file1", "group1", 400),
-                            new Intensity("file22", "group2", 300),
+                            new Intensity("file22", "group2", 400),
                             new Intensity("file11", "group1", 0),
                             new Intensity("file2", "group2", 0)},
                         new List<string>() { "group1", "group2" }, 1),
@@ -172,19 +172,19 @@ namespace Test
                         new List<Intensity>() {
                             new Intensity("file11", "group1", 100),
                             new Intensity("file2", "group2", 600),
-                            new Intensity("file11", "group1", 0),
-                            new Intensity("file2", "group2", 0)},
+                            new Intensity("file1", "group1", 0),
+                            new Intensity("file22", "group2", 0)},
                         new List<string>() { "group1", "group2" }, 1)
                 },
                 new List<Intensity> {
                 new Intensity("file1", "group1", 1000),
-                new Intensity("file1", "group2", 250),
-                new Intensity("file2", "group1", 1000),
-                new Intensity("file2", "group2", 250)},
+                new Intensity("file11", "group1", 1000),
+                new Intensity("file2", "group2", 400),
+                new Intensity("file22", "group2", 400)},
                 "group1", "group2", "modb",
                 3,
-                new List<double> { (500+400+0)/1000, (500+0+100)/1000 },
-                new List<double> { (0+300+0)/250, (200+0+600)/250 }
+                new List<double> { 0.9, 0.6 },
+                new List<double> { 2, 1.5 }
             }
         };
         /// <summary>

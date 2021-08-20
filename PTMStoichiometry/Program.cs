@@ -16,7 +16,7 @@ namespace PTMStoichiometry
             //user parameters - will need to validate input
 
             //reqNumUnmodPeptides - min num of modified peptides that must be observed for a protein in order to consider it
-            int reqNumUnmodPeptides = 1;
+            int reqNumUnmodPeptides = 3;
             //reqNumModPeptides - min num of modified peptides that must be observed for a protein in order to consider it
             int reqNumModPeptides = 1;
             //reqNumOfPepeptides - min num of peptides that must be observed for a protein in order to consider it
@@ -39,7 +39,7 @@ namespace PTMStoichiometry
             string groupToCompare = null;
             string dataType = "unknown";
 
-            string filepathpeptides = @"C:\Users\KAP\source\repos\PTMStoichiometry_master\Test\TestData\MSV000086126-2021-07-07-08-59-09-AllQuantifiedPeptides-10000PeptidesProteinAlphabetized.txt";
+            string filepathpeptides = @"C:\Users\KAP\source\repos\PTMStoichiometry_master\Test\TestData\MSV000086126-2021-07-07-08-59-09-AllQuantifiedPeptides-1000PeptidesProteinAlphabetized.txt";
             string filepathgroups = @"C:\Users\KAP\source\repos\PTMStoichiometry_master\Test\TestData\MSV000086126GlobalGroups.txt";
             string directory = @"D:\PTMStoichiometry\UnitTests\";
 
@@ -60,7 +60,7 @@ namespace PTMStoichiometry
             {
                 dataType = "MaxQuant";
             }
-            string subdirectory = "MSV000086126-2021-07-07-08-59-09-AllQuantifiedPeptides-10000PeptidesProteinAlphabetized-20210728a";
+            string subdirectory = "MSV000086126-2021-07-07-08-59-09-AllQuantifiedPeptides-1000PeptidesProteinAlphabetized-20210729a";
             string peptidestoichiometryfileout = subdirectory + "PeptideAnalysis";
             string ptmstoichiometryfileout = subdirectory + "PTMAnalysis";
             string paramsfile = subdirectory + "params";
