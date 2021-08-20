@@ -9,24 +9,24 @@ namespace Test
     [TestFixture]
     class PeptideTester
     {
-        
+
         private static readonly object[] _testFlashLFQGetter =
        {
             new object[] {
 
                 @"C:\Users\KAP\source\repos\PTMStoichiometry_master\Test\TestData\MSV000086126-2021-07-07-08-59-09-AllQuantifiedPeptides-1000PeptidesProteinAlphabetized.txt",
-                @"C:\Users\KAP\source\repos\PTMStoichiometry_master\Test\TestData\MSV000086126GlobalGroups.txt", 
+                @"C:\Users\KAP\source\repos\PTMStoichiometry_master\Test\TestData\MSV000086126GlobalGroups.txt",
                 3, 0,
-                "AGLGTGAAGGIGAGRTRAPSLASSSGSDK", 
-                "AGLGTGAAGGIGAGRTRAPSLASSSGSDK", 
-                new List<string> { "A0A087WPF7" }, 
-                "Auts2", 
-                "Mus musculus", 
+                "AGLGTGAAGGIGAGRTRAPSLASSSGSDK",
+                "AGLGTGAAGGIGAGRTRAPSLASSSGSDK",
+                new List<string> { "A0A087WPF7" },
+                "Auts2",
+                "Mus musculus",
                 18, 12,
-                "Intensity_1DLC122419QE_ZD_Kidney_global_#4-calib", 
+                "Intensity_1DLC122419QE_ZD_Kidney_global_#4-calib",
                 "Global Control",
                 3195479.843,
-                true, true 
+                true, true
             },
             new object[] {
 
@@ -99,7 +99,7 @@ namespace Test
         /// <param name="detectedMinNum">correct detectedMinNum bool</param>
         [Test]
         [TestCaseSource("_testFlashLFQGetter")]
-       
+
         public void Peptide_FlashLFQGetter_Pass(string filePath, string groupPath, int reqNumPepMeasurements, int lineToCompare, string sequence, string baseSequence,
             List<string> proteinGroup, string geneName, string organism, int numberIntensities, int intensityColToCompare, string fileName,
             string groupID, double intensityVal, bool isUnique, bool detectedMinNum)
@@ -167,7 +167,7 @@ namespace Test
         /// <param name="reqNumPepMeasurements">min num of peptide intensities that must be observed</param>
         /// <param name="numPeptidesMeetMeasurementReq">correct number of Peptides that meet the requirement with the set DetectedMinNum</param>
         [TestCase(@"C:\Users\KAP\source\repos\PTMStoichiometry_master\Test\TestData\MSV000086126-2021-07-07-08-59-09-AllQuantifiedPeptides-1000PeptidesProteinAlphabetized.txt",
-            @"C:\Users\KAP\source\repos\PTMStoichiometry_master\Test\TestData\MSV000086126GlobalGroups.txt", 
+            @"C:\Users\KAP\source\repos\PTMStoichiometry_master\Test\TestData\MSV000086126GlobalGroups.txt",
             0, 1000)]
         [TestCase(@"C:\Users\KAP\source\repos\PTMStoichiometry_master\Test\TestData\MSV000086126-2021-07-07-08-59-09-AllQuantifiedPeptides-1000PeptidesProteinAlphabetized.txt",
             @"C:\Users\KAP\source\repos\PTMStoichiometry_master\Test\TestData\MSV000086126GlobalGroups.txt",
@@ -180,6 +180,6 @@ namespace Test
             List<Peptide> pepsInFile = PeptideReader.ReadTsv(filePath, groupPath, reqNumPepMeasurements, 5, "FlashLFQ");
             Assert.AreEqual(numPeptidesMeetMeasurementReq, pepsInFile.Where(p => p.DetectedMinNum).Count());
         }
-       
+
     }
 }
