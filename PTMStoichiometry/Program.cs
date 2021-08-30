@@ -60,7 +60,7 @@ namespace PTMStoichiometry
             {
                 dataType = "MaxQuant";
             }
-            string subdirectory = "MSV000086126-2021-07-07-08-59-09-AllQuantifiedPeptides-1000PeptidesProteinAlphabetized-20210729a";
+            string subdirectory = "MSV000086126-2021-07-07-08-59-09-AllQuantifiedPeptides-1000PeptidesProteinAlphabetized-20210820a";
             string peptidestoichiometryfileout = subdirectory + "PeptideAnalysis";
             string ptmstoichiometryfileout = subdirectory + "PTMAnalysis";
             string paramsfile = subdirectory + "params";

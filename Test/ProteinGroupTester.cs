@@ -527,7 +527,7 @@ namespace Test
                 },
                 new List<string> { "group1", "group2" },
                 3, 1, 4, 0.5, false, 3, "group1",
-                false
+                true
             },
             new object[] {
                 "Prot",
@@ -643,131 +643,29 @@ namespace Test
                 "Prot",
                 new List<Peptide>
                 {
-                    new Peptide("Seq1[a]", "Seq1", "Prot", "Gene", "Organism",
+                    new Peptide("Seq1", "Seq1", "Prot", "Gene", "Organism",
                         new List<Intensity>() {
                             new Intensity("file1", "group1", 10),
                             new Intensity("file2", "group1", 20),
                             new Intensity("file3", "group1", 15),
                             new Intensity("file4", "group1", 30),
-
-                            new Intensity("file5", "group2", 10),
-                            new Intensity("file6", "group2", 20),
-                            new Intensity("file7", "group2", 15),
-                            new Intensity("file8", "group2", 30),
-
-                            new Intensity("file9", "group3", 10),
-                            new Intensity("file10", "group3", 20),
-                            new Intensity("file11", "group3", 15),
-                            new Intensity("file12", "group3", 30)
                         },
-                        new List<string>() { "group1", "group2", "group3" }, 1),
-                   new Peptide("Seq2b", "Seq2", "Prot", "Gene", "Organism",
+                        new List<string>() { "group1", "group2" }, 1),
+                   new Peptide("Seq2", "Seq2", "Prot", "Gene", "Organism",
                         new List<Intensity>() {
                             new Intensity("file1", "group1", 20),
                             new Intensity("file2", "group1", 40),
                             new Intensity("file3", "group1", 30),
                             new Intensity("file4", "group1", 60),
-
-                            new Intensity("file5", "group2", 20),
-                            new Intensity("file6", "group2", 40),
-                            new Intensity("file7", "group2", 30),
-                            new Intensity("file8", "group2", 60),
-
-                            new Intensity("file9", "group3", 20),
-                            new Intensity("file10", "group3", 40),
-                            new Intensity("file11", "group3", 30),
-                            new Intensity("file12", "group3", 60)
                         },
-                        new List<string>() { "group1", "group2", "group3" }, 1),
-                   new Peptide("Seq3", "Seq3", "Prot", "Gene", "Organism",
-                        new List<Intensity>() {
-                            new Intensity("file1", "group1", 100),
-                            new Intensity("file2", "group1", 20),
-                            new Intensity("file3", "group1", 50),
-                            new Intensity("file", "group1", 600),
-
-                            new Intensity("file4", "group2", 80),
-                            new Intensity("file5", "group2", 600),
-                            new Intensity("file6", "group2", 40),
-                            new Intensity("file7", "group2", 3),
-
-                            new Intensity("file8", "group3", 80),
-                            new Intensity("file9", "group3", 600),
-                            new Intensity("file10", "group3", 40),
-                            new Intensity("file11", "group3", 3)
-                        },
-                        new List<string>() { "group1", "group2", "group3" }, 1),
-                   new Peptide("Seq4", "Seq4", "Prot", "Gene", "Organism",
-                        new List<Intensity>() {
-                            new Intensity("file1", "group1", 150),
-                            new Intensity("file2", "group1", 50),
-                            new Intensity("file3", "group1", 75),
-                            new Intensity("file4", "group1", 200),
-
-                            new Intensity("file5", "group2", 90),
-                            new Intensity("file6", "group2", 100),
-                            new Intensity("file7", "group2", 50),
-                            new Intensity("file8", "group2", 10),
-
-                            new Intensity("file9", "group3", 90),
-                            new Intensity("file10", "group3", 100),
-                            new Intensity("file11", "group3", 50),
-                            new Intensity("file12", "group3", 10)
-                        },
-                        new List<string>() { "group1", "group2", "group3" }, 1),
-                   new Peptide("Seq5", "Seq5", "Prot", "Gene", "Organism",
-                        new List<Intensity>() {
-                            new Intensity("file1", "group1", 160),
-                            new Intensity("file2", "group1", 55),
-                            new Intensity("file3", "group1", 80),
-                            new Intensity("file4", "group1", 240),
-
-                            new Intensity("file5", "group2", 110),
-                            new Intensity("file6", "group2", 120),
-                            new Intensity("file7", "group2", 75),
-                            new Intensity("file8", "group2", 24),
-
-                            new Intensity("file9", "group3", 110),
-                            new Intensity("file10", "group3", 120),
-                            new Intensity("file11", "group3", 75),
-                            new Intensity("file12", "group3", 24)
-                        },
-                        new List<string>() { "group1", "group2", "group3" }, 1)
-
+                    new List<string>() { "group1", "group2" }, 1)
                 },
-                new List<string> { "group1", "group2", "group3" }, "group1",
-                6, 4, 30, 20
-            }
+                new List<string> { "group1", "group2" },
+                3, 1, 4, 0.5, false, 3, "group1",
+                
+            },
         };
 
-        /// <summary>
-        /// Test to check that the correct number of pairwise compairisons are being calculated
-        /// </summary>
-        /// <param name="proteinAccession">the protein acession</param>
-        /// <param name="peptides">list of all peptides</param>
-        /// <param name="groups">list of all groups</param>
-        /// <param name="groupToCompare">single group to compare all other groups to (not a required parameter)</param>
-        /// <param name="numPairwiseCompairisonsBaselineAllGroupProt">correct number of protein pairwise compairisons when comparing all groups</param>
-        /// <param name="numPairwiseCompairisonsBaselineSetGroupProt">correct number of protein pairwise compairisons when comparing against one group</param>
-        /// <param name="numPairwiseCompairisonsBaselineAllGroupPTM">correct number of ptm pairwise compairisons when comparing all groups</param>
-        /// <param name="numPairwiseCompairisonsBaselineSetGroupPTM">correct number of ptm pairwise compairisons when comparing against one group</param>
-        [Test]
-        [TestCaseSource("_calCompairison")]
-        public void ProteinGroup_calcComparison_Pass(string proteinAccession, List<Peptide> peptides, List<string> groups, string groupToCompare,
-            int numPairwiseCompairisonsBaselineAllGroupProt, int numPairwiseCompairisonsBaselineSetGroupProt, int numPairwiseCompairisonsBaselineAllGroupPTM,
-            int numPairwiseCompairisonsBaselineSetGroupPTM)
-        {
-
-            ProteinGroup ProteinGroupBaselineAllGroupTest = new ProteinGroup(proteinAccession, peptides, groups, 3, 1, 4,
-                3, 3, 0.5, false, 3);
-            ProteinGroup ProteinGroupBaselineSetGroupTest = new ProteinGroup(proteinAccession, peptides, groups, 3, 1, 4,
-                3, 3, 0.5, false, 3, groupToCompare);
-
-            Assert.AreEqual(numPairwiseCompairisonsBaselineAllGroupProt, ProteinGroupBaselineAllGroupTest.ProteinPairwiseComparisons.Count());
-            Assert.AreEqual(numPairwiseCompairisonsBaselineSetGroupProt, ProteinGroupBaselineSetGroupTest.ProteinPairwiseComparisons.Count());
-            Assert.AreEqual(numPairwiseCompairisonsBaselineAllGroupPTM, ProteinGroupBaselineAllGroupTest.PTMPairwiseCompairisons.Count());
-            Assert.AreEqual(numPairwiseCompairisonsBaselineSetGroupPTM, ProteinGroupBaselineSetGroupTest.PTMPairwiseCompairisons.Count());
-        }
     }
 }
 
