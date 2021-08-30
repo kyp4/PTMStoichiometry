@@ -24,7 +24,7 @@ namespace PTMStoichiometry
             using (StreamWriter output = new StreamWriter(writtenFile))
             {
                 
-                    output.WriteLine("Peptide\tModifications\tBaseline\tGroup1\tGroup2\tProtein\tTotalNumPeptidesProt\tMWStat\tMWPVal\tBHPVal\t" 
+                    output.WriteLine("Peptide\tModifications\tBaseline\tGroup1\tGroup2\tProtein\tTotalNumPeptidesProt\tMWStat\tMWPVal\t" 
                         + "MedianStoichiometryGroup1\tMedianStoichiometryGroup2\tMinStoichiometryGroup1\tMinStoichiometryGroup2\t"
                         + "MaxStoichiometryGroup1\tMaxStoichiometryGroup2\tStoichiometriesGroup1\tStoichiometriesGroup2");
                     foreach (ProteinGroup prot in proteinGroups)
@@ -77,7 +77,7 @@ namespace PTMStoichiometry
             using (StreamWriter output = new StreamWriter(writtenFile))
             {
                 
-                    output.WriteLine("Modification\tPeptides\tProtein\tBaseline\tGroup1\tGroup2\tMWStat\tMWPVal\tBHPVal\t"
+                    output.WriteLine("Modification\tPeptides\tProtein\tBaseline\tGroup1\tGroup2\tMWStat\tMWPVal\t"
                         + "MedianStoichiometryGroup1\tMedianStoichiometryGroup2\tMinStoichiometryGroup1\tMinStoichiometryGroup2\t"
                         + "MaxStoichiometryGroup1\tMaxStoichiometryGroup2\tStoichiometriesGroup1\tStoichiometriesGroup2");
                     foreach (ProteinGroup prot in proteinGroups)
